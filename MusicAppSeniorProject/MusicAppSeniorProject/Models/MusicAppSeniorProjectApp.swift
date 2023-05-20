@@ -32,6 +32,7 @@ struct MusicAppSeniorProjectApp: App {
             ContentView()
                 .environmentObject(ModelData())
                 .environmentObject(TeacherModelData())
+                .environmentObject(ProfileModel())
         }
     }
 }

@@ -29,9 +29,9 @@ struct CreateStudentProfilePage: View{
     @State private var studentLevel: String = ""
     @State private var description: String = ""
     @State private var image = UIImage(systemName: "heart.fill")
-    @StateObject var viewModel = ProfileModel()
+    @EnvironmentObject var viewModel: ProfileModel
     @State var displayImage: Bool = false
-
+    @State private var useCamera = false
     //    @State var tag:Int? = nil
     
     //    @State private var sldkfj: String = ""
@@ -54,8 +54,9 @@ struct CreateStudentProfilePage: View{
                         NavigationLink(destination:CameraView()){
                             Text("Use camera to take a photo")
                         }
-                        
+
                     }
+
                     //                    if(displayImage){
                     //                        Image(uiImage:viewModel.getImage())
                     //                    }
@@ -148,21 +149,8 @@ struct CreateStudentProfilePage: View{
 
                     }
 
-
-                    //                    NavigationLink(destination: StudentAppPage()){
-                    //                        Text("Submitting Profile")
-                    //                            .navigationTitle("Edit your profile")
-                    //                            .toolbar {
-                    //                                ToolbarItem(placement: .principal) {
-                    //                                    // this sets the screen title in the navigation bar, when the screen is visible
-                    //                                    Text("Create your Profile")
-                    //                                }
-                    //                            }
-                    //                    }.simultaneousGesture(TapGesture().{
-                    //                        submitProfile(student: modelData.studentUser)
-                    //                    })
                     Button("Submit Profile") {
-                        createStudentObject()
+//                        createStudentObject()
                         modelData.registerStudentUser(){ isFound in
                             if isFound {
                                 noUserFound = false
@@ -173,26 +161,20 @@ struct CreateStudentProfilePage: View{
                             }
                         }
                     }
-//                    Button("Show ProfileImage"){
-//                        print("SHOWING PROFILE IMAGE")
-//                        image = viewModel.getImage()
-//                        displayImage.toggle()
-//                    }
-
                         .buttonStyle(.bordered)
                         .padding(10)
 
                         Spacer()
-                    }
+//                    }
             .navigationDestination(isPresented: $loginSuccessful) {
                 StudentAppPage()
             }
             .navigationTitle("Edit Profile")
-            .toolbar(.hidden, for: .navigationBar)
+//            .toolbar(.hidden, for: .navigationBar)
         
         }
             
-//        }
+        }
         
         //creates Student and sets it to modelData.studentUser
         func createStudentObject(){

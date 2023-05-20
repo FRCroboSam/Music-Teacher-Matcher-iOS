@@ -12,7 +12,7 @@ struct TeacherProfilePage: View {
     //teacherType is if the teacher is in available teachers, requested, teachers, etc. 
     public var displayText: String
     @EnvironmentObject var modelData: ModelData
-    @StateObject var viewModel = ProfileModel()
+    @EnvironmentObject var viewModel: ProfileModel
     var body: some View {
         let keys = teacher.teacherInfo.map{$0.key}
         let values = teacher.teacherInfo.map {$0.value}

@@ -69,6 +69,7 @@
 		36CADD642A08B778006F246F /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CADD562A08B778006F246F /* PhotoView.swift */; };
 		36CADD652A08B778006F246F /* PhotoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CADD572A08B778006F246F /* PhotoAsset.swift */; };
 		36CADD682A0E9508006F246F /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CADD672A0E9508006F246F /* ProfileModel.swift */; };
+		36CADD6B2A1989D0006F246F /* ContentViewTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CADD6A2A1989D0006F246F /* ContentViewTest.swift */; };
 		36D7DF5A29A45CE800273F78 /* CreateTeacherProfilePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D7DF5929A45CE800273F78 /* CreateTeacherProfilePage.swift */; };
 		36F4164229F2635A003583A1 /* TeacherModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F4164129F2635A003583A1 /* TeacherModelData.swift */; };
 /* End PBXBuildFile section */
@@ -137,6 +138,7 @@
 		36CADD562A08B778006F246F /* PhotoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
 		36CADD572A08B778006F246F /* PhotoAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoAsset.swift; sourceTree = "<group>"; };
 		36CADD672A0E9508006F246F /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
+		36CADD6A2A1989D0006F246F /* ContentViewTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewTest.swift; sourceTree = "<group>"; };
 		36D7DF5929A45CE800273F78 /* CreateTeacherProfilePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTeacherProfilePage.swift; sourceTree = "<group>"; };
 		36F4164129F2635A003583A1 /* TeacherModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherModelData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -295,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				363583D12984F91900C37596 /* ContentView.swift */,
+				36CADD6A2A1989D0006F246F /* ContentViewTest.swift */,
 				363583F92984F94C00C37596 /* HomePage.swift */,
 				36C403E229D261400015935A /* LoginPage.swift */,
 				364DEBF029A8125900FFA18B /* Teacher Profile */,
@@ -498,6 +501,7 @@
 				36CADD5E2A08B778006F246F /* PhotoLibrary.swift in Sources */,
 				3642D16229EEF1E60052FF2E /* TeacherAppPage.swift in Sources */,
 				360FDF03299B556B00C8BAF3 /* StudentProfile.swift in Sources */,
+				36CADD6B2A1989D0006F246F /* ContentViewTest.swift in Sources */,
 				36094378299F1F6D000CE05C /* User.swift in Sources */,
 				360FDF05299B567200C8BAF3 /* MatchMakingPage.swift in Sources */,
 				364DEBF729A8634500FFA18B /* Student.swift in Sources */,

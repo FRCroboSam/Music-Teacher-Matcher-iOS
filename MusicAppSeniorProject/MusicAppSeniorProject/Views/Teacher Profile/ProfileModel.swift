@@ -13,6 +13,8 @@ import CoreTransferable
 class ProfileModel: ObservableObject {
     // MARK: - Profile Image
     var profileImage: ProfileImage?
+    var gotTheSelectedItem = false
+    var numSelectedItem = 0
     enum ImageState {
         case empty
         case loading(Progress)
@@ -74,11 +76,13 @@ class ProfileModel: ObservableObject {
                     print("Failed to get the selected item.")
                     return
                 }
+                self.numSelectedItem += 1
                 print("GOT THE SELECTED ITEM")
                 switch result {
                 case .success(let profileImage?):
                     self.profileImage = profileImage
                     self.imageState = .success(profileImage.image)
+                    self.gotTheSelectedItem = true
                 case .success(nil):
                     self.imageState = .empty
                 case .failure(let error):
@@ -86,6 +90,9 @@ class ProfileModel: ObservableObject {
                 }
             }
         }
+    }
+    public func setImageState(imageState:ImageState){
+        self.imageState = imageState
     }
     public func getImage() -> UIImage{
         let image = UIImage(systemName: "heart.fill")

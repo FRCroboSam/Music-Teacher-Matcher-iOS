@@ -28,7 +28,7 @@ struct PhotoCollectionView: View {
             LazyVGrid(columns: columns, spacing: Self.itemSpacing) {
                 ForEach(photoCollection.photoAssets) { asset in
                     NavigationLink {
-                        PhotoView(asset: asset, cache: photoCollection.cache)
+//                        PhotoView(asset: asset, cache: photoCollection.cache)
                     } label: {
                         photoItemView(asset: asset)
                     }

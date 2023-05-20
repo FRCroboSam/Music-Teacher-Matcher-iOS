@@ -3,13 +3,16 @@ See the License.txt file for this sample’s licensing information.
 */
 
 import SwiftUI
+import PhotosUI
 
 struct CameraView: View {
     @StateObject private var model = DataModel()
- 
+    @EnvironmentObject private var viewModel: ProfileModel
     private static let barHeightFactor = 0.15
     @State var move: Bool = false
+    @State var goToGallery = false
     @State var previousPhotoAssetsCount = 0
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         
         NavigationStack {
@@ -48,40 +51,56 @@ struct CameraView: View {
 //                move.toggle()
 //                print("Photo NUMBERS: " + String(model.photoCollection.photoAssets.count))
 //            }
-        }.navigationDestination(isPresented: $move) {
+        }
+//        .navigationDestination(isPresented: $move) {
+//            if(model.photoCollection.photoAssets.first != nil){
+//                PhotoView(asset: model.photoCollection.photoAssets.first!, cache: model.photoCollection.cache)
+//            }
+//
+//        }
+        .onChange(of: viewModel.numSelectedItem){ _ in
+            dismiss()
+        }
+        .sheet(isPresented: $move, onDismiss: {
+            // Code to execute after dismissing the new view
+        }) {
             if(model.photoCollection.photoAssets.first != nil){
-                PhotoView(asset: model.photoCollection.photoAssets.first!, cache: model.photoCollection.cache)
+                PhotoView(asset: model.photoCollection.photoAssets.first!, cache: model.photoCollection.cache, usePhotoClosure: usePhotoClosure)
             }
-        }.onChange(of: model.photoCollection.photoAssets.count) { newCount in
-            if newCount > previousPhotoAssetsCount {
+        }
+        .onChange(of: model.photoCollection.photoAssets.count) { newCount in
+            if newCount > previousPhotoAssetsCount && previousPhotoAssetsCount != 0 {
                 // New photo captured, update UI or perform any necessary actions
                 move = true
                 print("Photo NUMBERS: \(model.photoCollection.photoAssets.count)")
             }
             previousPhotoAssetsCount = newCount
         }
+
     }
-    
+    public func usePhotoClosure(){
+        dismiss()
+
+    }
     private func buttonsView() -> some View {
         HStack(spacing: 60) {
             
             Spacer()
-            
-            NavigationLink {
-                PhotoCollectionView(photoCollection: model.photoCollection)
-                    .onAppear {
-                        model.camera.isPreviewPaused = true
-                    }
-                    .onDisappear {
-                        model.camera.isPreviewPaused = false
-                    }
-            } label: {
+            //go to photos picker when choosing the photo
+
+
+            PhotosPicker(selection: $viewModel.imageSelection,
+                         matching: .images,
+
+                         photoLibrary: .shared()) {
                 Label {
                     Text("Gallery")
                 } icon: {
                     ThumbnailView(image: model.thumbnailImage)
                 }
             }
+            
+            .buttonStyle(.borderless)
             
             
             Button {
