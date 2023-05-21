@@ -30,7 +30,7 @@ struct StudentAppPage: View {
 //        }
         NavigationStack{
             VStack{
-                ProfileImage(image: Image(uiImage:(profilePhoto ?? UIImage(systemName: "heart.fill"))!))
+                ProfileImage(image: Image(uiImage:(modelData.uiImage ?? UIImage(systemName: "heart.fill"))!))
                 Text("Welcome, " + modelData.studentUser.name + "!")
                     .font(.system(size: 40))
                     .fontWeight(.bold)
@@ -114,6 +114,7 @@ struct StudentAppPage: View {
 //                        }
                         modelData.fetchImageAfterUploaded { downloaded in
                             if downloaded{
+                                print("DOWNLOADED")
                                 profilePhoto = modelData.uiImage
                             }
                             else{

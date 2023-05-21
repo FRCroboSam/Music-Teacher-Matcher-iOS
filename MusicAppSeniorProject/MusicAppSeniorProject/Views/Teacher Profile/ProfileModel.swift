@@ -15,13 +15,18 @@ class ProfileModel: ObservableObject {
     var profileImage: ProfileImage?
     var gotTheSelectedItem = false
     var numSelectedItem = 0
+    var uiImage2: UIImage?
     enum ImageState {
         case empty
         case loading(Progress)
         case success(Image)
         case failure(Error)
     }
-    
+    func setUIImage(uiImage: UIImage){
+        print("SETTING THE UIIMAGE 2131232133")
+        uiImage2 = uiImage
+        print(uiImage2!.size)
+    }
     enum TransferError: Error {
         case importFailed
     }
@@ -29,7 +34,7 @@ class ProfileModel: ObservableObject {
     struct ProfileImage: Transferable {
         let image: Image
         let uiImage: UIImage?
-        
+
         static var transferRepresentation: some TransferRepresentation {
             DataRepresentation(importedContentType: .image) { data in
             #if canImport(AppKit)
@@ -76,10 +81,10 @@ class ProfileModel: ObservableObject {
                     print("Failed to get the selected item.")
                     return
                 }
-                self.numSelectedItem += 1
                 print("GOT THE SELECTED ITEM")
                 switch result {
                 case .success(let profileImage?):
+                    print("Setting the profileImage")
                     self.profileImage = profileImage
                     self.imageState = .success(profileImage.image)
                     self.gotTheSelectedItem = true
@@ -88,6 +93,7 @@ class ProfileModel: ObservableObject {
                 case .failure(let error):
                     self.imageState = .failure(error)
                 }
+                self.numSelectedItem += 1
             }
         }
     }

@@ -46,7 +46,7 @@ struct CreateStudentProfilePage: View{
                         .fontWeight(.bold)
                         .padding(10)
                     VStack{
-                        EditableCircularProfileImage(viewModel: viewModel)
+                        EditableCircularProfileImage()
                         Text("Select a Profile Picture")
                             .font(.system(size: 20))
                             .fontWeight(.bold)
@@ -150,7 +150,7 @@ struct CreateStudentProfilePage: View{
                     }
 
                     Button("Submit Profile") {
-//                        createStudentObject()
+                        createStudentObject()
                         modelData.registerStudentUser(){ isFound in
                             if isFound {
                                 noUserFound = false
@@ -202,7 +202,8 @@ struct CreateStudentProfilePage: View{
             modelData.studentUser = Student(name: firstName + " " + lastName)
             modelData.studentUser.email = email
             modelData.studentUser.password = password
-            modelData.studentUser.profileImage = viewModel.profileImage
+            let uiImage = viewModel.profileImage?.uiImage ?? viewModel.uiImage2 ?? UIImage(systemName: "person")
+            modelData.studentUser.setUIImage(uiImage: uiImage!)
             modelData.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
             
         }

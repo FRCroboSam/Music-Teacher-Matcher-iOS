@@ -11,7 +11,7 @@ import SwiftUI
 struct Student: Identifiable{
     let id = UUID()
     var name: String
-    var profileImage: ProfileModel.ProfileImage?
+    var uiImage: UIImage?
     var firstName: String = ""
     var lastName: String = ""
     var age: Double = 12
@@ -66,13 +66,18 @@ struct Student: Identifiable{
         bob.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
         return bob
     }
-    public func getImage() -> Image{
-        let image = Image("blankperson")
-        return profileImage?.image ?? image
-    }
+//    public func getImage() -> Image{
+//        let image = Image("blankperson")
+//
+//        return profileImage?.image ?? image
+//    }
     public func getUIImage() -> UIImage{
+        print("GETTING THE UI IMAGE ")
         let image = UIImage(systemName: "heart.fill")
-        return profileImage?.uiImage ?? image!
+        return uiImage ?? image!
+    }
+    public mutating func setUIImage(uiImage: UIImage){
+        self.uiImage = uiImage 
     }
 
     

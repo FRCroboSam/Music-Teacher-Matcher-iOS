@@ -7,6 +7,8 @@ import Photos
 
 struct PhotoView: View {
     var asset: PhotoAsset
+
+
     var cache: CachedImageManager?
     var usePhotoClosure: () -> Void
 
@@ -52,8 +54,12 @@ struct PhotoView: View {
     private func buttonsView() -> some View {
         HStack(spacing: 60) {
             Button("Use this photo"){
+                print("USE THIS PHOTO ")
+                let uiImage = asset.phAsset!.getAssetThumbnail()
+                viewModel.setUIImage(uiImage: uiImage)
+                let image2 = Image(uiImage: uiImage)
+                viewModel.setImageState(imageState: .success(image2))
                 usePhoto = true
-                viewModel.setImageState(imageState: .success(image ?? Image(systemName: "person")))
                 dismiss()
                 usePhotoClosure()
             }
@@ -86,5 +92,21 @@ struct PhotoView: View {
         .padding(EdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30))
         .background(Color.secondary.colorInvert())
         .cornerRadius(15)
+    }
+}
+extension PHAsset {
+func getAssetThumbnail() -> UIImage {
+    let manager = PHImageManager.default()
+    let option = PHImageRequestOptions()
+    var thumbnail = UIImage()
+    option.isSynchronous = true
+    manager.requestImage(for: self,
+                         targetSize: CGSize(width: self.pixelWidth, height: self.pixelHeight),
+                         contentMode: .aspectFit,
+                         options: option,
+                         resultHandler: {(result, info) -> Void in
+                            thumbnail = result!
+                         })
+    return thumbnail
     }
 }

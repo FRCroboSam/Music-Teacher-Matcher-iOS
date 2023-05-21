@@ -88,7 +88,7 @@ struct CameraView: View {
             Spacer()
             //go to photos picker when choosing the photo
 
-
+            
             PhotosPicker(selection: $viewModel.imageSelection,
                          matching: .images,
 

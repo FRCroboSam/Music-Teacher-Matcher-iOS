@@ -72,7 +72,7 @@ struct ProfileImage: View{
 }
 
 struct EditableCircularProfileImage: View {
-    @ObservedObject var viewModel: ProfileModel
+    @EnvironmentObject var viewModel: ProfileModel
     var finalImage = Image("blankperson")
     
     var body: some View {
