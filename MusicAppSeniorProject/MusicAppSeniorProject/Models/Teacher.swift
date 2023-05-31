@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import CoreLocation
 
-struct Teacher:Identifiable{
+struct Teacher:Identifiable, Hashable{
     static func == (lhs: Teacher, rhs: Teacher) -> Bool {
         return lhs.name == rhs.name && lhs.id == rhs.id
     }
@@ -25,10 +25,10 @@ struct Teacher:Identifiable{
     var email: String = ""
     var password: String = ""
     var aboutDescription: String = ""
-    var imageName: String = ""
-    var image: Image{
-        Image(imageName)
-    }
+
+    
+    var uiImage: UIImage?
+
     var uid: String = "NULL"
     
     var loginInfo:KeyValuePairs = KeyValuePairs(dictionaryLiteral: ("", ""))
@@ -82,6 +82,16 @@ struct Teacher:Identifiable{
         bob.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
         return bob
         
+    }
+    public func getUIImage() -> UIImage{
+        print("GETTING THE UI IMAGE ")
+        let image = UIImage(systemName: "heart.fill")
+        return uiImage ?? image!
+    }
+    public mutating func setUIImage(uiImage: UIImage){
+        self.uiImage = uiImage
+    }
+    func hash(into hasher: inout Hasher) {
     }
 
 }

@@ -171,6 +171,23 @@ final class ModelData: ObservableObject{
           }
         }
     }
+    func fetchTeacherImage(teacher: Teacher, completion:@escaping(UIImage?) -> Void){
+        print("Fetching Teacher Image" + uid)
+        let storage = Storage.storage()
+        let storageRef = storage.reference(withPath: teacher.uid)
+        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+          if let error = error {
+            // Uh-oh, an error occurred!
+            completion(nil)
+          } else {
+              print("Successfully fetched teacher image from " + teacher.uid)
+            // Data for "images/island.jpg" is returned
+            let uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
+            completion(uiImage)
+          }
+        }
+    }
+
     //TODO: Test this
     func fetchImageAfterUploaded(completion:@escaping(Bool) -> Void ){
         print("FETCHING THE IMAGE from USer: " + uid)
@@ -438,6 +455,16 @@ final class ModelData: ObservableObject{
         teacher.email = (data!["email"] ?? "Generic User") as! String
         teacher.uid = uid
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
+//        fetchTeacherImage(teacher: teacher) { fetchedImage in
+//            print(fetchedImage == nil)
+//            if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                print("FOUND THE IMAGE ")
+//                self.availableTeachers[index].name = "FOUND THE FKSJD"
+//                self.availableTeachers[index].uiImage = fetchedImage
+//            }
+//            
+//            print("Success for " + teacher.uid)
+//        }
         return teacher
     }
     
@@ -461,6 +488,10 @@ final class ModelData: ObservableObject{
         print("Teacher ID: " + teacherId)
         getUserData(docRef: teacherRef){ data in
             studentRef.collection("Declined Teachers").document(teacherId).setData(data as [String : Any])
+            print("DECLINED TEACHER")
+            self.fetchTeacherData{
+                
+            }
         }
 
 
@@ -481,6 +512,8 @@ final class ModelData: ObservableObject{
         print("Teacher ID: " + teacherId)
         getUserData(docRef: teacherRef){ data in
             studentRef.collection("Requested Teachers").document(teacherId).setData(data as [String : Any])
+            self.fetchTeacherData{
+            }
         }
     }
     func searchForUserInCollection(userName: String, collectionRef: CollectionReference, completion: @escaping (Bool) -> Void){

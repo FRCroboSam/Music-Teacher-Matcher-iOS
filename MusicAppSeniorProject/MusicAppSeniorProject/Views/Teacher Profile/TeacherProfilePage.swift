@@ -11,6 +11,8 @@ struct TeacherProfilePage: View {
     public var teacher: Teacher
     //teacherType is if the teacher is in available teachers, requested, teachers, etc. 
     public var displayText: String
+    @State var teacherImage: UIImage?
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var modelData: ModelData
     @EnvironmentObject var viewModel: ProfileModel
     var body: some View {
@@ -25,9 +27,10 @@ struct TeacherProfilePage: View {
         
         let name: String? = teacher.name
         let instrument: String? = teacher.instrument
+        let uiImage = teacher.uiImage ?? UIImage(systemName: "person.fill")
         Form{
             Section{
-//                EditableCircularProfileImage(viewModel: viewModel)
+                ProfileImage(image: Image(uiImage:(teacherImage ?? UIImage(systemName: "heart.fill"))!))
                 HStack{
                     Text((name ?? "No Name"))
                         .font(.title)
@@ -52,8 +55,6 @@ struct TeacherProfilePage: View {
                         Text("\(valuesMusic[index2])")
                     }
                 }
-            }
-            Section {
                 ForEach(keysLesson.indices) {index3 in
                     HStack {
                         Text(keysLesson[index3] + ": ")
@@ -65,10 +66,13 @@ struct TeacherProfilePage: View {
             if(displayText == "Available Teachers"){
                 Button("Decline Teacher"){
                     modelData.declineTeacher(teacherId: teacher.uid)
+                    dismiss()
+                    
                 }
                 Button("Request Teacher"){
                     if(teacher.uid != ""){
                         modelData.requestTeacher(teacherId: teacher.uid)
+                        dismiss()
                     }
                     else{
                         print("ID EMPTY")
@@ -77,6 +81,10 @@ struct TeacherProfilePage: View {
                 
             }
 
+        }.onAppear{
+            modelData.fetchTeacherImage(teacher: teacher) { fetchedImage in
+                teacherImage = fetchedImage ?? UIImage(systemName: "heart.fill")
+            }
         }
         .padding()
         .navigationTitle(name ?? "Generic Student")

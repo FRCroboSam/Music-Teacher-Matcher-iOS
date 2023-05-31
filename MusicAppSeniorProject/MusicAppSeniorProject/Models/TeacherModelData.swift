@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 import FirebaseAppCheck
 import FirebaseAuth
+import FirebaseStorage
 final class TeacherModelData: ObservableObject{
     @Published var teachers = [Teacher]()
     
@@ -20,6 +21,9 @@ final class TeacherModelData: ObservableObject{
     
     @Published var userData: [String: Any]?
     @Published var uid: String = ""
+    
+    @Published var profileImage: ProfileModel?
+    @Published var uiImage: UIImage?
     
     public func createTeacherInFireStore(teacher: Teacher) {
         let db = Firestore.firestore()
@@ -59,6 +63,9 @@ final class TeacherModelData: ObservableObject{
         docRef.collection("Declined Students").document().setData([  // 👈 Create a document in the subcollection
             "title": "testing"
                                                                   ])
+        uploadImage(teacher: teacher){ uploaded in
+            
+        }
     }
     
     //use this after logging in (NOT SIGNUP) to create the teacher object
@@ -128,6 +135,72 @@ final class TeacherModelData: ObservableObject{
         return student 
     }
     
+    func fetchImage(completion:@escaping(Bool) -> Void ){
+        print("FETCHING THE IMAGE from USer: " + uid)
+        let storage = Storage.storage()
+        let storageRef = storage.reference(withPath: uid)
+        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+          if let error = error {
+            // Uh-oh, an error occurred!
+            completion(false)
+          } else {
+              print("Successfully fetched image")
+            // Data for "images/island.jpg" is returned
+              self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
+            completion(true)
+          }
+        }
+    }
+    //TODO: Test this
+    func fetchImageAfterUploaded(completion:@escaping(Bool) -> Void ){
+        print("FETCHING THE IMAGE from USer: " + uid)
+        let storage = Storage.storage()
+        let storageRef = storage.reference(withPath: uid)
+
+        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+            if let error = error {
+                // Uh-oh, an error occurred while fetching the image!
+                print("Error fetching image: \(error)")
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+                    self.fetchImageAfterUploaded(completion:completion)
+                }
+            } else {
+                
+                print("Successfully fetched image")
+                self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
+                completion(true)
+            }
+        }
+        
+        
+        
+    }
+    func uploadImage(teacher: Teacher, completion:@escaping(Bool) -> Void){
+        let storage = Storage.storage()
+        let storageRef = storage.reference(withPath: uid)
+        let image = self.teacherUser.getUIImage()
+        guard let imageData = image.jpegData(compressionQuality: 0.5) else { return }
+        storageRef.putData(imageData, metadata: nil) { metadata, err in
+            if let err = err {
+                //if image doesn't work, still upload the profile to firestore
+                completion(true)
+                print("Failed to push image to Storage:")
+                return
+            }
+
+            storageRef.downloadURL { url, err in
+                if let err = err {
+                    print("Failed to retrieve downloadURL")
+                    completion(true)
+                    return
+                }
+
+                print("Successfully stored image with url: \(url?.absoluteString ?? "")")
+                print(url?.absoluteString)
+                completion(true)
+            }
+        }
+    }
     
     func fetchStudentData(completion: @escaping() -> Void) {
         print("Fetching Student Data ")

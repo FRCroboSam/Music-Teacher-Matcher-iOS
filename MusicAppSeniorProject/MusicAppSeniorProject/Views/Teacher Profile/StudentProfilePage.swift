@@ -12,6 +12,8 @@ struct StudentProfilePage: View {
     @EnvironmentObject var modelData: TeacherModelData
     var mirrored_object = Mirror(reflecting: "")
     @StateObject var viewModel = ProfileModel()
+    @Environment(\.dismiss) var dismiss
+
 
     public var displayText: String
     var body: some View {
