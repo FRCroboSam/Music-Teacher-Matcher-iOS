@@ -455,16 +455,22 @@ final class ModelData: ObservableObject{
         teacher.email = (data!["email"] ?? "Generic User") as! String
         teacher.uid = uid
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
-//        fetchTeacherImage(teacher: teacher) { fetchedImage in
-//            print(fetchedImage == nil)
-//            if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
-//                print("FOUND THE IMAGE ")
-//                self.availableTeachers[index].name = "FOUND THE FKSJD"
-//                self.availableTeachers[index].uiImage = fetchedImage
-//            }
-//            
-//            print("Success for " + teacher.uid)
-//        }
+        fetchTeacherImage(teacher: teacher) { fetchedImage in
+            print(fetchedImage == nil)
+            if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
+                print("FOUND THE IMAGE ")
+                self.availableTeachers[index].uiImage = fetchedImage
+            }
+            else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+                if index < self.requestedTeachers.count {
+                    self.requestedTeachers[index].uiImage = fetchedImage
+                } else {
+                    print("Index out of range")
+                }
+            }
+            
+            print("Success for " + teacher.uid)
+        }
         return teacher
     }
     

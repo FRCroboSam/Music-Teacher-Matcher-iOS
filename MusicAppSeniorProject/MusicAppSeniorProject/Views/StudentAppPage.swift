@@ -100,10 +100,10 @@ struct StudentAppPage: View {
                                     profilePhoto = UIImage(systemName: "heart.fill")
                                 }
                             }
-                            
                         }
                         //logic may be jank
                         .onReceive(modelData.$availableTeachers) { newTeachers in
+                            print("HELLO")
                             displayArray = newTeachers
                         }
 

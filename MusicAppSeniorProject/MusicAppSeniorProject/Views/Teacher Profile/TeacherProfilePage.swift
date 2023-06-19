@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TeacherProfilePage: View {
-    public var teacher: Teacher
+    @State var teacher: Teacher
     //teacherType is if the teacher is in available teachers, requested, teachers, etc. 
     public var displayText: String
     @State var teacherImage: UIImage?
@@ -82,8 +82,16 @@ struct TeacherProfilePage: View {
             }
 
         }.onAppear{
-            modelData.fetchTeacherImage(teacher: teacher) { fetchedImage in
-                teacherImage = fetchedImage ?? UIImage(systemName: "heart.fill")
+            if(teacher.uiImage == nil) {
+                modelData.fetchTeacherImage(teacher: teacher) { fetchedImage in
+                    let teacherImage2 = fetchedImage ?? UIImage(systemName: "heart.fill")
+                    teacher.setUIImage(uiImage: (teacherImage2 ?? UIImage(systemName : "heart.fill"))!)
+                    teacherImage = teacher.uiImage
+                }
+            }
+            else{
+                print("Already has an image")
+                teacherImage = teacher.uiImage
             }
         }
         .padding()
