@@ -51,14 +51,14 @@ struct CircularProfileImage: View {
 }
 struct ProfileImage: View{
     let image: Image
-    
+    let size: CGFloat
     var body: some View {
         image.resizable()
             .font(.system(size: 40))
             .foregroundColor(.white)
             .scaledToFill()
             .clipShape(Circle())
-            .frame(width: 100, height: 100)
+            .frame(width: size, height: size)
             .background {
                 Circle().fill(
                     LinearGradient(

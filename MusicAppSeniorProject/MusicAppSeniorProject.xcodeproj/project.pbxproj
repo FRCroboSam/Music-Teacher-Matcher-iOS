@@ -54,6 +54,7 @@
 		3679178E29FA2DF400788878 /* iosCheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */; };
 		3697540429E766940035AD9B /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540329E766940035AD9B /* TestView.swift */; };
 		3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */; };
+		36BF5EF22A40FA3C00D0B15A /* TeacherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */; };
 		36C403E329D261400015935A /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C403E229D261400015935A /* LoginPage.swift */; };
 		36CADD592A08B778006F246F /* ThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CADD4B2A08B776006F246F /* ThumbnailView.swift */; };
 		36CADD5A2A08B778006F246F /* PhotoItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CADD4C2A08B776006F246F /* PhotoItemView.swift */; };
@@ -123,6 +124,7 @@
 		3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosCheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		3697540329E766940035AD9B /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
+		36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherListView.swift; sourceTree = "<group>"; };
 		36C403E229D261400015935A /* LoginPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPage.swift; sourceTree = "<group>"; };
 		36CADD4B2A08B776006F246F /* ThumbnailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThumbnailView.swift; sourceTree = "<group>"; };
 		36CADD4C2A08B776006F246F /* PhotoItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoItemView.swift; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 				360FDF02299B556B00C8BAF3 /* StudentProfile.swift */,
 				363583FD2984F99200C37596 /* StudentAppPage.swift */,
 				3642D16129EEF1E60052FF2E /* TeacherAppPage.swift */,
+				36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */,
 				3697540329E766940035AD9B /* TestView.swift */,
 				360FDF04299B567200C8BAF3 /* MatchMakingPage.swift */,
 				3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */,
@@ -474,6 +477,7 @@
 				363583D22984F91900C37596 /* ContentView.swift in Sources */,
 				364DEBED29A80CD600FFA18B /* TeacherProfilePage.swift in Sources */,
 				36094374299F1A38000CE05C /* FileStoreManager.swift in Sources */,
+				36BF5EF22A40FA3C00D0B15A /* TeacherListView.swift in Sources */,
 				36F4164229F2635A003583A1 /* TeacherModelData.swift in Sources */,
 				363583FE2984F99200C37596 /* StudentAppPage.swift in Sources */,
 				3679178E29FA2DF400788878 /* iosCheckboxToggleStyle.swift in Sources */,

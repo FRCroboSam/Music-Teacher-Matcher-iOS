@@ -252,7 +252,10 @@ final class ModelData: ObservableObject{
             self.uid = user?.uid ?? "null"
             self.createStudentFromId(uid: self.uid){ isCreated in
                 if(isCreated){
-                    completion(true)
+                    self.fetchTeacherData(){
+                        completion(true)
+                    }
+
                 }
                 else{
                     completion(false)
@@ -468,6 +471,13 @@ final class ModelData: ObservableObject{
                     print("Index out of range")
                 }
             }
+//            else if let index = self.declinedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                if index < self.declinedTeachers.count {
+//                    self.requestedTeachers[index].uiImage = fetchedImage
+//                } else {
+//                    print("Index out of range")
+//                }
+//            }
             
             print("Success for " + teacher.uid)
         }

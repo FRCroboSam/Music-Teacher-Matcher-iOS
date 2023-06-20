@@ -11,7 +11,7 @@ struct TeacherProfilePage: View {
     @State var teacher: Teacher
     //teacherType is if the teacher is in available teachers, requested, teachers, etc. 
     public var displayText: String
-    @State var teacherImage: UIImage?
+    let teacherImage: UIImage?
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var modelData: ModelData
     @EnvironmentObject var viewModel: ProfileModel
@@ -30,7 +30,7 @@ struct TeacherProfilePage: View {
         let uiImage = teacher.uiImage ?? UIImage(systemName: "person.fill")
         Form{
             Section{
-                ProfileImage(image: Image(uiImage:(teacherImage ?? UIImage(systemName: "heart.fill"))!))
+                ProfileImage(image: Image(uiImage:(teacherImage ?? UIImage(systemName: "heart.fill"))!), size:100)
                 HStack{
                     Text((name ?? "No Name"))
                         .font(.title)
@@ -81,18 +81,6 @@ struct TeacherProfilePage: View {
                 
             }
 
-        }.onAppear{
-            if(teacher.uiImage == nil) {
-                modelData.fetchTeacherImage(teacher: teacher) { fetchedImage in
-                    let teacherImage2 = fetchedImage ?? UIImage(systemName: "heart.fill")
-                    teacher.setUIImage(uiImage: (teacherImage2 ?? UIImage(systemName : "heart.fill"))!)
-                    teacherImage = teacher.uiImage
-                }
-            }
-            else{
-                print("Already has an image")
-                teacherImage = teacher.uiImage
-            }
         }
         .padding()
         .navigationTitle(name ?? "Generic Student")
@@ -102,8 +90,8 @@ struct TeacherProfilePage: View {
     }
 
 
-struct TeacherProfilePage_Previews: PreviewProvider {
-    static var previews: some View {
-        TeacherProfilePage(teacher: Teacher.createGenericTeacher(), displayText: "Generic")
-    }
-}
+//struct TeacherProfilePage_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TeacherProfilePage(teacher: Teacher.createGenericTeacher(), displayText: "Generic")
+//    }
+//}
