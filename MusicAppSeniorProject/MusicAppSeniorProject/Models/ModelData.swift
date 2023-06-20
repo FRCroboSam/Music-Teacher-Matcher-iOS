@@ -32,6 +32,8 @@ final class ModelData: ObservableObject{
     @Published var profileImage: ProfileModel?
     @Published var uiImage: UIImage?
     
+    @Published var loggedIn: Bool?
+    
 //    var user: User? {
 //        didSet {
 //            objectWillChange.send()
@@ -241,29 +243,47 @@ final class ModelData: ObservableObject{
     
     //sign in student with email
     func signinWithEmail(email: String, password: String, completion: @escaping (Bool) -> Void){
-        Auth.auth().signIn(withEmail: email, password: password) { result, err in
-            if let err = err {
-                print("Failed due to error:", err)
-                completion(false)
-                return
-            }
+        let handle = Auth.auth().addStateDidChangeListener { auth, user in
+            if(user != nil){
+                print("USer is already logged in")
+                let user = Auth.auth().currentUser
+                self.uid = user?.uid ?? "null"
+                self.createStudentFromId(uid: self.uid){ isCreated in
+                    if(isCreated){
+                        self.fetchTeacherData(){
+                            completion(true)
+                        }
 
-            let user = Auth.auth().currentUser
-            self.uid = user?.uid ?? "null"
-            self.createStudentFromId(uid: self.uid){ isCreated in
-                if(isCreated){
-                    self.fetchTeacherData(){
-                        completion(true)
                     }
-
-                }
-                else{
-                    completion(false)
+                    else{
+                        completion(false)
+                    }
                 }
             }
+        }
+//        Auth.auth().signIn(withEmail: email, password: password) { result, err in
+//            if let err = err {
+//                print("Failed due to error:", err)
+//                completion(false)
+//                return
+//            }
+//
+//            let user = Auth.auth().currentUser
+//            self.uid = user?.uid ?? "null"
+//            self.createStudentFromId(uid: self.uid){ isCreated in
+//                if(isCreated){
+//                    self.fetchTeacherData(){
+//                        completion(true)
+//                    }
+//
+//                }
+//                else{
+//                    completion(false)
+//                }
+//            }
             
           // ...
-        }//
+//        }//
 
     }
     func createStudentFromId(uid: String, completion: @escaping (Bool) -> Void ){

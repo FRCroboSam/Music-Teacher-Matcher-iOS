@@ -24,48 +24,50 @@ struct StudentAppPage: View {
     private let declinedTeacherDesc = "These are teachers that you have declined since they did not fit your needs."
     var body: some View {
         NavigationStack{
-            TabView{
-                TeacherListView(displayArray: $modelData.availableTeachers, displayText: availableTeacherDesc)
-                    .tabItem{
-                        Label("Available", systemImage: "person.crop.circle.fill.badge.plus")
-                    }
-                TeacherListView(displayArray: $modelData.requestedTeachers, displayText: requestedTeacherDesc)
-                    .tabItem{
-                        Label("Requested", systemImage: "person.crop.circle.badge.questionmark")
-                    }
-                TeacherListView(displayArray: $modelData.matchedTeachers, displayText: matchedTeacherDesc)
-                    .tabItem{
-                        Label("Matched", systemImage: "person.crop.circle.badge.checkmark")
-                    }
-                CreateStudentProfilePage()
-                    .tabItem{
-                        Label("Edit Profile", systemImage: "person.crop.circle.fill")
-                    }
-            }
-                        .onAppear() {
-                            if(profilePhoto == nil){
-                                modelData.fetchImageAfterUploaded { downloaded in
-                                    if downloaded{
-                                        print("DOWNLOADED")
-                                        profilePhoto = modelData.uiImage
-                                    }
-                                    else{
-                                        profilePhoto = UIImage(systemName: "heart.fill")
-                                    }
-                                }
-                            }
-     
+            ZStack{
+                TabView{
+                    TeacherListView(displayArray: $modelData.availableTeachers, displayText: availableTeacherDesc)
+                        .tabItem{
+                            Label("Available", systemImage: "person.crop.circle.fill.badge.plus")
                         }
-
-
+                    TeacherListView(displayArray: $modelData.requestedTeachers, displayText: requestedTeacherDesc)
+                        .tabItem{
+                            Label("Requested", systemImage: "person.crop.circle.badge.questionmark")
+                        }
+                    TeacherListView(displayArray: $modelData.matchedTeachers, displayText: matchedTeacherDesc)
+                        .tabItem{
+                            Label("Matched", systemImage: "person.crop.circle.badge.checkmark")
+                        }
+                    CreateStudentProfilePage()
+                        .tabItem{
+                            Label("Edit Profile", systemImage: "person.crop.circle.fill")
+                        }
                 }
-//            TabView{
-//
-//                    .tabItem{
-//                        Label("Menu", systemImage: "list.dash")
-//                    }
-//            }
+                .onAppear() {
+                    if(profilePhoto == nil){
+                        modelData.fetchImageAfterUploaded { downloaded in
+                            if downloaded{
+                                print("DOWNLOADED")
+                                profilePhoto = modelData.uiImage
+                            }
+                            else{
+                                profilePhoto = UIImage(systemName: "heart.fill")
+                            }
+                        }
+                    }
+                    
+                }
+                
+                
+            }
+            //            TabView{
+            //
+            //                    .tabItem{
+            //                        Label("Menu", systemImage: "list.dash")
+            //                    }
+            //            }
         }
+    }
     
 }
 struct MainAppPage_Previews: PreviewProvider {

@@ -10,19 +10,21 @@ import Firebase
 import FirebaseAuth
 
 struct ContentView: View {
-
+    @EnvironmentObject var modelData: ModelData
+    @State private var isUserLoggedIn = false
     enum VIEW_TYPE{
         case HOME_PAGE
         case PROFILE_PAGE
     }
     var body: some View {
-        //Code to read data from firebase
-//           AvailableTeachersPage()
-         HomePage()
-//        TestView()
-//        CameraView()
-
-
+        Group{
+            if modelData.loggedIn == true{
+                StudentAppPage()
+            }
+            else{
+                HomePage()
+            }
+        }
         
     }
 //    func asdf(){
