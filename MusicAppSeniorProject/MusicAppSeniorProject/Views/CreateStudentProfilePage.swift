@@ -202,8 +202,9 @@ struct CreateStudentProfilePage: View{
             modelData.studentUser = Student(name: firstName + " " + lastName)
             modelData.studentUser.email = email
             modelData.studentUser.password = password
-            let uiImage = viewModel.profileImage?.uiImage ?? viewModel.uiImage2 ?? UIImage(systemName: "person")
+            let uiImage = viewModel.profileImage?.uiImage ?? viewModel.uiImage2 ?? UIImage(systemName: "person.badge.shield.checkmark.fill")
             modelData.studentUser.setUIImage(uiImage: uiImage!)
+            modelData.uiImage = uiImage
             modelData.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
             
         }

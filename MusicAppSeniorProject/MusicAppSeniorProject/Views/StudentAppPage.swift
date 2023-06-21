@@ -26,15 +26,15 @@ struct StudentAppPage: View {
         NavigationStack{
             ZStack{
                 TabView{
-                    TeacherListView(displayArray: $modelData.availableTeachers, displayText: availableTeacherDesc)
+                    TeacherListView(displayArray: $modelData.availableTeachers, uiImage: $modelData.uiImage, displayText: availableTeacherDesc)
                         .tabItem{
                             Label("Available", systemImage: "person.crop.circle.fill.badge.plus")
                         }
-                    TeacherListView(displayArray: $modelData.requestedTeachers, displayText: requestedTeacherDesc)
+                    TeacherListView(displayArray: $modelData.requestedTeachers, uiImage: $modelData.uiImage, displayText: requestedTeacherDesc)
                         .tabItem{
                             Label("Requested", systemImage: "person.crop.circle.badge.questionmark")
                         }
-                    TeacherListView(displayArray: $modelData.matchedTeachers, displayText: matchedTeacherDesc)
+                    TeacherListView(displayArray: $modelData.matchedTeachers, uiImage: $modelData.uiImage, displayText: matchedTeacherDesc)
                         .tabItem{
                             Label("Matched", systemImage: "person.crop.circle.badge.checkmark")
                         }
@@ -44,10 +44,10 @@ struct StudentAppPage: View {
                         }
                 }
                 .onAppear() {
-                    if(profilePhoto == nil){
-                        modelData.fetchImageAfterUploaded { downloaded in
+                    if(modelData.uiImage == nil && !(modelData.uid == "")){
+                        modelData.fetchImage { downloaded in
                             if downloaded{
-                                print("DOWNLOADED")
+                                print("DOWNLOADED for: " + modelData.uid)
                                 profilePhoto = modelData.uiImage
                             }
                             else{
@@ -55,6 +55,7 @@ struct StudentAppPage: View {
                             }
                         }
                     }
+                    
                     
                 }
                 

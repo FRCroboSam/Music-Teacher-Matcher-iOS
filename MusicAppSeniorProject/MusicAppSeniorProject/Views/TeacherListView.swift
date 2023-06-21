@@ -12,12 +12,12 @@ enum teacherType{
 struct TeacherListView: View {
     @EnvironmentObject var modelData: ModelData
     @Binding var displayArray: [Teacher]
-    
+    @Binding var uiImage: UIImage?
     let displayText: String
     
     var body: some View {
         VStack{
-            ProfileImage(image: Image(uiImage:(modelData.uiImage ?? UIImage(systemName: "heart.fill"))!), size: 100)
+            ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
             Text("Welcome, " + modelData.studentUser.name + "!")
                 .font(.system(size: 40))
                 .fontWeight(.bold)

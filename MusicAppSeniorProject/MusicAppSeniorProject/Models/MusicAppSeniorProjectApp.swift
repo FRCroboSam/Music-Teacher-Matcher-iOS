@@ -43,16 +43,19 @@ struct MusicAppSeniorProjectApp: App {
                                 if let user = user {
                                     print("User is already logged in")
                                     let uid = user.uid
-                                    self.modelData.uid = uid
-                                    self.modelData.createStudentFromId(uid: uid) { isCreated in
+                                    modelData.uid = uid
+                                    print("USER UID IS: "  + uid)
+                                    modelData.createStudentFromId(uid: uid) { isCreated in
                                         if isCreated {
-                                            self.modelData.fetchTeacherData() {
-                                                print("User is logged in")
+                                            modelData.fetchTeacherData() {
+                                            }
+                                            modelData.fetchImage{_ in
                                             }
                                         } else {
                                             modelData.loggedIn = false
                                         }
                                     }
+                                    
                                 }
                             }
                 }

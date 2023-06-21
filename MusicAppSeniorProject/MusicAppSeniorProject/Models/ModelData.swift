@@ -168,7 +168,7 @@ final class ModelData: ObservableObject{
           } else {
               print("Successfully fetched image")
             // Data for "images/island.jpg" is returned
-              self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
+              self.uiImage = UIImage(data: data!)
             completion(true)
           }
         }
@@ -184,7 +184,7 @@ final class ModelData: ObservableObject{
           } else {
               print("Successfully fetched teacher image from " + teacher.uid)
             // Data for "images/island.jpg" is returned
-            let uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
+            let uiImage = UIImage(data: data!) ?? UIImage(systemName: "person.fill")
             completion(uiImage)
           }
         }
@@ -206,7 +206,7 @@ final class ModelData: ObservableObject{
             } else {
                 
                 print("Successfully fetched image")
-                self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
+                self.uiImage = UIImage(data: data!)
                 completion(true)
             }
         }
@@ -243,47 +243,29 @@ final class ModelData: ObservableObject{
     
     //sign in student with email
     func signinWithEmail(email: String, password: String, completion: @escaping (Bool) -> Void){
-        let handle = Auth.auth().addStateDidChangeListener { auth, user in
-            if(user != nil){
-                print("USer is already logged in")
-                let user = Auth.auth().currentUser
-                self.uid = user?.uid ?? "null"
-                self.createStudentFromId(uid: self.uid){ isCreated in
-                    if(isCreated){
-                        self.fetchTeacherData(){
-                            completion(true)
-                        }
+        Auth.auth().signIn(withEmail: email, password: password) { result, err in
+            if let err = err {
+                print("Failed due to error:", err)
+                completion(false)
+                return
+            }
 
+            let user = Auth.auth().currentUser
+            self.uid = user?.uid ?? "null"
+            self.createStudentFromId(uid: self.uid){ isCreated in
+                if(isCreated){
+                    self.fetchTeacherData(){
+                        completion(true)
                     }
-                    else{
-                        completion(false)
-                    }
+
+                }
+                else{
+                    completion(false)
                 }
             }
-        }
-//        Auth.auth().signIn(withEmail: email, password: password) { result, err in
-//            if let err = err {
-//                print("Failed due to error:", err)
-//                completion(false)
-//                return
-//            }
-//
-//            let user = Auth.auth().currentUser
-//            self.uid = user?.uid ?? "null"
-//            self.createStudentFromId(uid: self.uid){ isCreated in
-//                if(isCreated){
-//                    self.fetchTeacherData(){
-//                        completion(true)
-//                    }
-//
-//                }
-//                else{
-//                    completion(false)
-//                }
-//            }
             
           // ...
-//        }//
+        }
 
     }
     func createStudentFromId(uid: String, completion: @escaping (Bool) -> Void ){
@@ -312,6 +294,7 @@ final class ModelData: ObservableObject{
                 var name = (data!["name"] ?? "Generic User") as! String
                 self.studentUser = Student(name: name)
                 self.studentUser.uid = uid
+                self.uid = uid
                 self.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
                 completion(true)
                 
@@ -323,14 +306,9 @@ final class ModelData: ObservableObject{
     }
     //assumes modelData.studentUSer was already created and populated in CreateStudentProfilePage
     func registerStudentUser(completion: @escaping (Bool)->Void){
-        print("EMAIL: " + studentUser.email)
-        print("Password: " + studentUser.password)
-
         Auth.auth().createUser(withEmail: studentUser.email, password: studentUser.password){authResult, error in
         if(authResult != nil){
-            print("CREATED THE STUDENT")
             self.uid = authResult?.user.uid ?? "null"
-            print(self.uid)
             //set uid
             self.studentUser.setUID(uid: self.uid)
             //create the student
@@ -347,7 +325,6 @@ final class ModelData: ObservableObject{
         }
         else{
             completion(false)
-            print("FAILED TO CREATE USER")
         }
 
     }
@@ -360,7 +337,6 @@ final class ModelData: ObservableObject{
     //fetchTeacherData
     //called by StudentAppPage View onAppear
     func fetchTeacherData(completion: @escaping () -> Void){
-        print("Fetching Teacher Data ")
         let db = Firestore.firestore()
         let declinedTeachersRef = db.collection("StudentUser").document(uid).collection("Declined Teachers")
         let matchedTeachersRef = db.collection("StudentUser").document(uid).collection("Matched Teachers")
@@ -433,8 +409,6 @@ final class ModelData: ObservableObject{
                 let instrument = data["Instrument"] as? String ?? data["instrument"] as? String ?? ""
                 let studentInstrument = self.studentUser.musicalBackground[0].value
                 print(studentInstrument)
-                print("POPULATING AVAILABLE TEACHERS")
-                print("NAME IS: " + name + "EndString")
                 let canAdd = !(self.declinedTeachers + self.matchedTeachers + self.requestedTeachers).contains { $0.uid == uid }
                 let canMatch = instrument.compare(studentInstrument, options: .caseInsensitive) == .orderedSame
                 if canMatch && canAdd && !uid.isEmpty && !name.isEmpty && !(name.trimmingCharacters(in: .whitespaces) == ""){
@@ -450,7 +424,6 @@ final class ModelData: ObservableObject{
     }
 
     func createTeacherFromData(documentSnapshot: DocumentSnapshot) -> Teacher{
-        print("CREATING TEACHER FROM DATA")
         let data = documentSnapshot.data()
         let uid = data!["uid"] as? String ?? ""
         let loginInfo:KeyValuePairs = [
@@ -499,7 +472,6 @@ final class ModelData: ObservableObject{
 //                }
 //            }
             
-            print("Success for " + teacher.uid)
         }
         return teacher
     }
@@ -521,7 +493,6 @@ final class ModelData: ObservableObject{
 //        }
 
         //add the teachers data to a new document in the student's list of requested teachers
-        print("Teacher ID: " + teacherId)
         getUserData(docRef: teacherRef){ data in
             studentRef.collection("Declined Teachers").document(teacherId).setData(data as [String : Any])
             print("DECLINED TEACHER")
@@ -545,7 +516,6 @@ final class ModelData: ObservableObject{
         }
 
         //add the teachers data to a new document in the student's list of requested teachers
-        print("Teacher ID: " + teacherId)
         getUserData(docRef: teacherRef){ data in
             studentRef.collection("Requested Teachers").document(teacherId).setData(data as [String : Any])
             self.fetchTeacherData{
