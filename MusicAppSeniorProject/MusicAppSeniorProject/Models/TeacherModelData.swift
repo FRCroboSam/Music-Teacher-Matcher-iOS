@@ -71,6 +71,7 @@ final class TeacherModelData: ObservableObject{
     //use this after logging in (NOT SIGNUP) to create the teacher object
     //basically fetches teacherData from the database
     func createTeacherFromId(uid: String, completion: @escaping (Bool) -> Void ){
+        print("CREATING TEACHER FROM ID")
         let db = Firestore.firestore()
         let docRef = db.collection("Teachers").document(uid)
 
@@ -204,6 +205,7 @@ final class TeacherModelData: ObservableObject{
     
     func fetchStudentData(completion: @escaping() -> Void) {
         print("Fetching Student Data ")
+        print("UID IS: " + uid)
         let db = Firestore.firestore()
         let declinedStudentsRef = db.collection("Teachers").document(uid).collection("Declined Students")
         let matchedStudentsRef = db.collection("Teachers").document(uid).collection("Matched Students")

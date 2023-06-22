@@ -33,6 +33,7 @@ final class ModelData: ObservableObject{
     @Published var uiImage: UIImage?
     
     @Published var loggedIn: Bool?
+    @Published var isStudent: Bool?
     
 //    var user: User? {
 //        didSet {
@@ -267,6 +268,23 @@ final class ModelData: ObservableObject{
           // ...
         }
 
+    }
+    
+    func userIsStudent(completion:@escaping (Bool) -> Void){
+        let db = Firestore.firestore()
+        let docRef = db.collection("StudentUser").document(uid)
+        docRef.getDocument { (document, error) in
+            if let document = document {
+                if document.exists{
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            }
+            else{
+                completion(false)
+            }
+        }
     }
     func createStudentFromId(uid: String, completion: @escaping (Bool) -> Void ){
         let db = Firestore.firestore()

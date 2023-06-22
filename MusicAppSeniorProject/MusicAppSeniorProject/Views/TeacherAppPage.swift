@@ -76,14 +76,7 @@ struct TeacherAppPage: View {
                             displayArray = modelData.requestedStudents
                         }
                     }
-                Button("CLEAR DATA"){
-                    if(modelData.uid != "NULL"){
-                        modelData.resetTeacher()
-                    }
-                    else{
-                        print("ID EMPTY")
-                    }
-                }
+ 
             }
             Spacer()
             .onAppear{

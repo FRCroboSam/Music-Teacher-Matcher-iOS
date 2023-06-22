@@ -24,7 +24,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct MusicAppSeniorProjectApp: App {
     @StateObject private var modelData = ModelData()
-    //this is new 
+    @StateObject private var teacherModelData = TeacherModelData()
+    //this is new
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
 //    init(){
@@ -35,27 +36,48 @@ struct MusicAppSeniorProjectApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(modelData)
-                .environmentObject(TeacherModelData())
+                .environmentObject(teacherModelData)
                 .environmentObject(ProfileModel())
                 .onAppear{
                     modelData.loggedIn = delegate.loggedIn
+
                     let handle = Auth.auth().addStateDidChangeListener { auth, user in
                                 if let user = user {
                                     print("User is already logged in")
                                     let uid = user.uid
                                     modelData.uid = uid
+                                    teacherModelData.uid = uid
                                     print("USER UID IS: "  + uid)
-                                    modelData.createStudentFromId(uid: uid) { isCreated in
-                                        if isCreated {
-                                            modelData.fetchTeacherData() {
+                                    modelData.userIsStudent { isStudent in
+                                        if(isStudent){
+                                            modelData.createStudentFromId(uid: uid) { isCreated in
+                                                if isCreated {
+                                                    modelData.fetchTeacherData() {
+                                                    }
+                                                    modelData.fetchImage{_ in
+                                                    }
+                                                } else {
+                                                    modelData.loggedIn = false
+                                                }
                                             }
-                                            modelData.fetchImage{_ in
+                                            modelData.isStudent = true;
+                                        }
+                                        else{
+                                            modelData.isStudent = false;
+                                            teacherModelData.createTeacherFromId(uid: uid) { isCreated in
+                                                if isCreated {
+                                                    teacherModelData.fetchStudentData() {
+                                                    }
+                                                    modelData.fetchImage{_ in
+                                                    }
+                                                } else {
+                                                    modelData.loggedIn = false
+                                                }
                                             }
-                                        } else {
-                                            modelData.loggedIn = false
                                         }
                                     }
-                                    
+
+
                                 }
                             }
                 }
