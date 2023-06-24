@@ -98,7 +98,10 @@ class ProfileModel: ObservableObject {
         }
     }
     public func setImageState(imageState:ImageState){
-        self.imageState = imageState
+        DispatchQueue.main.async {
+            self.imageState = imageState
+        }
+        
     }
     public func getImage() -> UIImage{
         let image = UIImage(systemName: "heart.fill")

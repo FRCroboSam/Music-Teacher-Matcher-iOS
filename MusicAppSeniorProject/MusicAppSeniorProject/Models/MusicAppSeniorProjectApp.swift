@@ -9,21 +9,30 @@ import SwiftUI
 import Firebase
 
 //this class is new
+import FirebaseAppCheck
 class AppDelegate: NSObject, UIApplicationDelegate {
   var loggedIn = false;
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    FirebaseApp.configure()
+      let providerFactory = YourSimpleAppCheckProviderFactory()
+      AppCheck.setAppCheckProviderFactory(providerFactory)
+      FirebaseApp.configure()
       if(Auth.auth().currentUser != nil){
           loggedIn = true
       }
     return true
   }
 }
+class YourSimpleAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
+  func createProvider(with app: FirebaseApp) -> AppCheckProvider? {
+    return AppAttestProvider(app: app)
+  }
+}
 
 @main
 struct MusicAppSeniorProjectApp: App {
     @StateObject private var modelData = ModelData()
+    @StateObject private var profileModel = ProfileModel()
     @StateObject private var teacherModelData = TeacherModelData()
     //this is new
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
@@ -37,7 +46,7 @@ struct MusicAppSeniorProjectApp: App {
             ContentView()
                 .environmentObject(modelData)
                 .environmentObject(teacherModelData)
-                .environmentObject(ProfileModel())
+                .environmentObject(profileModel)
                 .onAppear{
                     modelData.loggedIn = delegate.loggedIn
 
@@ -46,6 +55,7 @@ struct MusicAppSeniorProjectApp: App {
                                     print("User is already logged in")
                                     let uid = user.uid
                                     modelData.uid = uid
+                                    modelData.email = user.email
                                     teacherModelData.uid = uid
                                     print("USER UID IS: "  + uid)
                                     modelData.userIsStudent { isStudent in

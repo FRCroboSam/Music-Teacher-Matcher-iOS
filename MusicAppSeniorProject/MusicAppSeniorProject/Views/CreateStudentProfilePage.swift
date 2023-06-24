@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import Combine
 enum Instrument: String, CaseIterable, Identifiable {
     case cello, piano, violin
     var id: Self { self }
@@ -32,6 +33,11 @@ struct CreateStudentProfilePage: View{
     @EnvironmentObject var viewModel: ProfileModel
     @State var displayImage: Bool = false
     @State private var useCamera = false
+    @State private var toggle: Bool = false
+
+    var editMode = false
+    @State var hasPopulated = false
+    var student: Student?
     //    @State var tag:Int? = nil
     
     //    @State private var sldkfj: String = ""
@@ -51,10 +57,22 @@ struct CreateStudentProfilePage: View{
                             .font(.system(size: 20))
                             .fontWeight(.bold)
                             .padding(10)
-                        NavigationLink(destination:CameraView()){
-                            Text("Use camera to take a photo")
-                        }
+//                        NavigationLink(destination:CameraView()){
+//                            Text("Use camera to take a photo")
+//                        }.buttonStyle(BorderlessButtonStyle())
 
+                    }
+                    .onAppear{
+                        print("APPEARING")
+                        if(editMode && !hasPopulated){
+                            if(student != nil){
+                                populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
+                                hasPopulated = true
+                            }
+                            Task {
+                                await populateImage()
+                            }
+                        }
                     }
 
                     //                    if(displayImage){
@@ -166,12 +184,13 @@ struct CreateStudentProfilePage: View{
 
                         Spacer()
 //                    }
+
             .navigationDestination(isPresented: $loginSuccessful) {
                 StudentAppPage()
             }
             .navigationTitle("Edit Profile")
 //            .toolbar(.hidden, for: .navigationBar)
-        
+                
         }
             
         }
@@ -208,12 +227,80 @@ struct CreateStudentProfilePage: View{
             modelData.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
             
         }
-        struct CreateStudentProfilePage_Previews: PreviewProvider {
-            static var previews: some View {
-                CreateStudentProfilePage()
-                    .environmentObject(ModelData())
+    func populateProfileEditor(student:Student){
+        //personal info
+        name = student.name
+        firstName = value(key: "firstName", pairs: student.personalInfo)
+        lastName = value(key: "lastName", pairs: student.personalInfo)
+        age = convertToDouble(s:value(key: "age", pairs: student.personalInfo))
+        //loginInfo 
+        email = modelData.email ?? "template@gmail.com"
+        //musical background
+        selectedInstrument = value(key: "Instrument", pairs: student.musicalBackground)
+        yearsPlaying = convertToDouble(s:value(key: "Years Playing", pairs: student.musicalBackground))
+        studentLevel = value(key: "Skill Level", pairs: student.musicalBackground)
+        description = value(key: "Prior Pieces Played", pairs: student.musicalBackground)
+        price = convertToDouble(s:value(key: "Budget", pairs: student.musicalBackground))
+
+        let image = Image(systemName: "camera.fill")
+//                            let image = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
+//        viewModel.setImageState(imageState: .success(image))
+
+    }
+    func populateImage() async {
+        if modelData.uiImage == nil {
+            var subscription: AnyCancellable?
+            var isCancelled = false
+
+            subscription = modelData.$uiImage
+                .sink { image in
+                    if let image = image {
+                        // uiImage is not nil, execute the desired method
+                        if !isCancelled {
+                            print("UIIMAGE IS NULL: " + String(modelData.uiImage == nil))
+                            DispatchQueue.main.async {
+                                let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "camera.macro")!)
+                                print("DOING SOMEThing")
+                                viewModel.setImageState(imageState: .success(image2))
+                                toggle.toggle()
+
+                            }
+                            subscription?.cancel()
+                        }
+                    }
+                }
+
+            // Wait for the task to be cancelled or completed
+            await Task.yield()
+
+            // Check if the task was cancelled
+            if Task.isCancelled {
+                isCancelled = true
             }
         }
+    }
+
+    func value(key: String, pairs: KeyValuePairs<String, String>) -> String {
+        if let index = pairs.firstIndex(where: { $0.0 == key }) {
+            print("KEY: " + key + " VALUE: " + pairs[index].value)
+            return pairs[index].value
+        } else {
+            return ""
+        }
+    }
+    func convertToDouble(s:String) -> Double{
+        if let doubleValue = Double(s) {
+            return doubleValue
+        } else {
+            return 0
+        }
+    }
+//        struct CreateStudentProfilePage_Previews: PreviewProvider {
+//            static var previews: some View {
+//                CreateStudentProfilePage()
+//                    .environmentObject(ModelData())
+//            }
+//        }
     }
     //command 0 for show navigate pane
     

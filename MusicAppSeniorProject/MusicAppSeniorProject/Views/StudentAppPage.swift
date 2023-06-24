@@ -16,6 +16,7 @@ struct StudentAppPage: View {
     @State private var currentPage: Int = 0
     @State private var selection = 0
     @State private var doStuff = 0
+    @State private var loggedOut = false
     private let categories = ["Available", "Declined", "Matched", "Requested"]
     @State private var profilePhoto:UIImage?
     private let availableTeacherDesc = "These are teachers in the area that you can request if you think they are a good fit or respectfully decline. Teachers will not see that you have declined them."
@@ -38,11 +39,15 @@ struct StudentAppPage: View {
                         .tabItem{
                             Label("Matched", systemImage: "person.crop.circle.badge.checkmark")
                         }
-                    CreateStudentProfilePage()
+                    CreateStudentProfilePage(editMode:true, student: modelData.studentUser)
                         .tabItem{
                             Label("Edit Profile", systemImage: "person.crop.circle.fill")
                         }
                 }
+                Button("Logout", action: {
+                    modelData.logOut();
+                    loggedOut = true
+                })
                 .onAppear() {
                     if(modelData.uiImage == nil && !(modelData.uid == "")){
                         modelData.fetchImage { downloaded in
@@ -67,6 +72,8 @@ struct StudentAppPage: View {
             //                        Label("Menu", systemImage: "list.dash")
             //                    }
             //            }
+        }.navigationDestination(isPresented: $loggedOut) {
+            HomePage()
         }
     }
     

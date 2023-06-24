@@ -66,6 +66,7 @@ struct Student: Identifiable{
         bob.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
         return bob
     }
+
 //    public func getImage() -> Image{
 //        let image = Image("blankperson")
 //

@@ -56,7 +56,6 @@ struct PhotoView: View {
             Button("Use this photo"){
                 print("USE THIS PHOTO ")
                 let uiImage = asset.phAsset!.getAssetThumbnail()
-                viewModel.setUIImage(uiImage: uiImage)
                 let image2 = Image(uiImage: uiImage)
                 viewModel.setImageState(imageState: .success(image2))
                 usePhoto = true
