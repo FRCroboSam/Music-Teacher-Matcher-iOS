@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
-import FirebaseAuth
+import Firebase
 import Combine
+import FirebaseAuth
 enum Instrument: String, CaseIterable, Identifiable {
     case cello, piano, violin
     var id: Self { self }
@@ -16,6 +17,7 @@ enum Instrument: String, CaseIterable, Identifiable {
 
 struct CreateStudentProfilePage: View{
     @EnvironmentObject var modelData: ModelData
+    @EnvironmentObject var viewModel: ProfileModel
     @State private var name: String = ""
     @State private var loginSuccessful = false
     @State private var noUserFound = true
@@ -30,12 +32,16 @@ struct CreateStudentProfilePage: View{
     @State private var studentLevel: String = ""
     @State private var description: String = ""
     @State private var image = UIImage(systemName: "heart.fill")
-    @EnvironmentObject var viewModel: ProfileModel
     @State var displayImage: Bool = false
     @State private var useCamera = false
     @State private var toggle: Bool = false
+    @State private var changePassword: Bool = false
+    @State private var changeEmail: Bool = false
+
 
     var editMode = false
+    @State var newEmail = ""
+    @State var newPassword = ""
     @State var hasPopulated = false
     var student: Student?
     //    @State var tag:Int? = nil
@@ -47,10 +53,19 @@ struct CreateStudentProfilePage: View{
 //        NavigationStack{
             Form{
                 Section{
-                    Text("Your Student Profile")
-                        .font(.system(size: 40))
-                        .fontWeight(.bold)
-                        .padding(10)
+                    if(editMode){
+                        Text("Edit Your Profile")
+                            .font(.system(size: 35))
+                            .fontWeight(.bold)
+                            .padding(10)
+                    }
+                    else{
+                        Text("Your Student Profile")
+                            .font(.system(size: 40))
+                            .fontWeight(.bold)
+                            .padding(10)
+                    }
+
                     VStack{
                         EditableCircularProfileImage()
                         Text("Select a Profile Picture")
@@ -69,9 +84,12 @@ struct CreateStudentProfilePage: View{
                                 populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
                                 hasPopulated = true
                             }
-                            Task {
-                                await populateImage()
+                            if(modelData.uiImage == nil){
+                                Task {
+                                    await populateImage()
+                                }
                             }
+
                         }
                     }
 
@@ -153,34 +171,91 @@ struct CreateStudentProfilePage: View{
                                 in: 0...200,
                                 step: 1
                             )
+                            if(editMode){
+
+                            }
+
                         }
                         .padding(10)
                         VStack(alignment: .leading, spacing: 5){
                             Text("Login Info")
                                 .font(.system(size: 20))
-                            TextField("Enter email (your's or parent's)", text: $email)
-                                .textFieldStyle(.roundedBorder)
-                            TextField("Enter a password", text: $password)
-                                .textFieldStyle(.roundedBorder)
+                            if(editMode){
+                                    Toggle(isOn: $changeEmail) {
+                                        Text("Update Email?")
+                                            .foregroundColor(.black)
+                                    }
+                                    .toggleStyle(iOSCheckboxToggleStyle())
+                                    if(changeEmail){
+                                        TextField("Enter new email", text: $newEmail)
+                                            .textFieldStyle(.roundedBorder)
+                                    }
+                                //https://www.hackingwithswift.com/quick-start/swiftui/how-to-add-a-textfield-to-an-alert
+                            }
+                            else{
+                                TextField("Enter email (your's or parent's)", text: $email)
+                                    .textFieldStyle(.roundedBorder)
+                                TextField("Enter a password", text: $password)
+                                    .textFieldStyle(.roundedBorder)
+                                    .listRowSeparator(.hidden)
+                            }
+
                         }
                         .padding(10)
 
                     }
-
-                    Button("Submit Profile") {
-                        createStudentObject()
-                        modelData.registerStudentUser(){ isFound in
-                            if isFound {
-                                noUserFound = false
-                                loginSuccessful = true
-                            } else {
-                                noUserFound = true
-                                loginSuccessful = false
-                            }
-                        }
+                    Toggle(isOn: $changePassword) {
+                        Text("Change Password?")
+                            .foregroundColor(.black)
+                            .listRowSeparator(.hidden)
                     }
+                    .toggleStyle(iOSCheckboxToggleStyle())
+
+                    if(changePassword){
+                        TextField("Enter new password", text: $newPassword)
+                            .textFieldStyle(.roundedBorder)
+                            .listRowSeparator(.hidden)
+                    }
+                    if(editMode){
+                        Text("Enter current password to save changes to profile")
+                            .listRowSeparator(.hidden)
+
+                        TextField("Enter current password", text: $password)
+                            .textFieldStyle(.roundedBorder)
+                        Button("Update Profile") {
+                            updateProfile()
+//                            createStudentObject()
+//                            modelData.registerStudentUser(){ isFound in
+//                                if isFound {
+//                                    noUserFound = false
+//                                    loginSuccessful = true
+//                                } else {
+//                                    noUserFound = true
+//                                    loginSuccessful = false
+//                                }
+//                            }
+                        }
                         .buttonStyle(.bordered)
                         .padding(10)
+                        .listRowSeparator(.hidden)
+                    }
+                    else{
+                        Button("Submit Profile") {
+                            createStudentObject()
+                            modelData.registerStudentUser(){ isFound in
+                                if isFound {
+                                    noUserFound = false
+                                    loginSuccessful = true
+                                } else {
+                                    noUserFound = true
+                                    loginSuccessful = false
+                                }
+                            }
+                        }.listRowSeparator(.hidden)
+                        .buttonStyle(.bordered)
+                        .padding(10)
+                    }
+
 
                         Spacer()
 //                    }
@@ -191,7 +266,7 @@ struct CreateStudentProfilePage: View{
             .navigationTitle("Edit Profile")
 //            .toolbar(.hidden, for: .navigationBar)
                 
-        }
+            }.listRowSeparator(.hidden)
             
         }
         
@@ -227,6 +302,51 @@ struct CreateStudentProfilePage: View{
             modelData.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
             
         }
+    func updateProfile(){
+        print("Updating Profile")
+        let user = Auth.auth().currentUser
+        var credential: AuthCredential
+        credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        if(changeEmail || changePassword){
+            user?.reauthenticate(with: credential) { result, error in
+              if let error = error {
+                  print("ERROR REAUTHENTICATING")
+                  print(error)
+                // An error happened.
+              } else if result != nil {
+                  if(changeEmail){
+                      Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
+                          if let error = error{
+                              print("INVALID EMAIL")
+                          }
+                          else{
+                              print("UPDATE EMAIL SUCCESSFUl ")
+                              print("EMAIL IS: " + (Auth.auth().currentUser?.email ?? "NO EMAIL")!)
+                          }
+                      }
+                  }
+                  if(changePassword){
+                      Auth.auth().currentUser?.updatePassword(to: newPassword){ (error) in
+                          if let error = error{
+                              print("INVALID Password")
+                          }
+                          else{
+                              print("UPDATE Password SUCCESSFUl ")
+                          }
+                      }
+                  }
+                // User re-authenticated.
+              }
+            }
+        }
+        user?.reauthenticate(with: credential) { result, error in
+          if let error = error {
+            // An error happened.
+          } else if result != nil {
+            // User re-authenticated.
+          }
+        }
+    }
     func populateProfileEditor(student:Student){
         //personal info
         name = student.name
@@ -242,9 +362,8 @@ struct CreateStudentProfilePage: View{
         description = value(key: "Prior Pieces Played", pairs: student.musicalBackground)
         price = convertToDouble(s:value(key: "Budget", pairs: student.musicalBackground))
 
-        let image = Image(systemName: "camera.fill")
-//                            let image = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
-//        viewModel.setImageState(imageState: .success(image))
+        let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
+        viewModel.setImageState(imageState: .success(image2))//                            let image =
 
     }
     func populateImage() async {
@@ -257,10 +376,8 @@ struct CreateStudentProfilePage: View{
                     if let image = image {
                         // uiImage is not nil, execute the desired method
                         if !isCancelled {
-                            print("UIIMAGE IS NULL: " + String(modelData.uiImage == nil))
                             DispatchQueue.main.async {
                                 let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "camera.macro")!)
-                                print("DOING SOMEThing")
                                 viewModel.setImageState(imageState: .success(image2))
                                 toggle.toggle()
 

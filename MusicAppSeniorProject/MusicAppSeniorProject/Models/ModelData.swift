@@ -110,6 +110,7 @@ final class ModelData: ObservableObject{
                 print("Document does not exist")
             }
         }
+        var credential: AuthCredential
 
 //        let storage = Storage.storage()
 //        let storageRef = storage.reference(withPath: uid)
