@@ -1,41 +1,29 @@
 import SwiftUI
 struct ContentViewTest: View {
-    @State private var isShowingNewView = false
+@State private var login = "Tony"
+@State private var password = "1234"
 
-    var body: some View {
-        NavigationView {
-            VStack {
-                Text("Home View")
-                NavigationLink(destination: NewView().navigationBarBackButtonHidden(true)) {
-                    Text("Navigate")
-                }
-            }
-        }
-        .navigationBarHidden(true)
-        .onAppear {
-            if isShowingNewView {
-                // Navigate to the new view immediately
-                DispatchQueue.main.async {
-                    isShowingNewView = false
-                }
-            }
-        }
-    }
-}
-
-struct NewView: View {
-    @Environment(\.presentationMode) var presentationMode
-
-    var body: some View {
+var body: some View {
+    
+    ZStack {
         VStack {
-            Text("New View")
-        }
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: Button(action: {
-            presentationMode.wrappedValue.dismiss()
-        }) {
-            Image(systemName: "chevron.left")
-            Text("Back")
-        })
-    }
+            HStack {
+                Text("Enter Login and Password")
+            }
+
+            HStack {
+                Image(systemName: "person")
+                TextField("Login", text: $login)
+            }
+            
+            HStack {
+                SecureField("Password", text: $password)
+            }
+            
+            Button("Login") {
+                   
+            }
+         }
+      }
+   }
 }

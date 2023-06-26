@@ -48,6 +48,8 @@ struct CreateStudentProfilePage: View{
     
     //    @State private var sldkfj: String = ""
     
+    //for checking which fields were updated
+    @State private var profileImageCount = 0
     
     var body: some View {
 //        NavigationStack{
@@ -68,6 +70,10 @@ struct CreateStudentProfilePage: View{
 
                     VStack{
                         EditableCircularProfileImage()
+                            .onReceive(viewModel.$imageSelection){ (value) in
+                                print("PROFILE IMAGE CHANGING")
+                                profileImageCount += 1
+                            }
                         Text("Select a Profile Picture")
                             .font(.system(size: 20))
                             .fontWeight(.bold)
@@ -75,7 +81,14 @@ struct CreateStudentProfilePage: View{
 //                        NavigationLink(destination:CameraView()){
 //                            Text("Use camera to take a photo")
 //                        }.buttonStyle(BorderlessButtonStyle())
-
+                        Button("Use Camera to take a photo") {
+                            useCamera = true
+                        }.listRowSeparator(.hidden)
+                        .buttonStyle(.bordered)
+                        .padding(10)
+                        .navigationDestination(isPresented: $useCamera) {
+                            CameraView()
+                        }
                     }
                     .onAppear{
                         print("APPEARING")
@@ -180,6 +193,8 @@ struct CreateStudentProfilePage: View{
                         VStack(alignment: .leading, spacing: 5){
                             Text("Login Info")
                                 .font(.system(size: 20))
+                            Text("Email: " + email)
+                                .font(.system(size: 20))
                             if(editMode){
                                     Toggle(isOn: $changeEmail) {
                                         Text("Update Email?")
@@ -216,14 +231,27 @@ struct CreateStudentProfilePage: View{
                             .textFieldStyle(.roundedBorder)
                             .listRowSeparator(.hidden)
                     }
-                    if(editMode){
+                if(editMode && (changePassword || changeEmail)){
                         Text("Enter current password to save changes to profile")
                             .listRowSeparator(.hidden)
 
                         TextField("Enter current password", text: $password)
                             .textFieldStyle(.roundedBorder)
                         Button("Update Profile") {
-                            updateProfile()
+                            updateProfile(){ canUpdate in
+                                if canUpdate{
+                                    print("UPDATED SUCCESSFULLy")
+                                    createStudentObject()
+                                    if(profileImageCount > 1){
+                                        modelData.uploadImage(student: modelData.studentUser) { _  in
+                                        }
+                                    }
+                                }
+                                else{
+                                    print("FAILED TO UPDATE")
+                                    
+                                }
+                            }
 //                            createStudentObject()
 //                            modelData.registerStudentUser(){ isFound in
 //                                if isFound {
@@ -246,6 +274,8 @@ struct CreateStudentProfilePage: View{
                                 if isFound {
                                     noUserFound = false
                                     loginSuccessful = true
+                                    modelData.uploadImage(student: modelData.studentUser) { _ in
+                                    }
                                 } else {
                                     noUserFound = true
                                     loginSuccessful = false
@@ -297,30 +327,33 @@ struct CreateStudentProfilePage: View{
             modelData.studentUser.email = email
             modelData.studentUser.password = password
             let uiImage = viewModel.profileImage?.uiImage ?? viewModel.uiImage2 ?? UIImage(systemName: "person.badge.shield.checkmark.fill")
-            modelData.studentUser.setUIImage(uiImage: uiImage!)
+//            modelData.studentUser.setUIImage(uiImage: uiImage!)
             modelData.uiImage = uiImage
             modelData.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
             
         }
-    func updateProfile(){
+    func updateProfile(completion: @escaping (Bool) -> Void){
         print("Updating Profile")
         let user = Auth.auth().currentUser
         var credential: AuthCredential
         credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        var success = true
         if(changeEmail || changePassword){
+            print("CHANGING EMAIl")
             user?.reauthenticate(with: credential) { result, error in
               if let error = error {
+                  success = false
                   print("ERROR REAUTHENTICATING")
-                  print(error)
                 // An error happened.
               } else if result != nil {
+                  print("REAUTHENTICATED")
                   if(changeEmail){
                       Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
                           if let error = error{
-                              print("INVALID EMAIL")
+                              print("ERROR UPDAting EMAIL")
+                              success = false
                           }
                           else{
-                              print("UPDATE EMAIL SUCCESSFUl ")
                               print("EMAIL IS: " + (Auth.auth().currentUser?.email ?? "NO EMAIL")!)
                           }
                       }
@@ -328,24 +361,30 @@ struct CreateStudentProfilePage: View{
                   if(changePassword){
                       Auth.auth().currentUser?.updatePassword(to: newPassword){ (error) in
                           if let error = error{
-                              print("INVALID Password")
+                              completion(false)
                           }
                           else{
-                              print("UPDATE Password SUCCESSFUl ")
+                              print("CHANGING PASSWORD WORKS ")
+                              if(success){
+                                  completion(true)
+                              }
+                              else{
+                                  completion(false)
+                              }
                           }
                       }
                   }
+
+//                  completion(success)
                 // User re-authenticated.
               }
             }
         }
-        user?.reauthenticate(with: credential) { result, error in
-          if let error = error {
-            // An error happened.
-          } else if result != nil {
-            // User re-authenticated.
-          }
+        else{
+           completion(true)
         }
+        
+
     }
     func populateProfileEditor(student:Student){
         //personal info

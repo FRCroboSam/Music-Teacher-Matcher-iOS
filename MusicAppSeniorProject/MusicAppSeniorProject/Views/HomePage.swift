@@ -28,13 +28,13 @@ struct HomePage: View {
                         .backgroundStyle(.green)
                 }
                 .buttonStyle(.bordered)
-
+                
                 Text("Music Teacher who wants to find students?")
                 NavigationLink(destination: CreateTeacherProfilePage()){
                     Text("Click here")
                         .backgroundStyle(.green)
-//                        .navigationBarBackButtonHidden(true)
-
+                    //                        .navigationBarBackButtonHidden(true)
+                    
                 }
                 .buttonStyle(.bordered)
                 Text("Already created an account?")
@@ -49,14 +49,14 @@ struct HomePage: View {
                 }
                 .buttonStyle(.bordered)
                 Spacer()
-
+                
                 
             }
             .padding(10)
             Spacer()
             
             
-        }
+        }.navigationBarBackButtonHidden(true)
     }
 }
 

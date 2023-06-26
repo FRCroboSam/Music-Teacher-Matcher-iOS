@@ -19,13 +19,14 @@ struct ContentView: View {
     var body: some View {
         Group{
             if modelData.loggedIn == true{
-                if(!(modelData.isStudent ?? true)){
-                    TeacherAppPage()
-                }
-                else{
-                    StudentAppPage()
-                }
+//                if(!(modelData.isStudent ?? true)){
+//                    TeacherAppPage()
+//                }
+//                else{
+//                    StudentAppPage()
+//                }
 //                HomePage()
+                LoginPage()
             }
             else{
                 HomePage()

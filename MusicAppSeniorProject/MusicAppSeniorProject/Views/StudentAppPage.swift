@@ -44,10 +44,7 @@ struct StudentAppPage: View {
                             Label("Edit Profile", systemImage: "person.crop.circle.fill")
                         }
                 }
-                Button("Logout", action: {
-                    modelData.logOut();
-                    loggedOut = true
-                })
+
                 .onAppear() {
                     if(modelData.uiImage == nil && !(modelData.uid == "")){
                         modelData.fetchImage { downloaded in
@@ -72,7 +69,11 @@ struct StudentAppPage: View {
             //                        Label("Menu", systemImage: "list.dash")
             //                    }
             //            }
-        }.navigationDestination(isPresented: $loggedOut) {
+        }
+        Button("Logout", action: {
+            modelData.logOut();
+            loggedOut = true
+        }).navigationDestination(isPresented: $loggedOut) {
             HomePage()
         }
     }

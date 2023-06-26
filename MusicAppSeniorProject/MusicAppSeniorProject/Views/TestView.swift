@@ -1,89 +1,83 @@
-//
-//  TestView.swift
-//  MusicAppSeniorProject
-//
-//  Created by Samuel Wang on 4/12/23.
-//
-
 import SwiftUI
-import UIKit
+
 struct TestView: View {
-    @State private var password: String = ""
-    @State private var showAlert: Bool = false
-    @State private var selectedInstrument: String = "Cello"
-
-      var body: some View {
-          Form {
-//              VStack{
-                  Picker("Pick an instrument", selection: $selectedInstrument, content:{
-                      Text("Cello").tag("Cello")
-                      Text("Piano").tag("Piano")
-                      Text("Violin").tag("Violin")
-                  })
-                  TextField("Enter password", text: $password)
-    //                  .padding()
-                      .textFieldStyle(RoundedBorderTextFieldStyle())
-    //                  .padding(.horizontal, 50)
-    //                  .padding(.top, 100)
-                      .keyboardType(.asciiCapable)
-                      .autocorrectionDisabled()
-                  Spacer()
-//              }
-
-              
-//              Button(action: {
-//                  if password == "password" {
-//                      // Correct password, perform login logic here
-//                      print("Logged in successfully")
-//                  } else {
-//                      // Incorrect password, show alert
-//                      showAlert = true
-//                  }
-//              }) {
-//                  Text("Login")
-//                      .font(.title)
-//                      .foregroundColor(.white)
-//                      .padding()
-//                      .background(Color.blue)
-//                      .cornerRadius(10)
-//              }
-//              .padding(.top, 20)
-          }
-//          .ignoresSafeArea(.keyboard)
-          
-          .alert(isPresented: $showAlert) {
-              Alert(title: Text("Incorrect Password"), message: Text("Please enter the correct password."), dismissButton: .default(Text("OK")))
-          }
-      }
-    //    @State private var readyToNavigate : Bool = false
-    //    @State private var firstName: String = ""
-    //    @State private var lastName: String = ""
-    //    var body: some View {
-    //        Spacer()
-    //        VStack {
-    //            TextField("Enter text", text: $firstName)
-    //                .padding()
-    //                .textFieldStyle(RoundedBorderTextFieldStyle())
-    //                .layoutPriority(0)
-    //
-    //
-    //            Button("Show Alert") {
-    //                readyToNavigate = true
-    //            }
-    //        }
-    //        .ignoresSafeArea()
-    //        .adaptsToKeyboard()
-    //
-    //        .alert(isPresented: $readyToNavigate) {
-    //            Alert(title: Text("Alert"), message: Text("You entered: \(firstName)"), dismissButton: .default(Text("OK")))
-    //        }
-    //
-    //    }
-}
-    struct TestView_Previews: PreviewProvider {
-        static var previews: some View {
-            TestView()
-        }
+    
+    @State var name: String = ""
+    @State var password: String = ""
+    @State var showPassword: Bool = false
+    
+    var isSignInButtonDisabled: Bool {
+        [name, password].contains(where: \.isEmpty)
     }
     
+    var body: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            Spacer()
+            
+            TextField("Name",
+                      text: $name ,
+                      prompt: Text("Login").foregroundColor(.blue)
+            )
+            .padding(10)
+            .overlay {
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(.blue, lineWidth: 2)
+            }
+            .padding(.horizontal)
 
+            HStack {
+                Group {
+                    if showPassword {
+                        TextField("Password", // how to create a secure text field
+                                    text: $password,
+                                    prompt: Text("Password").foregroundColor(.red)) // How to change the color of the TextField Placeholder
+                    } else {
+                        SecureField("Password", // how to create a secure text field
+                                    text: $password,
+                                    prompt: Text("Password").foregroundColor(.red)) // How to change the color of the TextField Placeholder
+                    }
+                }
+                .padding(10)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(.red, lineWidth: 2) // How to add rounded corner to a TextField and change it colour
+                }
+
+                Button {
+                    showPassword.toggle()
+                } label: {
+                    Image(systemName: showPassword ? "eye.slash" : "eye")
+                        .foregroundColor(.red) // how to change image based in a State variable
+                }
+
+            }.padding(.horizontal)
+
+            Spacer()
+
+            Button {
+                print("do login action")
+            } label: {
+                Text("Sign In")
+                    .font(.title2)
+                    .bold()
+                    .foregroundColor(.white)
+            }
+            .frame(height: 50)
+            .frame(maxWidth: .infinity) // how to make a button fill all the space available horizontaly
+            .background(
+                isSignInButtonDisabled ? // how to add a gradient to a button in SwiftUI if the button is disabled
+                LinearGradient(colors: [.gray], startPoint: .topLeading, endPoint: .bottomTrailing) :
+                    LinearGradient(colors: [.blue, .red], startPoint: .topLeading, endPoint: .bottomTrailing)
+            )
+            .cornerRadius(20)
+            .disabled(isSignInButtonDisabled) // how to disable while some condition is applied
+            .padding()
+        }
+    }
+}
+
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}

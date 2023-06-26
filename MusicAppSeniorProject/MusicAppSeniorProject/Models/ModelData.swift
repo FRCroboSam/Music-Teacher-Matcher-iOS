@@ -98,9 +98,7 @@ final class ModelData: ObservableObject{
         docRef.collection("Requested Teachers").document().setData([  // 👈 Create a document in the subcollection
             "title": "testing"
         ])
-        uploadImage(student: student) { Bool in
-            
-        }
+
         //set modelData
         docRef.getDocument { (document, error) in
             if let document = document, document.exists {

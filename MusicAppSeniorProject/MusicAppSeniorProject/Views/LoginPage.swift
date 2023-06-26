@@ -58,6 +58,7 @@ struct LoginPage: View {
                 SecureField("Password ", text: $password)
                     .textFieldStyle(.roundedBorder)
                     .font(.system(size: 20))
+                    .textContentType(.newPassword)
                     .keyboardType(.asciiCapable)
                     .autocorrectionDisabled()
                     
