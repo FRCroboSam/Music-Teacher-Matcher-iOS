@@ -156,6 +156,7 @@ final class ModelData: ObservableObject{
         storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
           if let error = error {
             // Uh-oh, an error occurred!
+              print("ERROR FETCHING IMAGE")
             completion(false)
           } else {
               print("Successfully fetched image")
@@ -570,6 +571,35 @@ final class ModelData: ObservableObject{
                         print("Found teacher, completion is true")
                         completion(true)
                     }
+                }
+            }
+        }
+    }
+    
+    
+    func checkEmailValidity(email: String, completion: @escaping (Bool) -> Void) {
+        print("CHECKING EMAIL AVAILABILITY")
+        Auth.auth().fetchSignInMethods(forEmail: email) { (signInMethods, error) in
+            if let error = error {
+                print("SOMETHING WRONG WITH EMAIL")
+                completion(false)
+            }
+            else {
+                print("OTEHR")
+                if let signInMethods = signInMethods {
+                    if signInMethods.isEmpty {
+                        print("EMAIL WORKS ")
+                        completion(true)
+                    } else {
+                        print("Email is registered.")
+                        print("Sign-in methods: \(signInMethods)")
+                        completion(false)
+
+                    }
+                }
+                else{
+                    print("SIGNIN METHODS NIL: " + String(signInMethods == nil))
+                    completion(true)
                 }
             }
         }

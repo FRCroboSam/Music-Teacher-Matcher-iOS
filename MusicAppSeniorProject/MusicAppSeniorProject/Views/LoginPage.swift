@@ -57,10 +57,11 @@ struct LoginPage: View {
                     .padding(10)
                 SecureField("Password ", text: $password)
                     .textFieldStyle(.roundedBorder)
-                    .font(.system(size: 20))
                     .textContentType(.newPassword)
+                    .font(.system(size: 20))
                     .keyboardType(.asciiCapable)
                     .autocorrectionDisabled()
+
                     
                 .padding(10)
                 HStack(spacing: 10){

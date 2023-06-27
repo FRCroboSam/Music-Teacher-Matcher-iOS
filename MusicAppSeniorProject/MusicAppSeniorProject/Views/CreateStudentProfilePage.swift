@@ -44,6 +44,10 @@ struct CreateStudentProfilePage: View{
     @State var newPassword = ""
     @State var hasPopulated = false
     var student: Student?
+    
+    @State var invalidEmail = false
+    @State var invalidNewPassword = false
+    @State var invalidPassword = false
     //    @State var tag:Int? = nil
     
     //    @State private var sldkfj: String = ""
@@ -196,15 +200,6 @@ struct CreateStudentProfilePage: View{
                             Text("Email: " + email)
                                 .font(.system(size: 20))
                             if(editMode){
-                                    Toggle(isOn: $changeEmail) {
-                                        Text("Update Email?")
-                                            .foregroundColor(.black)
-                                    }
-                                    .toggleStyle(iOSCheckboxToggleStyle())
-                                    if(changeEmail){
-                                        TextField("Enter new email", text: $newEmail)
-                                            .textFieldStyle(.roundedBorder)
-                                    }
                                 //https://www.hackingwithswift.com/quick-start/swiftui/how-to-add-a-textfield-to-an-alert
                             }
                             else{
@@ -219,12 +214,25 @@ struct CreateStudentProfilePage: View{
                         .padding(10)
 
                     }
-                    Toggle(isOn: $changePassword) {
-                        Text("Change Password?")
-                            .foregroundColor(.black)
-                            .listRowSeparator(.hidden)
+                    if(editMode){
+
+
+                        Toggle(isOn: $changeEmail) {
+                            Text("Update Email?")
+                                .foregroundColor(.black)
+                        }
+                        .toggleStyle(iOSCheckboxToggleStyle())
+                        if(changeEmail){
+                            TextField("Enter new email", text: $newEmail)
+                                .textFieldStyle(.roundedBorder)
+                        }
+                        Toggle(isOn: $changePassword) {
+                            Text("Change Password?")
+                                .foregroundColor(.black)
+    //                            .listRowSeparator(.hidden)
+                        }.toggleStyle(iOSCheckboxToggleStyle())
                     }
-                    .toggleStyle(iOSCheckboxToggleStyle())
+
 
                     if(changePassword){
                         TextField("Enter new password", text: $newPassword)
@@ -297,6 +305,9 @@ struct CreateStudentProfilePage: View{
 //            .toolbar(.hidden, for: .navigationBar)
                 
             }.listRowSeparator(.hidden)
+            .alert("No User Found", isPresented: $noUserFound) {
+                Button("Try Again", role: .destructive) { }
+            }
             
         }
         
@@ -332,59 +343,92 @@ struct CreateStudentProfilePage: View{
             modelData.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
             
         }
+    
     func updateProfile(completion: @escaping (Bool) -> Void){
+        invalidPassword = false
+        invalidNewPassword = false
+        invalidEmail = false
         print("Updating Profile")
         let user = Auth.auth().currentUser
         var credential: AuthCredential
         credential = EmailAuthProvider.credential(withEmail: email, password: password)
         var success = true
         if(changeEmail || changePassword){
-            print("CHANGING EMAIl")
-            user?.reauthenticate(with: credential) { result, error in
-              if let error = error {
-                  success = false
-                  print("ERROR REAUTHENTICATING")
-                // An error happened.
-              } else if result != nil {
-                  print("REAUTHENTICATED")
-                  if(changeEmail){
-                      Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
-                          if let error = error{
-                              print("ERROR UPDAting EMAIL")
-                              success = false
-                          }
-                          else{
-                              print("EMAIL IS: " + (Auth.auth().currentUser?.email ?? "NO EMAIL")!)
-                          }
-                      }
-                  }
-                  if(changePassword){
-                      Auth.auth().currentUser?.updatePassword(to: newPassword){ (error) in
-                          if let error = error{
-                              completion(false)
-                          }
-                          else{
-                              print("CHANGING PASSWORD WORKS ")
-                              if(success){
-                                  completion(true)
-                              }
-                              else{
-                                  completion(false)
-                              }
-                          }
-                      }
-                  }
-
-//                  completion(success)
-                // User re-authenticated.
-              }
+            user?.reauthenticate(with: credential){ result, error in
+                if let error = error{
+                    print("INCORRECT PASSWORD")
+                    invalidPassword = true
+                    completion(false)
+                }
+                else{
+                    print("CORRECT PASSWORD")
+                    if(changeEmail){
+                        //check if email is valid before changing password if changePassword is a thing
+                        modelData.checkEmailValidity(email: newEmail) { canChangeEmail in
+                            if canChangeEmail{
+                                print("CAN CHANGE EMAIL")
+                                //attempt to change the password
+                                if(changePassword){
+                                    Auth.auth().currentUser?.updatePassword(to: newPassword){ (error) in
+                                        if let error = error{
+                                            print("INVALID NEW PASSSWORD")
+                                            invalidNewPassword = true
+                                            completion(false)
+                                        }
+                                        else{
+                                            print("CHANGING EMAIL AND PASSWORD")
+                                            completion(true)
+                                            Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
+                                                if let error = error{
+                                                    print("DIDNT UPDATE EMIAL")
+                                                }
+                                                else{
+                                                    email = newEmail
+                                                    print("UPDATED EMAIL")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else{
+                                    print("ATTEMPTING TO UPDATE EMIAL")
+                                    Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
+                                        if let error = error{
+                                            print("DIDNT UPDATE EMIAL")
+                                        }
+                                        else{
+                                            email = newEmail
+                                            print("UPDATED EMAIL")
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                print("CNAT USSE EMIAL")
+                                completion(false)
+                            }
+                            print("HELLO")
+                        }
+                        print("DIFJDIFJIJ")
+                    }
+                    else{
+                        Auth.auth().currentUser?.updatePassword(to: newPassword){ (error) in
+                            if let error = error{
+                                print("OTHER")
+                                completion(false)
+                            }
+                            else{
+                                print("OTHER")
+                                completion(true)
+                            }
+                        }
+                    }
+                }
             }
         }
         else{
            completion(true)
         }
-        
-
     }
     func populateProfileEditor(student:Student){
         //personal info
