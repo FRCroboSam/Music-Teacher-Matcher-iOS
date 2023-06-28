@@ -54,7 +54,8 @@ struct CreateStudentProfilePage: View{
     
     //for checking which fields were updated
     @State private var profileImageCount = 0
-    
+    @State private var failedUpdate = false
+    @State private var updatedSuccessfully = false
     var body: some View {
 //        NavigationStack{
             Form{
@@ -239,12 +240,14 @@ struct CreateStudentProfilePage: View{
                             .textFieldStyle(.roundedBorder)
                             .listRowSeparator(.hidden)
                     }
-                if(editMode && (changePassword || changeEmail)){
+                if(editMode){
+                    if(changePassword || changeEmail){
                         Text("Enter current password to save changes to profile")
                             .listRowSeparator(.hidden)
 
                         TextField("Enter current password", text: $password)
                             .textFieldStyle(.roundedBorder)
+                    }
                         Button("Update Profile") {
                             updateProfile(){ canUpdate in
                                 if canUpdate{
@@ -254,9 +257,20 @@ struct CreateStudentProfilePage: View{
                                         modelData.uploadImage(student: modelData.studentUser) { _  in
                                         }
                                     }
+                                    modelData.updateStudentData { works in
+                                        if(works){
+                                            updatedSuccessfully = true
+                                            failedUpdate = false
+                                        }
+                                        else{
+                                            failedUpdate = true
+                                        }
+                                    }
+                                    
                                 }
                                 else{
-                                    print("FAILED TO UPDATE")
+                                    print("FAILED UPDATE")
+                                    failedUpdate = true
                                     
                                 }
                             }
@@ -305,14 +319,20 @@ struct CreateStudentProfilePage: View{
 //            .toolbar(.hidden, for: .navigationBar)
                 
             }.listRowSeparator(.hidden)
-            .alert("No User Found", isPresented: $noUserFound) {
-                Button("Try Again", role: .destructive) { }
-            }
+//            .alert("Failed to update info: Check password and email", isPresented: $failedUpdate) {
+//                Button("Try Again", role: .destructive) { }
+//            }
+//            .alert("Info updated successfully", isPresented: $updatedSuccessfully) {
+//                Button("Ok", role: .destructive) { }
+//            }
             
         }
         
         //creates Student and sets it to modelData.studentUser
         func createStudentObject(){
+            if(changeEmail){
+                email = newEmail
+            }
             let loginInfo:KeyValuePairs = [
                 "email": email,
                 "password": password
@@ -321,7 +341,7 @@ struct CreateStudentProfilePage: View{
                 "Instrument": selectedInstrument,
                 "Years Playing": String(yearsPlaying),
                 "Skill Level": studentLevel,
-                "Prior Pieces Played": description,
+                "Prior Pieces Played":  description,
                 "Budget": String(price)
             ]
             let name = firstName + " " +  lastName
@@ -385,6 +405,7 @@ struct CreateStudentProfilePage: View{
                                                 else{
                                                     email = newEmail
                                                     print("UPDATED EMAIL")
+                                                    completion(true)
                                                 }
                                             }
                                         }
@@ -395,10 +416,12 @@ struct CreateStudentProfilePage: View{
                                     Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
                                         if let error = error{
                                             print("DIDNT UPDATE EMIAL")
+                                            completion(false)
                                         }
                                         else{
                                             email = newEmail
                                             print("UPDATED EMAIL")
+                                            completion(true)
                                         }
                                     }
                                 }
@@ -427,14 +450,21 @@ struct CreateStudentProfilePage: View{
             }
         }
         else{
+            print("NOT CHANGING EMAIL OR PASSWORD CAN DO")
            completion(true)
         }
     }
     func populateProfileEditor(student:Student){
         //personal info
         name = student.name
-        firstName = value(key: "firstName", pairs: student.personalInfo)
-        lastName = value(key: "lastName", pairs: student.personalInfo)
+        print("PERSONAL INFO: ")
+        print(student.personalInfo)
+        name = value(key: "name", pairs: student.personalInfo)
+
+        firstName = student.firstName
+        lastName = student.lastName
+        print("FIRSTNAME: " + firstName)
+        print("LASTNAME: " + lastName)
         age = convertToDouble(s:value(key: "age", pairs: student.personalInfo))
         //loginInfo 
         email = modelData.email ?? "template@gmail.com"

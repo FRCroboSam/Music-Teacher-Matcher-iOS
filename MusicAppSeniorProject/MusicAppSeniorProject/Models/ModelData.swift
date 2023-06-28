@@ -304,11 +304,14 @@ final class ModelData: ObservableObject{
                     "age": (data!["age"] ?? "Generic User") as! String
 
                 ]
+                
                 var name = (data!["name"] ?? "Generic User") as! String
                 self.studentUser = Student(name: name)
                 self.studentUser.uid = uid
                 self.uid = uid
                 self.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
+                self.studentUser.firstName = (data!["firstName"] ?? "Generic User") as! String
+                self.studentUser.lastName = (data!["lastName"] ?? "Generic User") as! String
                 completion(true)
                 
             } else {
@@ -320,11 +323,31 @@ final class ModelData: ObservableObject{
     //assumes modelData.studentUSer was already created and populated in CreateStudentProfilePage
     func registerStudentUser(completion: @escaping (Bool)->Void){
         Auth.auth().createUser(withEmail: studentUser.email, password: studentUser.password){authResult, error in
-        if(authResult != nil){
-            self.uid = authResult?.user.uid ?? "null"
-            //set uid
-            self.studentUser.setUID(uid: self.uid)
-            //create the student
+            if(authResult != nil){
+                self.uid = authResult?.user.uid ?? "null"
+                //set uid
+                self.studentUser.setUID(uid: self.uid)
+                //create the student
+                self.createStudentInFirestore(student: self.studentUser){ created in
+                    if(created){
+                        completion(true)
+                    }
+                    else{
+                        completion(false)
+                    }
+                }
+                
+                
+            }
+            else{
+                completion(false)
+            }
+            
+        }
+    }
+    //assumes user is logged in already
+        func updateStudentData(completion: @escaping (Bool)->Void){
+            
             self.createStudentInFirestore(student: self.studentUser){ created in
                 if(created){
                     completion(true)
@@ -333,23 +356,15 @@ final class ModelData: ObservableObject{
                     completion(false)
                 }
             }
-            
-
         }
-        else{
-            completion(false)
-        }
-
-    }
 //        modelData.createStudent(student: student)
 //        modelData.studentUser = Student(name: firstName + " " + lastName)
 //        modelData.studentUser.populateInfo(firstName: firstName, lastName: lastName, age: age, price: price, email: email, selectedInstrument: selectedInstrument)
 
-    
-}
     //fetchTeacherData
     //called by StudentAppPage View onAppear
     func fetchTeacherData(completion: @escaping () -> Void){
+        print("FETCHING TEACHER DATAAA")
         let db = Firestore.firestore()
         let declinedTeachersRef = db.collection("StudentUser").document(uid).collection("Declined Teachers")
         let matchedTeachersRef = db.collection("StudentUser").document(uid).collection("Matched Teachers")
