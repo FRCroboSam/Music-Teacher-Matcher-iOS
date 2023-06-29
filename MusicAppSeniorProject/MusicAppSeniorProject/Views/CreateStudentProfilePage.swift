@@ -254,6 +254,7 @@ struct CreateStudentProfilePage: View{
                                     print("UPDATED SUCCESSFULLy")
                                     createStudentObject()
                                     if(profileImageCount > 1){
+                                        print("GOING TO UPLOAD AN IMAGE")
                                         modelData.uploadImage(student: modelData.studentUser) { _  in
                                         }
                                     }
@@ -319,17 +320,19 @@ struct CreateStudentProfilePage: View{
 //            .toolbar(.hidden, for: .navigationBar)
                 
             }.listRowSeparator(.hidden)
-//            .alert("Failed to update info: Check password and email", isPresented: $failedUpdate) {
-//                Button("Try Again", role: .destructive) { }
-//            }
-//            .alert("Info updated successfully", isPresented: $updatedSuccessfully) {
-//                Button("Ok", role: .destructive) { }
-//            }
+            .alert("Failed to update info: Check password and email", isPresented: $failedUpdate) {
+                Button("Try Again", role: .destructive) { }
+            }
+            .alert("Info updated successfully", isPresented: $updatedSuccessfully) {
+                Button("Ok", role: .destructive) { }
+            }
             
         }
         
         //creates Student and sets it to modelData.studentUser
         func createStudentObject(){
+            //reset newEmail, changeEmail, newPassword, etc
+            
             if(changeEmail){
                 email = newEmail
             }
@@ -351,15 +354,23 @@ struct CreateStudentProfilePage: View{
                 "lastName": lastName,
                 "age": String(age)
             ]
+            newEmail = ""
+            newPassword = ""
+            changeEmail = false
+            changePassword = false
             
 
 
             modelData.studentUser = Student(name: firstName + " " + lastName)
             modelData.studentUser.email = email
             modelData.studentUser.password = password
+            
             let uiImage = viewModel.profileImage?.uiImage ?? viewModel.uiImage2 ?? UIImage(systemName: "person.badge.shield.checkmark.fill")
-//            modelData.studentUser.setUIImage(uiImage: uiImage!)
-            modelData.uiImage = uiImage
+            modelData.studentUser.setUIImage(uiImage: uiImage!)
+            //only do this if u selected a diff image
+            if(!editMode || profileImageCount > 1){
+                modelData.uiImage = uiImage
+            }
             modelData.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
             
         }

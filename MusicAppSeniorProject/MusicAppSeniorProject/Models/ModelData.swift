@@ -208,6 +208,7 @@ final class ModelData: ObservableObject{
         
     }
     func uploadImage(student: Student, completion:@escaping(Bool) -> Void){
+        print("UPLOADING THE IMAGE")
         let storage = Storage.storage()
         let storageRef = storage.reference(withPath: uid)
         let image = self.studentUser.getUIImage()
