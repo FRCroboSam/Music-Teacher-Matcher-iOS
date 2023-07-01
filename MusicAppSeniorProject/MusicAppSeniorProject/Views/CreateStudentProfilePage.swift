@@ -408,10 +408,12 @@ struct CreateStudentProfilePage: View{
                                         }
                                         else{
                                             print("CHANGING EMAIL AND PASSWORD")
-                                            completion(true)
+                                            print("GOING TO UPDATE EMAIL")
                                             Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
                                                 if let error = error{
+                                                    print(error)
                                                     print("DIDNT UPDATE EMIAL")
+                                                    completion(false)
                                                 }
                                                 else{
                                                     email = newEmail

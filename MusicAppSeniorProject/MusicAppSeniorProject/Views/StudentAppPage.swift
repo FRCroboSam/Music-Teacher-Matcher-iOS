@@ -43,6 +43,8 @@ struct StudentAppPage: View {
                         .tabItem{
                             Label("Edit Profile", systemImage: "person.crop.circle.fill")
                         }
+                }.navigationDestination(isPresented: $loggedOut) {
+                    HomePage()
                 }
 
                 .onAppear() {
@@ -71,11 +73,11 @@ struct StudentAppPage: View {
             //            }
         }
         Button("Logout", action: {
+            print("LOGGING OUT")
             modelData.logOut();
             loggedOut = true
-        }).navigationDestination(isPresented: $loggedOut) {
-            HomePage()
-        }
+            print(loggedOut)
+        })
     }
     
 }
