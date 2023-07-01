@@ -48,6 +48,7 @@ struct CreateStudentProfilePage: View{
     @State var invalidEmail = false
     @State var invalidNewPassword = false
     @State var invalidPassword = false
+    @State var loggedOut = false
     //    @State var tag:Int? = nil
     
     //    @State private var sldkfj: String = ""
@@ -61,7 +62,7 @@ struct CreateStudentProfilePage: View{
             Form{
                 Section{
                     if(editMode){
-                        Text("Edit Your Profile")
+                        Text("Edit Your Profile Settings")
                             .font(.system(size: 35))
                             .fontWeight(.bold)
                             .padding(10)
@@ -289,6 +290,9 @@ struct CreateStudentProfilePage: View{
                         .buttonStyle(.bordered)
                         .padding(10)
                         .listRowSeparator(.hidden)
+                        Button("Sign out"){
+                           loggedOut = true
+                        }.buttonStyle(.bordered)
                     }
                     else{
                         Button("Submit Profile") {
@@ -316,6 +320,9 @@ struct CreateStudentProfilePage: View{
             .navigationDestination(isPresented: $loginSuccessful) {
                 StudentAppPage()
             }
+            .navigationDestination(isPresented: $loggedOut, destination: {
+                HomePage()
+            })
             .navigationTitle("Edit Profile")
 //            .toolbar(.hidden, for: .navigationBar)
                 

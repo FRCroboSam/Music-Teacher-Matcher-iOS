@@ -14,10 +14,12 @@ struct TeacherListView: View {
     @Binding var displayArray: [Teacher]
     @Binding var uiImage: UIImage?
     let displayText: String
-    
+    @State private var loggedOut = false
     var body: some View {
         VStack{
+            Spacer(minLength:20)
             ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
+
             Text("Welcome, " + modelData.studentUser.name + "!")
                 .font(.system(size: 40))
                 .fontWeight(.bold)
@@ -39,6 +41,7 @@ struct TeacherListView: View {
 
                 }
             }
+
         }
         
 }

@@ -72,12 +72,6 @@ struct StudentAppPage: View {
             //                    }
             //            }
         }
-        Button("Logout", action: {
-            print("LOGGING OUT")
-            modelData.logOut();
-            loggedOut = true
-            print(loggedOut)
-        })
     }
     
 }
