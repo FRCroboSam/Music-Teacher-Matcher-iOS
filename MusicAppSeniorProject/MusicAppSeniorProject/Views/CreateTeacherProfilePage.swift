@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CreateTeacherProfilePage: View {
     @EnvironmentObject var modelData: TeacherModelData
+    @EnvironmentObject var viewModel: ProfileModel
+
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var yearsTeaching : Double = 0
@@ -30,6 +32,29 @@ struct CreateTeacherProfilePage: View {
     @State private var customPricing = false
     @State private var custom = false
     @State private var studentLevel = "Beginner"
+    
+    @State private var useCamera = false
+
+    var editMode = false
+    @State var newEmail = ""
+    @State var newPassword = ""
+    @State var hasPopulated = false
+    var student: Student?
+    
+    @State var invalidEmail = false
+    @State var invalidNewPassword = false
+    @State var invalidPassword = false
+    @State var loggedOut = false
+    //    @State var tag:Int? = nil
+    
+    //    @State private var sldkfj: String = ""
+    
+    //for checking which fields were updated
+    @State private var profileImageCount = 0
+    @State private var failedUpdate = false
+    @State private var updatedSuccessfully = false
+    
+    
     var body: some View {
 //        NavigationStack{
             Form{
@@ -39,6 +64,43 @@ struct CreateTeacherProfilePage: View {
                         .padding(10)
                     Spacer()
                         .frame(height: 0)
+                VStack{
+                    EditableCircularProfileImage()
+                        .onReceive(viewModel.$imageSelection){ (value) in
+                            print("PROFILE IMAGE CHANGING")
+                            profileImageCount += 1
+                        }
+                    Text("Select a Profile Picture")
+                        .font(.system(size: 20))
+                        .fontWeight(.bold)
+                        .padding(10)
+//                        NavigationLink(destination:CameraView()){
+//                            Text("Use camera to take a photo")
+//                        }.buttonStyle(BorderlessButtonStyle())
+                    Button("Use Camera to take a photo") {
+                        useCamera = true
+                    }.listRowSeparator(.hidden)
+                    .buttonStyle(.bordered)
+                    .padding(10)
+                    .navigationDestination(isPresented: $useCamera) {
+                        CameraView()
+                    }
+                }
+                .onAppear{
+                    print("APPEARING")
+//                        if(editMode && !hasPopulated){
+//                            if(student != nil){
+//                                populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
+//                                hasPopulated = true
+//                            }
+//                            if(modelData.uiImage == nil){
+//                                Task {
+//                                    await populateImage()
+//                                }
+//                            }
+//
+//                        }
+                }
                     Text("Help students learn about you!")
                         .font(.system(size: 30))
                         .padding(10)
@@ -52,6 +114,7 @@ struct CreateTeacherProfilePage: View {
 
                     }
                     .padding(10)
+
                     Section{
                         HStack(spacing: 10){
                             Picker("Select your instrument", selection: $instrument, content:{

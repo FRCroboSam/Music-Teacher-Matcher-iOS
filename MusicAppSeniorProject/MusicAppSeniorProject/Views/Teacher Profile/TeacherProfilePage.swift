@@ -11,6 +11,7 @@ struct TeacherProfilePage: View {
     @State var teacher: Teacher
     //teacherType is if the teacher is in available teachers, requested, teachers, etc. 
     public var displayText: String
+    public var status: String
     let teacherImage: UIImage?
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var modelData: ModelData
@@ -36,7 +37,7 @@ struct TeacherProfilePage: View {
                         .font(.title)
                     
                 }
-                if(displayText == "Matched Teachers"){
+                if(status == "Matched Teachers"){
                     Text("Contact " + teacher.name + " at " + teacher.email + " to schedule an interview!")
                 }
             }
@@ -63,7 +64,7 @@ struct TeacherProfilePage: View {
                 }
             }
             
-            if(displayText == "Available Teachers"){
+            if(status == "Available Teachers"){
                 Button("Decline Teacher"){
                     modelData.declineTeacher(teacherId: teacher.uid)
                     dismiss()

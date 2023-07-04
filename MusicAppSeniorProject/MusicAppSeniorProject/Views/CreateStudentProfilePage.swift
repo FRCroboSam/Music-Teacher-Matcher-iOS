@@ -291,6 +291,7 @@ struct CreateStudentProfilePage: View{
                         .padding(10)
                         .listRowSeparator(.hidden)
                         Button("Sign out"){
+                            modelData.logOut()
                            loggedOut = true
                         }.buttonStyle(.bordered)
                     }

@@ -13,6 +13,7 @@ struct TeacherListView: View {
     @EnvironmentObject var modelData: ModelData
     @Binding var displayArray: [Teacher]
     @Binding var uiImage: UIImage?
+    let status: String
     let displayText: String
     @State private var loggedOut = false
     var body: some View {
@@ -20,7 +21,7 @@ struct TeacherListView: View {
             Spacer(minLength:20)
             ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
 
-            Text("Welcome, " + modelData.studentUser.name + "!")
+            Text(status + " students")
                 .font(.system(size: 40))
                 .fontWeight(.bold)
                 .padding(10)
@@ -28,7 +29,7 @@ struct TeacherListView: View {
                 .padding(10)
             List(displayArray) { teacher in
                 NavigationLink{
-                    TeacherProfilePage(teacher: teacher, displayText: displayText, teacherImage: (teacher.uiImage ?? UIImage(systemName: "heart.fill"))!)
+                    TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "heart.fill"))!)
                 } label:{
                     HStack{
                         ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "heart.fill"))!), size: 50)

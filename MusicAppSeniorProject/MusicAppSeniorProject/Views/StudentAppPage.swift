@@ -27,15 +27,15 @@ struct StudentAppPage: View {
         NavigationStack{
             ZStack{
                 TabView{
-                    TeacherListView(displayArray: $modelData.availableTeachers, uiImage: $modelData.uiImage, displayText: availableTeacherDesc)
+                    TeacherListView(displayArray: $modelData.availableTeachers, uiImage: $modelData.uiImage, status: "Available Teachers", displayText: availableTeacherDesc)
                         .tabItem{
                             Label("Available", systemImage: "person.crop.circle.fill.badge.plus")
                         }
-                    TeacherListView(displayArray: $modelData.requestedTeachers, uiImage: $modelData.uiImage, displayText: requestedTeacherDesc)
+                    TeacherListView(displayArray: $modelData.requestedTeachers, uiImage: $modelData.uiImage, status: "Requested Teachers", displayText: requestedTeacherDesc)
                         .tabItem{
                             Label("Requested", systemImage: "person.crop.circle.badge.questionmark")
                         }
-                    TeacherListView(displayArray: $modelData.matchedTeachers, uiImage: $modelData.uiImage, displayText: matchedTeacherDesc)
+                    TeacherListView(displayArray: $modelData.matchedTeachers, uiImage: $modelData.uiImage, status: "Matched Teachers", displayText: matchedTeacherDesc)
                         .tabItem{
                             Label("Matched", systemImage: "person.crop.circle.badge.checkmark")
                         }
