@@ -147,7 +147,7 @@ struct LoginPage: View {
                 TeacherAppPage()
             }
             .navigationTitle("Logout")
-            .toolbar(.hidden, for:.navigationBar)
+//            .toolbar(.hidden, for:.navigationBar)
             .navigationBarTitleDisplayMode(.inline)
 
        }

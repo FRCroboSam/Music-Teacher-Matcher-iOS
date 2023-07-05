@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import Combine
 
 struct CreateTeacherProfilePage: View {
     @EnvironmentObject var modelData: TeacherModelData
     @EnvironmentObject var viewModel: ProfileModel
-
+    var teacher: Teacher?
+    
+    @State private var name: String = ""
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var yearsTeaching : Double = 0
@@ -32,14 +36,16 @@ struct CreateTeacherProfilePage: View {
     @State private var customPricing = false
     @State private var custom = false
     @State private var studentLevel = "Beginner"
-    
+    @State private var loginSuccessful = false
+
     @State private var useCamera = false
 
     var editMode = false
+    @State var hasPopulated = false
     @State var newEmail = ""
     @State var newPassword = ""
-    @State var hasPopulated = false
-    var student: Student?
+    @State private var changePassword: Bool = false
+    @State private var changeEmail: Bool = false
     
     @State var invalidEmail = false
     @State var invalidNewPassword = false
@@ -58,6 +64,7 @@ struct CreateTeacherProfilePage: View {
     var body: some View {
 //        NavigationStack{
             Form{
+
                     Text("Your Teacher Profile")
                         .font(.system(size: 40))
                         .fontWeight(.bold)
@@ -77,6 +84,7 @@ struct CreateTeacherProfilePage: View {
 //                        NavigationLink(destination:CameraView()){
 //                            Text("Use camera to take a photo")
 //                        }.buttonStyle(BorderlessButtonStyle())
+
                     Button("Use Camera to take a photo") {
                         useCamera = true
                     }.listRowSeparator(.hidden)
@@ -88,18 +96,18 @@ struct CreateTeacherProfilePage: View {
                 }
                 .onAppear{
                     print("APPEARING")
-//                        if(editMode && !hasPopulated){
-//                            if(student != nil){
-//                                populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
-//                                hasPopulated = true
-//                            }
-//                            if(modelData.uiImage == nil){
-//                                Task {
-//                                    await populateImage()
-//                                }
-//                            }
-//
-//                        }
+                        if(editMode && !hasPopulated){
+                            if(teacher != nil){
+                                populateProfileEditor(teacher: teacher ?? Teacher(name: "DKFJDJ"))
+                                hasPopulated = true
+                            }
+                            if(modelData.uiImage == nil){
+                                Task {
+                                    await populateImage()
+                                }
+                            }
+
+                        }
                 }
                     Text("Help students learn about you!")
                         .font(.system(size: 30))
@@ -227,24 +235,77 @@ struct CreateTeacherProfilePage: View {
                     }
                     .padding(10)
 
-                    Button("Create Account") {
-                        createTeacherObject()
-                        modelData.submitProfile(teacher: modelData.teacherUser){ isFound in
-                            if isFound {
-                                noUserFound = false
-                                registrationSuccessful = true
-                            } else {
-                                print("REGISTRATION SUCCESSFUL")
-                                noUserFound = true
-                                registrationSuccessful = false
-                            }
-                        }
+                if(editMode){
+                    if(changePassword || changeEmail){
+                        Text("Enter current password to save changes to profile")
+                            .listRowSeparator(.hidden)
+
+                        TextField("Enter current password", text: $password)
+                            .textFieldStyle(.roundedBorder)
                     }
-
-
-                    .navigationBarBackButtonHidden(true)
-                    .buttonStyle(.bordered)
-                    .padding(10)
+                        Button("Update Profile") {
+                            updateProfile(){ canUpdate in
+                                if canUpdate{
+                                    print("UPDATED SUCCESSFULLy")
+                                    createTeacherObject()
+                                    if(profileImageCount > 1){
+                                        print("GOING TO UPLOAD AN IMAGE")
+                                        modelData.uploadImage(teacher: modelData.teacherUser) { _  in
+                                        }
+                                    }
+                                    modelData.updateTeacherData { works in
+                                        if(works){
+                                            updatedSuccessfully = true
+                                            failedUpdate = false
+                                        }
+                                        else{
+                                            failedUpdate = true
+                                        }
+                                    }
+                                }
+                                else{
+                                    print("FAILED UPDATE")
+                                    failedUpdate = true
+                                    
+                                }
+                            }
+//                            createStudentObject()
+//                            modelData.registerStudentUser(){ isFound in
+//                                if isFound {
+//                                    noUserFound = false
+//                                    loginSuccessful = true
+//                                } else {
+//                                    noUserFound = true
+//                                    loginSuccessful = false
+//                                }
+//                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .padding(10)
+                        .listRowSeparator(.hidden)
+                        Button("Sign out"){
+                            modelData.logOut()
+                           loggedOut = true
+                        }.buttonStyle(.bordered)
+                    }
+                    else{
+                        Button("Submit Profile") {
+                            createTeacherObject()
+                            modelData.submitProfile(teacher: modelData.teacherUser){ isFound in
+                                if isFound {
+                                    noUserFound = false
+                                    loginSuccessful = true
+                                    modelData.uploadImage(teacher: modelData.teacherUser) { _ in
+                                    }
+                                } else {
+                                    noUserFound = true
+                                    loginSuccessful = false
+                                }
+                            }
+                        }.listRowSeparator(.hidden)
+                        .buttonStyle(.bordered)
+                        .padding(10)
+                    }
 
                     Spacer()
                         .navigationBarBackButtonHidden(true)
@@ -284,9 +345,177 @@ struct CreateTeacherProfilePage: View {
         modelData.teacherUser = Teacher(name: firstName + " " + lastName)
         modelData.teacherUser.email = email
         modelData.teacherUser.password = password
+        let uiImage = viewModel.profileImage?.uiImage ?? viewModel.uiImage2 ?? UIImage(systemName: "person.badge.shield.checkmark.fill")
+        modelData.teacherUser.setUIImage(uiImage: uiImage!)
+        //only do this if u selected a diff image
+        if(!editMode || profileImageCount > 1){
+            modelData.uiImage = uiImage
+        }
         modelData.teacherUser.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
     }
+    func updateProfile(completion: @escaping (Bool) -> Void){
+        invalidPassword = false
+        invalidNewPassword = false
+        invalidEmail = false
+        print("Updating Profile")
+        let user = Auth.auth().currentUser
+        var credential: AuthCredential
+        credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        var success = true
+        if(changeEmail || changePassword){
+            user?.reauthenticate(with: credential){ result, error in
+                if let error = error{
+                    print("INCORRECT PASSWORD")
+                    invalidPassword = true
+                    completion(false)
+                }
+                else{
+                    print("CORRECT PASSWORD")
+                    if(changeEmail){
+                        //check if email is valid before changing password if changePassword is a thing
+                        modelData.checkEmailValidity(email: newEmail) { canChangeEmail in
+                            if canChangeEmail{
+                                print("CAN CHANGE EMAIL")
+                                //attempt to change the password
+                                if(changePassword){
+                                    Auth.auth().currentUser?.updatePassword(to: newPassword){ (error) in
+                                        if let error = error{
+                                            print("INVALID NEW PASSSWORD")
+                                            invalidNewPassword = true
+                                            completion(false)
+                                        }
+                                        else{
+                                            print("CHANGING EMAIL AND PASSWORD")
+                                            print("GOING TO UPDATE EMAIL")
+                                            Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
+                                                if let error = error{
+                                                    print(error)
+                                                    print("DIDNT UPDATE EMIAL")
+                                                    completion(false)
+                                                }
+                                                else{
+                                                    email = newEmail
+                                                    print("UPDATED EMAIL")
+                                                    completion(true)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else{
+                                    print("ATTEMPTING TO UPDATE EMIAL")
+                                    Auth.auth().currentUser?.updateEmail(to: newEmail){ (error) in
+                                        if let error = error{
+                                            print("DIDNT UPDATE EMIAL")
+                                            completion(false)
+                                        }
+                                        else{
+                                            email = newEmail
+                                            print("UPDATED EMAIL")
+                                            completion(true)
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                print("CNAT USSE EMIAL")
+                                completion(false)
+                            }
+                            print("HELLO")
+                        }
+                        print("DIFJDIFJIJ")
+                    }
+                    else{
+                        Auth.auth().currentUser?.updatePassword(to: newPassword){ (error) in
+                            if let error = error{
+                                print("OTHER")
+                                completion(false)
+                            }
+                            else{
+                                print("OTHER")
+                                completion(true)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else{
+            print("NOT CHANGING EMAIL OR PASSWORD CAN DO")
+           completion(true)
+        }
+    }
+    func populateProfileEditor(teacher: Teacher){
+//        //personal info
+//        name = teacher.name
+//        print("PERSONAL INFO: ")
+//        print(teacher.personalInfo)
+//        name = value(key: "name", pairs: teacher.personalInfo)
+//
+//        firstName = student.firstName
+//        lastName = student.lastName
+//        print("FIRSTNAME: " + firstName)
+//        print("LASTNAME: " + lastName)
+//        yearsTeaching = convertToDouble(s:value(key: "Years Teaching", pairs: student.personalInfo))
+//        //loginInfo
+//        email = modelData.email ?? "template@gmail.com"
+//        //musical background
+//        instrument = value(key: "Instrument", pairs: student.musicalBackground)
+//        studentLevel = value(key: "Skill Level", pairs: student.musicalBackground)
+//        description = value(key: "Prior Pieces Played", pairs: student.musicalBackground)
+//        cost = value(key: "Cost", pairs: student.musicalBackground)
+
+        let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
+        viewModel.setImageState(imageState: .success(image2))//                            let image =
+
+    }
+    func populateImage() async {
+        if modelData.uiImage == nil {
+            var subscription: AnyCancellable?
+            var isCancelled = false
+
+            subscription = modelData.$uiImage
+                .sink { image in
+                    if let image = image {
+                        // uiImage is not nil, execute the desired method
+                        if !isCancelled {
+                            DispatchQueue.main.async {
+                                let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "camera.macro")!)
+                                viewModel.setImageState(imageState: .success(image2))
+
+                            }
+                            subscription?.cancel()
+                        }
+                    }
+                }
+
+            // Wait for the task to be cancelled or completed
+            await Task.yield()
+
+            // Check if the task was cancelled
+            if Task.isCancelled {
+                isCancelled = true
+            }
+        }
+    }
+
+    func value(key: String, pairs: KeyValuePairs<String, String>) -> String {
+        if let index = pairs.firstIndex(where: { $0.0 == key }) {
+            print("KEY: " + key + " VALUE: " + pairs[index].value)
+            return pairs[index].value
+        } else {
+            return ""
+        }
+    }
+    func convertToDouble(s:String) -> Double{
+        if let doubleValue = Double(s) {
+            return doubleValue
+        } else {
+            return 0
+        }
+    }
 }
+
 
 struct CreateTeacherProfilePage_Previews: PreviewProvider {
     static var previews: some View {

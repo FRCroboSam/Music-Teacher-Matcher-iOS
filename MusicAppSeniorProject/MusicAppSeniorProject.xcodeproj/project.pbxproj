@@ -11,7 +11,6 @@
 		36094374299F1A38000CE05C /* FileStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36094373299F1A38000CE05C /* FileStoreManager.swift */; };
 		36094378299F1F6D000CE05C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36094377299F1F6D000CE05C /* User.swift */; };
 		3609437A299F1FA6000CE05C /* userViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36094379299F1FA6000CE05C /* userViewModel.swift */; };
-		360FDF03299B556B00C8BAF3 /* StudentProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 360FDF02299B556B00C8BAF3 /* StudentProfile.swift */; };
 		360FDF05299B567200C8BAF3 /* MatchMakingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 360FDF04299B567200C8BAF3 /* MatchMakingPage.swift */; };
 		360FDF07299B579A00C8BAF3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 360FDF06299B579A00C8BAF3 /* GoogleService-Info.plist */; };
 		360FDF08299B579A00C8BAF3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 360FDF06299B579A00C8BAF3 /* GoogleService-Info.plist */; };
@@ -52,6 +51,7 @@
 		364DEBF729A8634500FFA18B /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364DEBF629A8634500FFA18B /* Student.swift */; };
 		364DEBF929A87B2900FFA18B /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364DEBF829A87B2900FFA18B /* ModelData.swift */; };
 		3679178E29FA2DF400788878 /* iosCheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */; };
+		368CC60F2A54E39D00F36140 /* StudentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC60E2A54E39D00F36140 /* StudentListView.swift */; };
 		3697540429E766940035AD9B /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540329E766940035AD9B /* TestView.swift */; };
 		3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */; };
 		36BF5EF22A40FA3C00D0B15A /* TeacherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */; };
@@ -99,7 +99,6 @@
 		36094373299F1A38000CE05C /* FileStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStoreManager.swift; sourceTree = "<group>"; };
 		36094377299F1F6D000CE05C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		36094379299F1FA6000CE05C /* userViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = userViewModel.swift; sourceTree = "<group>"; };
-		360FDF02299B556B00C8BAF3 /* StudentProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentProfile.swift; sourceTree = "<group>"; };
 		360FDF04299B567200C8BAF3 /* MatchMakingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchMakingPage.swift; sourceTree = "<group>"; };
 		360FDF06299B579A00C8BAF3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		363583CC2984F91900C37596 /* MusicAppSeniorProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicAppSeniorProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,6 +121,7 @@
 		364DEBF629A8634500FFA18B /* Student.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		364DEBF829A87B2900FFA18B /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
 		3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosCheckboxToggleStyle.swift; sourceTree = "<group>"; };
+		368CC60E2A54E39D00F36140 /* StudentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentListView.swift; sourceTree = "<group>"; };
 		3697540329E766940035AD9B /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherListView.swift; sourceTree = "<group>"; };
@@ -306,10 +306,10 @@
 				36D7DF5929A45CE800273F78 /* CreateTeacherProfilePage.swift */,
 				3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */,
 				363583FB2984F96C00C37596 /* CreateStudentProfilePage.swift */,
-				360FDF02299B556B00C8BAF3 /* StudentProfile.swift */,
 				363583FD2984F99200C37596 /* StudentAppPage.swift */,
 				3642D16129EEF1E60052FF2E /* TeacherAppPage.swift */,
 				36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */,
+				368CC60E2A54E39D00F36140 /* StudentListView.swift */,
 				3697540329E766940035AD9B /* TestView.swift */,
 				360FDF04299B567200C8BAF3 /* MatchMakingPage.swift */,
 				3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */,
@@ -496,6 +496,7 @@
 				36CADD632A08B778006F246F /* ViewfinderView.swift in Sources */,
 				36CADD5D2A08B778006F246F /* CameraView.swift in Sources */,
 				363583FA2984F94C00C37596 /* HomePage.swift in Sources */,
+				368CC60F2A54E39D00F36140 /* StudentListView.swift in Sources */,
 				363583FC2984F96C00C37596 /* CreateStudentProfilePage.swift in Sources */,
 				363583D02984F91900C37596 /* MusicAppSeniorProjectApp.swift in Sources */,
 				3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */,
@@ -504,7 +505,6 @@
 				36CADD682A0E9508006F246F /* ProfileModel.swift in Sources */,
 				36CADD5E2A08B778006F246F /* PhotoLibrary.swift in Sources */,
 				3642D16229EEF1E60052FF2E /* TeacherAppPage.swift in Sources */,
-				360FDF03299B556B00C8BAF3 /* StudentProfile.swift in Sources */,
 				36CADD6B2A1989D0006F246F /* ContentViewTest.swift in Sources */,
 				36094378299F1F6D000CE05C /* User.swift in Sources */,
 				360FDF05299B567200C8BAF3 /* MatchMakingPage.swift in Sources */,

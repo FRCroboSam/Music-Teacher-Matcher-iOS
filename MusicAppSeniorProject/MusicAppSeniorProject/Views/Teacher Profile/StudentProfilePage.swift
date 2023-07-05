@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct StudentProfilePage: View {
-    public var student: Student
+    @State var student: Student
+    public var displayText: String
+    public var status: String
+    let studentImage: UIImage?
     @EnvironmentObject var modelData: TeacherModelData
-    var mirrored_object = Mirror(reflecting: "")
     @StateObject var viewModel = ProfileModel()
     @Environment(\.dismiss) var dismiss
 
 
-    public var displayText: String
     var body: some View {
         let keys = student.personalInfo.map{$0.key}
         let values = student.personalInfo.map {$0.value}
@@ -24,14 +25,15 @@ struct StudentProfilePage: View {
         let valuesMusic = student.musicalBackground.map{$0.value}
         
         let name: String? = student.name
-        let instrument: String? = student.selectedInstrument
 
         Form{
+            ProfileImage(image: Image(uiImage:(studentImage ?? UIImage(systemName: "heart.fill"))!), size:100)
             HStack{
-//                EditableCircularProfileImage(viewModel: viewModel)
                 Text((name ?? "No Name"))
                     .font(.title)
                 
+            }
+            if(status == "Matched Teachers"){
             }
             
             Section {
@@ -66,17 +68,19 @@ struct StudentProfilePage: View {
 
                 
                 
-            }
+        }.onAppear{
+            print("SHOWING THE VIEW")
+        }
             .navigationTitle(student.firstName + ", " + student.lastName)
             .navigationBarTitleDisplayMode(.inline)
         }
     }
     
-    struct StudentProfilePage_Previews: PreviewProvider {
-        static var previews: some View {
-            
-            StudentProfilePage(student: Student.createGenericStudent(), displayText: "generic")
-                .environmentObject(ModelData())
-        }
-    }
+//    struct StudentProfilePage_Previews: PreviewProvider {
+//        static var previews: some View {
+//            
+//            StudentProfilePage(student: Student.createGenericStudent(), displayText: "generic")
+//                .environmentObject(ModelData())
+//        }
+//    }
 

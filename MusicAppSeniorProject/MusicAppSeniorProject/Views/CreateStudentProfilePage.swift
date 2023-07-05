@@ -268,7 +268,6 @@ struct CreateStudentProfilePage: View{
                                             failedUpdate = true
                                         }
                                     }
-                                    
                                 }
                                 else{
                                     print("FAILED UPDATE")
@@ -315,9 +314,7 @@ struct CreateStudentProfilePage: View{
                     }
 
 
-                        Spacer()
-//                    }
-
+                    Spacer()
             .navigationDestination(isPresented: $loginSuccessful) {
                 StudentAppPage()
             }

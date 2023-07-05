@@ -22,10 +22,54 @@ final class TeacherModelData: ObservableObject{
     @Published var userData: [String: Any]?
     @Published var uid: String = ""
     
+    @Published var email: String?
+
     @Published var profileImage: ProfileModel?
     @Published var uiImage: UIImage?
     
-    public func createTeacherInFireStore(teacher: Teacher) {
+    func logOut(){
+        try! Auth.auth().signOut()
+    }
+    func updateTeacherData(completion: @escaping (Bool)->Void){
+        
+        self.createTeacherInFireStore(teacher:self.teacherUser){ created in
+            if(created){
+                completion(true)
+            }
+            else{
+                completion(false)
+            }
+        }
+    }
+    func checkEmailValidity(email: String, completion: @escaping (Bool) -> Void) {
+        print("CHECKING EMAIL AVAILABILITY")
+        Auth.auth().fetchSignInMethods(forEmail: email) { (signInMethods, error) in
+            if let error = error {
+                print("SOMETHING WRONG WITH EMAIL")
+                completion(false)
+            }
+            else {
+                print("OTEHR")
+                if let signInMethods = signInMethods {
+                    if signInMethods.isEmpty {
+                        print("EMAIL WORKS ")
+                        completion(true)
+                    } else {
+                        print("Email is registered.")
+                        print("Sign-in methods: \(signInMethods)")
+                        completion(false)
+
+                    }
+                }
+                else{
+                    print("SIGNIN METHODS NIL: " + String(signInMethods == nil))
+                    completion(true)
+                }
+            }
+        }
+    }
+    
+    public func createTeacherInFireStore(teacher: Teacher, completion: @escaping(Bool) -> Void) {
         let db = Firestore.firestore()
         //add Teacher to Teachers
         let docRef = db.collection("Teachers").document(self.uid)
@@ -49,6 +93,8 @@ final class TeacherModelData: ObservableObject{
         docRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 self.userData = document.data()
+                completion(true)
+
             } else {
                 print("Document does not exist")
             }
@@ -63,9 +109,7 @@ final class TeacherModelData: ObservableObject{
         docRef.collection("Declined Students").document().setData([  // 👈 Create a document in the subcollection
             "title": "testing"
                                                                   ])
-        uploadImage(teacher: teacher){ uploaded in
-            
-        }
+
     }
     
     //use this after logging in (NOT SIGNUP) to create the teacher object
@@ -111,7 +155,24 @@ final class TeacherModelData: ObservableObject{
             }
         }
     }
+    func fetchStudentImage(student: Student, completion:@escaping(UIImage?) -> Void){
+        print("Fetching Student Image" + uid)
+        let storage = Storage.storage()
+        let storageRef = storage.reference(withPath: student.uid)
+        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+          if let error = error {
+            // Uh-oh, an error occurred!
+            completion(nil)
+          } else {
+              print("Successfully fetched teacher image from " + student.uid)
+            // Data for "images/island.jpg" is returned
+            let uiImage = UIImage(data: data!) ?? UIImage(systemName: "person.fill")
+            completion(uiImage)
+          }
+        }
+    }
     func createStudentFromData(documentSnapshot: DocumentSnapshot) -> Student{
+        print("CREATING THE STUDENT")
         let data = documentSnapshot.data()
         let loginInfo:KeyValuePairs = [
             "email": (data!["email"] ?? "Generic User") as! String,
@@ -133,6 +194,30 @@ final class TeacherModelData: ObservableObject{
         var student = Student(name: name)
         student.uid = data!["uid"] as? String ?? ""
         student.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
+        fetchStudentImage(student: student) { fetchedImage in
+            print("FETCHING TEACHER IMAGE")
+            print(fetchedImage == nil)
+            if let index = self.requestedStudents.firstIndex(where: { $0.id == student.id }) {
+                print("FOUND THE IMAGE with id: ")
+                print(student.id)
+                self.requestedStudents[index].uiImage = fetchedImage
+            }
+            else if let index = self.matchedStudents.firstIndex(where: { $0.id == student.id }) {
+                if index < self.matchedStudents.count {
+                    self.matchedStudents[index].uiImage = fetchedImage
+                } else {
+                    print("Index out of range")
+                }
+            }
+//            else if let index = self.declinedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                if index < self.declinedTeachers.count {
+//                    self.requestedTeachers[index].uiImage = fetchedImage
+//                } else {
+//                    print("Index out of range")
+//                }
+//            }
+            
+        }
         return student 
     }
     
@@ -389,7 +474,9 @@ final class TeacherModelData: ObservableObject{
             if(authResult != nil){
                 print("CREATED THE TEACHER")
                 self.uid = authResult?.user.uid ?? "null"
-                self.createTeacherInFireStore(teacher: teacher)
+                self.createTeacherInFireStore(teacher: teacher){ _ in
+                    
+                }
                 completion(true)
             }
             else{
