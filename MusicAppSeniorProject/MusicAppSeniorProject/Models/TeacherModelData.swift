@@ -134,18 +134,19 @@ final class TeacherModelData: ObservableObject{
                 ]
                 let lessonInfo:KeyValuePairs = [
                     "Lesson Length": (data!["Lesson Length"] ?? "Generic User") as! String,
-                    "Pricing": (data!["email"] ?? "Generic User") as! String,
-                    "Minimum Student Level": (data!["email"] ?? "Generic User") as! String,
+                    "Pricing": (data!["Pricing"] ?? "Generic User") as! String,
+                    "Minimum Student Level": (data!["Minimum Student Level"] ?? "Generic User") as! String,
                 ]
                 let teacherInfo:KeyValuePairs = [
                     "name": (data!["name"] ?? "Generic User") as! String,
-                    "firstName": (data!["email"] ?? "Generic User") as! String,
-                    "lastName": (data!["email"] ?? "Generic User") as! String
+                    "firstName": (data!["firstName"] ?? "Generic User") as! String,
+                    "lastName": (data!["lastName"] ?? "Generic User") as! String
                 ]
                 var name = (data!["name"] ?? "Generic User") as! String
                 self.userData = data
                 self.teacherUser = Teacher(name: name)
                 self.teacherUser.uid = uid
+                
                 self.teacherUser.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
                 completion(true)
                 

@@ -22,7 +22,7 @@ struct CreateTeacherProfilePage: View {
     @State private var description: String = ""
     @State private var instrument: String = "Cello"
     @State private var lessonType: String = ""
-    @State private var location: String = ""
+//    @State private var location: String = "" //TODO: Implement this
     @State private var cost: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
@@ -32,8 +32,11 @@ struct CreateTeacherProfilePage: View {
     @State private var teachingStyle = ""
     @State private var musicDegree = ""
     @State private var musicalBackground = ""
-    @State private var pricingInfo = ""
+    
+    //pricing if custom
     @State private var customPricing = false
+    @State private var pricingInfo = ""
+
     @State private var custom = false
     @State private var studentLevel = "Beginner"
     @State private var loginSuccessful = false
@@ -201,11 +204,6 @@ struct CreateTeacherProfilePage: View {
                         HStack{
                             Text("Custom pricing?")
                             iosCheckboxToggleStyle(checked:$customPricing)
-//                            Toggle(isOn: $perLesson) {
-//                                Text("Per Lesson?")
-//                                    .foregroundColor(.black)
-//                            }
-//                            .toggleStyle(iOSCheckboxToggleStyle())
                         }
                         if(customPricing){
                             TextField("Describe pricing/tuition rates", text: $pricingInfo, axis:.vertical)
@@ -446,25 +444,21 @@ struct CreateTeacherProfilePage: View {
         }
     }
     func populateProfileEditor(teacher: Teacher){
-//        //personal info
-//        name = teacher.name
-//        print("PERSONAL INFO: ")
-//        print(teacher.personalInfo)
-//        name = value(key: "name", pairs: teacher.personalInfo)
-//
-//        firstName = student.firstName
-//        lastName = student.lastName
-//        print("FIRSTNAME: " + firstName)
-//        print("LASTNAME: " + lastName)
-//        yearsTeaching = convertToDouble(s:value(key: "Years Teaching", pairs: student.personalInfo))
-//        //loginInfo
-//        email = modelData.email ?? "template@gmail.com"
-//        //musical background
-//        instrument = value(key: "Instrument", pairs: student.musicalBackground)
-//        studentLevel = value(key: "Skill Level", pairs: student.musicalBackground)
-//        description = value(key: "Prior Pieces Played", pairs: student.musicalBackground)
-//        cost = value(key: "Cost", pairs: student.musicalBackground)
-
+        //personal info
+        name = teacher.name
+        firstName = value(key: "firstName", pairs: teacher.teacherInfo)
+        lastName = value(key: "lastName", pairs: teacher.teacherInfo)
+        
+        yearsTeaching = convertToDouble(s:value(key: "Years Teaching", pairs: teacher.musicalBackground))
+        email = modelData.email ?? "template@gmail.com"
+        cost = value(key: "Pricing", pairs: teacher.lessonInfo)
+        
+        instrument = value(key: "Instrument", pairs: teacher.musicalBackground)
+        lessonLength = Int(value(key: "Lesson Length", pairs: teacher.lessonInfo)) ?? 60
+        studentLevel = value(key: "Minimum Student Level", pairs: teacher.lessonInfo)
+        teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
+        musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)
+        
         let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
         viewModel.setImageState(imageState: .success(image2))//                            let image =
 

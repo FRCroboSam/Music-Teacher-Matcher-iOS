@@ -475,6 +475,7 @@ final class ModelData: ObservableObject{
             "firstName": (data!["firstName"] ?? "Generic User") as! String,
             "lastName": (data!["lastName"] ?? "Generic User") as! String
         ]
+        
         let name = (data!["name"] ?? "Generic User") as! String
         var teacher = Teacher(name: name)
         teacher.email = (data!["email"] ?? "Generic User") as! String
