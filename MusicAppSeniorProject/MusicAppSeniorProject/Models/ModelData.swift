@@ -54,6 +54,20 @@ final class ModelData: ObservableObject{
 //            self.user = user
 //        }
 //    }
+    func checkIfCollectionExists(collectionName: String, completion: @escaping (Bool) -> Void) {
+        let db = Firestore.firestore()
+        let collectionRef = db.collection("StudentUser").document(uid).collection(collectionName)
+        print(collectionRef.path)
+        collectionRef.getDocuments { (snapshot, error) in
+            guard let snapshot = snapshot else {
+                print("Error fetching collection: \(error?.localizedDescription ?? "Unknown error")")
+                completion(false)
+                return
+            }
+            
+            completion(!snapshot.isEmpty)
+        }
+    }
     public func createStudentInFirestore(student: Student, completion: @escaping(Bool) -> Void) {
         let db = Firestore.firestore()
         let docRef = db.collection("StudentUser").document(uid)
@@ -86,18 +100,36 @@ final class ModelData: ObservableObject{
 //                print("Document successfully written!")
 //            }
 //        }
-        docRef.collection("Available Teachers").document().setData([  // 👈 Create a document in the subcollection
-            "title": "testing"
-        ])
-        docRef.collection("Matched Teachers").document().setData([  // 👈 Create a document in the subcollection
-            "title": "testing"
-        ])
-        docRef.collection("Declined Teachers").document().setData([  // 👈 Create a document in the subcollection
-            "title": "testing"
-        ])
-        docRef.collection("Requested Teachers").document().setData([  // 👈 Create a document in the subcollection
-            "title": "testing"
-        ])
+        checkIfCollectionExists(collectionName: "Matched Teachers") { works in
+            if(!works){
+                docRef.collection("Matched Teachers").document().setData([  // 👈 Create a document in the subcollection
+                    "title": "testing"
+                ])
+            }
+            else{
+                print("FOUND MATCHED, not ADDING")
+            }
+        }
+        checkIfCollectionExists(collectionName: "Declined Teachers") { exists in
+            if(!exists){
+                docRef.collection("Declined Teachers").document().setData([  // 👈 Create a document in the subcollection
+                    "title": "testing"
+                ])
+            }
+            else{
+                print("DID NOT FIND COLLECTIOn")
+            }
+        }
+        checkIfCollectionExists(collectionName: "Requested Teachers") { works in
+            if(!works){
+                docRef.collection("Requested Teachers").document().setData([  // 👈 Create a document in the subcollection
+                    "title": "testing"
+                ])
+            }
+            else{
+                print("DID NOT FIND COLLECTIOn")
+            }
+        }
 
         //set modelData
         docRef.getDocument { (document, error) in
@@ -370,56 +402,85 @@ final class ModelData: ObservableObject{
         let declinedTeachersRef = db.collection("StudentUser").document(uid).collection("Declined Teachers")
         let matchedTeachersRef = db.collection("StudentUser").document(uid).collection("Matched Teachers")
         let requestedTeachersRef = db.collection("StudentUser").document(uid).collection("Requested Teachers")
+        let teacherRef = db.collection("Teachers")
         
+        var unavailableTeacherIDs = [""]
         //populate declined teachers
         declinedTeachersRef.addSnapshotListener { querySnapshot, error in
+            self.declinedTeachers = []
+
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
                 return
               }
-            self.declinedTeachers = documents.compactMap { documentSnapshot in
-                let data = documentSnapshot.data()
-                let uid = data["uid"] as? String ?? ""
-                if !uid.isEmpty{
-                    return self.createTeacherFromData(documentSnapshot: documentSnapshot)
-                } else {
-                    return nil // Return nil if the condition is not met
-                }
+            documents.forEach { documentSnapshot in
+                let teacherId = documentSnapshot.documentID
+                var declinedTeacher = Teacher(name:"GENERIC")
+                declinedTeacher.setUID(uid: teacherId)
+                self.declinedTeachers.append(declinedTeacher)
+                unavailableTeacherIDs.append(teacherId)
             }
         }
         //populate Matched teachers
+
         matchedTeachersRef.addSnapshotListener { querySnapshot, error in
-            print("ADDING MATCHED TEACHER")
+            self.matchedTeachers = []
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
                 return
               }
-            self.matchedTeachers = documents.compactMap { documentSnapshot in
-                let data = documentSnapshot.data()
-                let uid = data["uid"] as? String ?? ""
-                let canAdd = !(self.declinedTeachers).contains { $0.uid == uid }
-                if canAdd && !uid.isEmpty{
-                    return self.createTeacherFromData(documentSnapshot: documentSnapshot)
-                } else {
-                    return nil // Return nil if the condition is not met
-                }
+            documents.forEach { documentSnapshot in
+                let teacherId = documentSnapshot.documentID
+                unavailableTeacherIDs.append(teacherId)
+                let teacherRef = db.collection("Teachers").document(teacherId)
+                    teacherRef.getDocument { (snapshot, err) in
+                        if let err = err {
+                            print("Error getting document: \(err)")
+                        }
+                        else if let snapshot = snapshot, snapshot.exists {
+                            let data = snapshot.data()
+                            if let data = data{
+                                let matchedTeacher = self.createTeacherFromData(documentSnapshot: snapshot)
+                                self.matchedTeachers.append(matchedTeacher)
+                            }
+                        }
+                    }
             }
         }
         
         //populate requested teachers
+
         requestedTeachersRef.addSnapshotListener { querySnapshot, error in
+            self.requestedTeachers = []
+
+            print("* UPDATING REQUESTED TEACHERS" )
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
                 return
               }
-            self.requestedTeachers = documents.compactMap { documentSnapshot in
-                let data = documentSnapshot.data()
-                let uid = data["uid"] as? String ?? ""
-                let canAdd = !(self.declinedTeachers + self.matchedTeachers).contains { $0.uid == uid }
-                if canAdd && !uid.isEmpty{
-                    return self.createTeacherFromData(documentSnapshot: documentSnapshot)
-                } else {
-                    return nil // Return nil if the condition is not met
+            print("* THERE ARE : " + String(documents.count) + " Documents requested")
+            documents.forEach { documentSnapshot in
+                let teacherId = documentSnapshot.documentID
+                unavailableTeacherIDs.append(teacherId)
+                let teacherRef = teacherRef.document(teacherId)
+                teacherRef.getDocument { (document, err) in
+                    if let err = err {
+                        print("Error getting document: \(err)")
+                    }
+                    else if let document = document, document.exists {
+                        let canAdd = !(self.requestedTeachers + self.declinedTeachers + self.matchedTeachers).contains { $0.uid == teacherId }
+                        if canAdd{
+                            let data = document.data()
+                            if let data = data {
+                                let requestedTeacher = self.createTeacherFromData(documentSnapshot: document)
+                                print("* REQUESTED TEACHER ID: " + requestedTeacher.uid )
+                                self.requestedTeachers.append(requestedTeacher)
+                                print("* ADDING ANOTHER REQUESTED TEACHER")
+                            }
+
+                        }
+
+                    }
                 }
             }
         }
@@ -432,15 +493,17 @@ final class ModelData: ObservableObject{
               }
             
             self.availableTeachers = documents.compactMap { (documentSnapshot) -> Teacher? in
+                print("REPOPULATING AVAILABLE TEACHERS")
                 let data = documentSnapshot.data()
                 let uid = data["uid"] as? String ?? ""
                 let name = data["name"] as? String ?? ""
                 let instrument = data["Instrument"] as? String ?? data["instrument"] as? String ?? ""
                 let studentInstrument = self.studentUser.musicalBackground[0].value
                 print(studentInstrument)
-                let canAdd = !(self.declinedTeachers + self.matchedTeachers + self.requestedTeachers).contains { $0.uid == uid }
+                let canAdd = !(unavailableTeacherIDs.contains(uid))
                 let canMatch = instrument.compare(studentInstrument, options: .caseInsensitive) == .orderedSame
                 if canMatch && canAdd && !uid.isEmpty && !name.isEmpty && !(name.trimmingCharacters(in: .whitespaces) == ""){
+                    print("POPULATING AVAILABLE TEACHERS")
                     return self.createTeacherFromData(documentSnapshot: documentSnapshot)
                 } else {
                     return nil // Return nil if the condition is not met
@@ -451,10 +514,13 @@ final class ModelData: ObservableObject{
         }
         
     }
+    func teacherIsCompatible(){
+        
+    }
 
     func createTeacherFromData(documentSnapshot: DocumentSnapshot) -> Teacher{
         let data = documentSnapshot.data()
-        let uid = data!["uid"] as? String ?? ""
+        let uid = documentSnapshot.documentID
         let loginInfo:KeyValuePairs = [
             "email": (data!["email"] ?? "Generic User") as! String,
             "password": (data!["password"] ?? "Generic User") as! String
@@ -465,6 +531,8 @@ final class ModelData: ObservableObject{
             "Musical Degree": (data!["Musical Degree"] ?? "Generic User") as! String,
             "Teaching Style": (data!["Teaching Style"] ?? "Generic User") as! String,
         ]
+        print("Teaching Style for : " + uid)
+        print((data!["Teaching Style"] ?? "Generic User") as! String)
         let lessonInfo:KeyValuePairs = [
             "Lesson Length": (data!["Lesson Length"] ?? "Generic User") as! String,
             "Pricing": (data!["Pricing"] ?? "Generic User") as! String,
@@ -480,6 +548,12 @@ final class ModelData: ObservableObject{
         var teacher = Teacher(name: name)
         teacher.email = (data!["email"] ?? "Generic User") as! String
         teacher.uid = uid
+        if(uid == "vy1cNne4wef1MfdQZgkxvmHYMHa2"){
+            print("TEACHER INFO:")
+            print(teacherInfo)
+            print(musicalBackground)
+            print(lessonInfo)
+        }
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
         fetchTeacherImage(teacher: teacher) { fetchedImage in
             print("FETCHING TEACHER IMAGE")
@@ -526,21 +600,22 @@ final class ModelData: ObservableObject{
         let collectionRef = db.collection("Teachers")
         let studentRef = db.collection("StudentUser").document(uid)
         let teacherRef = db.collection("Teachers").document(teacherId)
-        //add the student to the teacher's Requested Students collection
-        
-        //add studentUser data to a new document in teacher's requested students
-//        getUserData(docRef: studentRef) { data in
-//            teacherRef.collection("Declined Students").document(self.uid).setData(data as [String : Any])
-//        }
-
-        //add the teachers data to a new document in the student's list of requested teachers
-        getUserData(docRef: teacherRef){ data in
-            studentRef.collection("Declined Teachers").document(teacherId).setData(data as [String : Any])
-            print("DECLINED TEACHER")
-            self.fetchTeacherData{
-                
-            }
+        //New method: Add teacher id to declinedTeacherRef
+        studentRef.collection("Declined Teachers").document(teacherId).setData([  // 👈 Create a document in the subcollection
+            "title": "Declined Teacher"
+        ])
+        //refresh teacher data -> May not need
+        self.fetchTeacherData {
         }
+        
+        //OLD METHOD: adding the students data to declined teacher
+//        getUserData(docRef: teacherRef){ data in
+//            studentRef.collection("Declined Teachers").document(teacherId).setData(data as [String : Any])
+//            print("DECLINED TEACHER")
+//            self.fetchTeacherData{
+//
+//            }
+//        }
 
 
     }
@@ -551,17 +626,26 @@ final class ModelData: ObservableObject{
         let teacherRef = db.collection("Teachers").document(teacherId)
         //add the student to the teacher's Requested Students collection
         
-        //add studentUser data to a new document in teacher's requested students
-        getUserData(docRef: studentRef) { data in
-            teacherRef.collection("Requested Students").document(self.uid).setData(data as [String : Any])
-        }
-
-        //add the teachers data to a new document in the student's list of requested teachers
-        getUserData(docRef: teacherRef){ data in
-            studentRef.collection("Requested Teachers").document(teacherId).setData(data as [String : Any])
+        //New Method - add teacher id to requested studentRef, student id to requested Teacher Ref
+        teacherRef.collection("Requested Students").document(uid).setData([
+            "title": "Requested Student"
+        ])
+        studentRef.collection("Requested Teachers").document(teacherId).setData([
+            "title": "Requested Teacher"
+        ])
+        
+        //OLD METHOD
+       //add studentUser data to a new document in teacher's requested students
+//        getUserData(docRef: studentRef) { data in
+//            teacherRef.collection("Requested Students").document(self.uid).setData(data as [String : Any])
+//        }
+//
+//        //add the teachers data to a new document in the student's list of requested teachers
+//        getUserData(docRef: teacherRef){ data in
+//            studentRef.collection("Requested Teachers").document(teacherId).setData(data as [String : Any])
             self.fetchTeacherData{
             }
-        }
+//        }
     }
     func searchForUserInCollection(userName: String, collectionRef: CollectionReference, completion: @escaping (Bool) -> Void){
         collectionRef.whereField("name", isEqualTo: userName).getDocuments { (snapshot, err) in

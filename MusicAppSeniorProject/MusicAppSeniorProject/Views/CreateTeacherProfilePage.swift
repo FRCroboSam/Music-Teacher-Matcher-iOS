@@ -283,7 +283,7 @@ struct CreateTeacherProfilePage: View {
                         .listRowSeparator(.hidden)
                         Button("Sign out"){
                             modelData.logOut()
-                           loggedOut = true
+                            loggedOut = true
                         }.buttonStyle(.bordered)
                     }
                     else{
@@ -310,6 +310,9 @@ struct CreateTeacherProfilePage: View {
                 .navigationDestination(isPresented: $registrationSuccessful) {
                     TeacherAppPage()
                 }
+                .navigationDestination(isPresented: $loggedOut, destination: {
+                    HomePage()
+                })
                 .navigationTitle("Edit Profile")
                 .toolbar(.hidden, for: .navigationBar)
             }
@@ -328,7 +331,7 @@ struct CreateTeacherProfilePage: View {
             "Musical Degree": degree,
             "Teaching Style": teachingStyle,
         ]
-        let cost = customPricing ? pricingInfo : String(cost + " per lesson")
+        let cost = customPricing ? pricingInfo : String(cost)
         let lessonInfo:KeyValuePairs = [
             "Lesson Length": String(lessonLength),
             "Pricing": cost,

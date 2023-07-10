@@ -221,7 +221,7 @@ final class TeacherModelData: ObservableObject{
         }
         return student 
     }
-    
+    //TODO: FIX THIS TO USE ID FETCHING SYSTEM FROM STUDENT USERS 
     func fetchImage(completion:@escaping(Bool) -> Void ){
         print("FETCHING THE IMAGE from USer: " + uid)
         let storage = Storage.storage()
@@ -297,6 +297,7 @@ final class TeacherModelData: ObservableObject{
         let matchedStudentsRef = db.collection("Teachers").document(uid).collection("Matched Students")
         let requestedStudentsRef = db.collection("Teachers").document(uid).collection("Requested Students")
         //populate declined teachers
+        let studentRef = db.collection("Teachers")
         declinedStudentsRef.addSnapshotListener { querySnapshot, error in
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
@@ -401,16 +402,12 @@ final class TeacherModelData: ObservableObject{
         let requestedTeachersRef = db.collection("StudentUser").document(studentUID).collection("Requested Teachers")
 
         let studentRef = db.collection("StudentUser").document(studentUID)
-        studentRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                matchedStudentsRef.document(studentUID).setData(data ?? ["": ""])
-                //BUGGG
-                matchedTeachersRef.document(self.uid).setData(self.userData ?? ["":""])
-            } else {
-                print("Document does not exist")
-            }
-        }
+        matchedTeachersRef.document(uid).setData([
+            "title": "Matched Teacher"
+        ])
+        matchedStudentsRef.document(studentUID).setData([
+            "title": "Matched Student"
+        ])
         //remove student from teacher's requested students
        requestedStudentsRef.document(studentUID).delete() { err in
             if let err = err {
