@@ -56,6 +56,7 @@ struct MusicAppSeniorProjectApp: App {
                                     let uid = user.uid
                                     modelData.uid = uid
                                     modelData.email = user.email
+                                    teacherModelData.email = user.email
                                     teacherModelData.uid = uid
                                     print("USER UID IS: "  + uid)
                                     modelData.userIsStudent { isStudent in

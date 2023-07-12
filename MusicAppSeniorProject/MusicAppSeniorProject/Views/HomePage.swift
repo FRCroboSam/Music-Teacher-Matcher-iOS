@@ -18,45 +18,53 @@ struct HomePage: View {
 
     var body: some View {
         NavigationStack{
-            VStack(alignment: .leading) {
-                Text("Music Lessons for Everybody")
-                    .font(.system(size: 50))
-                    .fontWeight(.bold)
-                Text("First time using the app as a student looking for a music teacher?")
-                NavigationLink(destination: CreateStudentProfilePage()){
-                    Text("Click here")
-                        .backgroundStyle(.green)
-                }
-                .buttonStyle(.bordered)
-                
-                Text("Music Teacher who wants to find students?")
-                NavigationLink(destination: CreateTeacherProfilePage()){
-                    Text("Click here")
-                        .backgroundStyle(.green)
-                    //                        .navigationBarBackButtonHidden(true)
+            ZStack{
+                Image("music_background")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .edgesIgnoringSafeArea(.all)
+
+                VStack(alignment: .leading) {
+                    Section{
+                        
+                        Text("Music Lessons for Everybody")
+                            .font(.system(size: 50))
+                            .fontWeight(.bold)
+                    }
+                    Text("First time using the app as a student looking for a music teacher?")
+                    NavigationLink(destination: CreateStudentProfilePage()){
+                        Text("Click here")
+                            .backgroundStyle(.green)
+                    }
+                    .buttonStyle(.bordered)
                     
-                }
-                .buttonStyle(.bordered)
-                Text("Already created an account?")
-                NavigationLink(destination: LoginPage()){
-                    
-                    Text("Log in")
-                }
-                .buttonStyle(.bordered)
-                Spacer()
-                NavigationLink(destination: TestView()){
-                    Text("Test View")
-                }
-                .buttonStyle(.bordered)
-                Spacer()
-                
-                
+                    Text("Music Teacher who wants to find students?")
+                    NavigationLink(destination: CreateTeacherProfilePage()){
+                        Text("Click here")
+                            .backgroundStyle(.green)
+                        //                        .navigationBarBackButtonHidden(true)
+                        
+                    }
+                    .buttonStyle(.bordered)
+                    Text("Already created an account?")
+                    NavigationLink(destination: LoginPage()){
+                        
+                        Text("Log in")
+                    }
+                    .buttonStyle(.bordered)
+                    Spacer()
+                    NavigationLink(destination: TestView()){
+                        Text("Test View")
+                    }
+                    .buttonStyle(.bordered)
+                    Spacer()
             }
-            .padding(10)
-            Spacer()
-            
-            
+                .padding(10)
+                Spacer()
+
+            }
         }.navigationBarBackButtonHidden(true)
+        
     }
 }
 

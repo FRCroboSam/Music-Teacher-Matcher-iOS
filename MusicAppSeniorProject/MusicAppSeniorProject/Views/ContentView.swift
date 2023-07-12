@@ -30,8 +30,10 @@ struct ContentView: View {
             }
             else{
                 HomePage()
+//
             }
         }
+
         
     }
 //    func asdf(){

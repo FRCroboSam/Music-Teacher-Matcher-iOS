@@ -146,7 +146,7 @@ final class TeacherModelData: ObservableObject{
                 self.userData = data
                 self.teacherUser = Teacher(name: name)
                 self.teacherUser.uid = uid
-                
+                self.teacherUser.email = self.email ?? "No email found"
                 self.teacherUser.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
                 completion(true)
                 
