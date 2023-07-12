@@ -44,17 +44,7 @@ struct TeacherAppPage: View {
                 }
 
                 .onAppear() {
-                    if(modelData.uiImage == nil && !(modelData.uid == "")){
-                        modelData.fetchImage { downloaded in
-                            if downloaded{
-                                print("DOWNLOADED for: " + modelData.uid)
-                                profilePhoto = modelData.uiImage
-                            }
-                            else{
-                                profilePhoto = UIImage(systemName: "heart.fill")
-                            }
-                        }
-                    }
+//f
                 }
                 
                 

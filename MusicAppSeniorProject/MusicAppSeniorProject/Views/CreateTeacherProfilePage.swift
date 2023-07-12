@@ -43,7 +43,7 @@ struct CreateTeacherProfilePage: View {
 
     @State private var useCamera = false
 
-    var editMode = false
+    @State var editMode = false
     @State var hasPopulated = false
     @State var newEmail = ""
     @State var newPassword = ""
@@ -80,6 +80,7 @@ struct CreateTeacherProfilePage: View {
                             print("PROFILE IMAGE CHANGING")
                             profileImageCount += 1
                         }
+
                     Text("Select a Profile Picture")
                         .font(.system(size: 20))
                         .fontWeight(.bold)
@@ -291,10 +292,12 @@ struct CreateTeacherProfilePage: View {
                             createTeacherObject()
                             modelData.submitProfile(teacher: modelData.teacherUser){ isFound in
                                 if isFound {
+                                    print("SUBMITTED PROFILE")
                                     noUserFound = false
                                     loginSuccessful = true
-                                    modelData.uploadImage(teacher: modelData.teacherUser) { _ in
-                                    }
+                                    editMode = true
+//                                    modelData.uploadImage(teacher: modelData.teacherUser) { _ in
+//                                    }
                                 } else {
                                     noUserFound = true
                                     loginSuccessful = false
@@ -307,7 +310,7 @@ struct CreateTeacherProfilePage: View {
 
                     Spacer()
                         .navigationBarBackButtonHidden(true)
-                .navigationDestination(isPresented: $registrationSuccessful) {
+                .navigationDestination(isPresented: $loginSuccessful) {
                     TeacherAppPage()
                 }
                 .navigationDestination(isPresented: $loggedOut, destination: {

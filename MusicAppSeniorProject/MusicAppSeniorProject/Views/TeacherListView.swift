@@ -21,7 +21,7 @@ struct TeacherListView: View {
             Spacer(minLength:20)
             ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
 
-            Text(status + " students")
+            Text(status)
                 .font(.system(size: 40))
                 .fontWeight(.bold)
                 .padding(10)
