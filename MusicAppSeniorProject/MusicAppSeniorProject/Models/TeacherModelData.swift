@@ -100,15 +100,15 @@ final class TeacherModelData: ObservableObject{
             }
         }
         //Add a section for the teacher that carries all their students
-        docRef.collection("Requested Students").document().setData([  // 👈 Create a document in the subcollection
-            "title": "testing"
-                                                                   ])
-        docRef.collection("Matched Students").document().setData([  // 👈 Create a document in the subcollection
-            "title": "testing"
-                                                                  ])
-        docRef.collection("Declined Students").document().setData([  // 👈 Create a document in the subcollection
-            "title": "testing"
-                                                                  ])
+//        docRef.collection("Requested Students").document().setData([  // 👈 Create a document in the subcollection
+//            "title": "testing"
+//                                                                   ])
+//        docRef.collection("Matched Students").document().setData([  // 👈 Create a document in the subcollection
+//            "title": "testing"
+//                                                                  ])
+//        docRef.collection("Declined Students").document().setData([  // 👈 Create a document in the subcollection
+//            "title": "testing"
+//                                                                  ])
 
     }
     
@@ -187,7 +187,7 @@ final class TeacherModelData: ObservableObject{
             "Budget": (data!["Budget"] ?? "Generic User") as! String
         ]
         let studentInfo:KeyValuePairs = [
-            "name": (String(describing:data!["name"]) ?? "Generic User") as! String,
+            "name": (data!["name"] ?? "Generic User") as! String,
             "age": String(format: "%@", (data!["age"] ?? "0") as! CVarArg)
 
         ]
@@ -221,7 +221,7 @@ final class TeacherModelData: ObservableObject{
         }
         return student 
     }
-    //TODO: FIX THIS TO USE ID FETCHING SYSTEM FROM STUDENT USERS 
+    //TODO: FIX THIS TO USE ID FETCHING SYSTEM FROM STUDENT USERS
     func fetchImage(completion:@escaping(Bool) -> Void ){
         print("FETCHING THE IMAGE from USer: " + uid)
         let storage = Storage.storage()
@@ -290,69 +290,82 @@ final class TeacherModelData: ObservableObject{
     }
     
     func fetchStudentData(completion: @escaping() -> Void) {
-        print("Fetching Student Data ")
-        print("UID IS: " + uid)
+        print("Fetching Student Data For: " + uid)
         let db = Firestore.firestore()
         let declinedStudentsRef = db.collection("Teachers").document(uid).collection("Declined Students")
         let matchedStudentsRef = db.collection("Teachers").document(uid).collection("Matched Students")
         let requestedStudentsRef = db.collection("Teachers").document(uid).collection("Requested Students")
-        //populate declined teachers
+        //populate declined students
         let studentRef = db.collection("Teachers")
+        var unavailableStudentIds = [""]
+        //populate declined teachers
         declinedStudentsRef.addSnapshotListener { querySnapshot, error in
+            self.declinedStudents = []
+
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
                 return
               }
-            self.declinedStudents = documents.compactMap { documentSnapshot in
-                let data = documentSnapshot.data()
-                let uid = data["uid"] as? String ?? ""
-                let canAdd = !(self.requestedStudents + self.matchedStudents).contains { $0.uid == uid }
-                if canAdd && !uid.isEmpty{
-                    return self.createStudentFromData(documentSnapshot: documentSnapshot)
-                } else {
-                    return nil // Return nil if the condition is not met
-                }
+            documents.forEach { documentSnapshot in
+                let studentId = documentSnapshot.documentID
+                var declinedStudent = Student(name:"DECLINED STUDENT")
+                declinedStudent.setUID(uid: studentId)
+                self.declinedStudents.append(declinedStudent)
+                unavailableStudentIds.append(studentId)
             }
-            print("Declined STUDENTS SIZE: " + String(self.declinedStudents.count))
-
         }
         //populate Matched teachers
         matchedStudentsRef.addSnapshotListener { querySnapshot, error in
+            self.matchedStudents = []
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
                 return
               }
-            self.matchedStudents = documents.compactMap { documentSnapshot in
-                let data = documentSnapshot.data()
-                let uid = data["uid"] as? String ?? ""
-                let canAdd = !(self.declinedStudents + self.requestedStudents).contains { $0.uid == uid }
-                if canAdd && !uid.isEmpty{
-                    return self.createStudentFromData(documentSnapshot: documentSnapshot)
-                } else {
-                    return nil // Return nil if the condition is not met
-                }
+            documents.forEach { documentSnapshot in
+                let studentId = documentSnapshot.documentID
+                unavailableStudentIds.append(studentId)
+                let studentRef = db.collection("StudentUser").document(studentId)
+                    studentRef.getDocument { (snapshot, err) in
+                        let canAdd = !self.matchedStudents.contains { $0.uid == studentId }
+                        if let err = err {
+                            print("Error getting document: \(err)")
+                        }
+                        else if let snapshot = snapshot, canAdd, snapshot.exists {
+                            let data = snapshot.data()
+                            if let data = data{
+                                let matchedStudent = self.createStudentFromData(documentSnapshot: snapshot)
+                                self.matchedStudents.append(matchedStudent)
+                            }
+                        }
+                    }
             }
-            print("MATCHED STUDENTS SIZE: " + String(self.matchedStudents.count))
         }
-        //populate requested students - cannot be declined/matched
+        
         requestedStudentsRef.addSnapshotListener { querySnapshot, error in
+            print("POPULATING REQUESTED STUDENTS fet")
+            self.requestedStudents = []
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
                 return
               }
-            self.requestedStudents = documents.compactMap { documentSnapshot in
-                let data = documentSnapshot.data()
-                let uid = data["uid"] as? String ?? ""
-                let canAdd = !(self.declinedStudents + self.matchedStudents).contains { $0.uid == uid }
-                if canAdd && !uid.isEmpty{
-                    return self.createStudentFromData(documentSnapshot: documentSnapshot)
-                } else {
-                    return nil // Return nil if the condition is not met
-                }
+            documents.forEach { documentSnapshot in
+                let studentId = documentSnapshot.documentID
+                unavailableStudentIds.append(studentId)
+                let studentRef = db.collection("StudentUser").document(studentId)
+                    studentRef.getDocument { (snapshot, err) in
+                        let canAdd = !self.requestedStudents.contains { $0.uid == studentId }
+                        if let err = err {
+                            print("Error getting document: \(err)")
+                        }
+                        else if let snapshot = snapshot, canAdd, snapshot.exists {
+                            let data = snapshot.data()
+                            if let data = data{
+                                let requestedStudent = self.createStudentFromData(documentSnapshot: snapshot)
+                                self.requestedStudents.append(requestedStudent)
+                            }
+                        }
+                    }
             }
-            print("Requested STUDENTS SIZE: " + String(self.requestedStudents.count))
-
-            completion() 
         }
     }
     //add student to 
@@ -367,15 +380,9 @@ final class TeacherModelData: ObservableObject{
         let requestedStudentsRef = db.collection("Teachers").document(uid).collection("Requested Students")
         let requestedTeachersRef = db.collection("StudentUser").document(uid).collection("Requested Teachers")
 
-        studentRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                let data = document.data()
-                declinedStudentsRef.document(studentUID).setData(data ?? ["": ""])
-                declinedTeachersRef.document(self.uid).setData(self.userData ?? ["":""])
-            } else {
-                print("Document does not exist")
-            }
-        }
+        declinedStudentsRef.document(studentUID).setData([
+            "title": "Declined Student"
+        ])
         requestedStudentsRef.document(studentUID).delete() { err in
              if let err = err {
                  print("Error removing document: \(err)")

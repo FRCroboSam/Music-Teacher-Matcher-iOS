@@ -19,7 +19,7 @@ struct StudentListView: View {
             Spacer(minLength:20)
             ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
 
-            Text(status + " students")
+            Text(status)
                 .font(.system(size: 40))
                 .fontWeight(.bold)
                 .padding(10)
@@ -28,7 +28,7 @@ struct StudentListView: View {
             List(displayArray) { student in
                 NavigationLink{
 //                    TeacherProfilePage(teacher: modelData.teacherUser, displayText: displayText, status: status, teacherImage: (modelData.teacherUser.uiImage ?? UIImage(systemName: "heart.fill"))!)
-                    StudentProfilePage(student: student, displayText: "DF", status: "status", studentImage: (student.uiImage ?? UIImage(systemName: "heart.fill"))!)
+                    StudentProfilePage(student: student, displayText: displayText, status: status, studentImage: (student.uiImage ?? UIImage(systemName: "heart.fill"))!)
                 } label:{
                     HStack{
                         ProfileImage(image: Image(uiImage: (student.uiImage ?? UIImage(systemName: "heart.fill"))!), size: 50)

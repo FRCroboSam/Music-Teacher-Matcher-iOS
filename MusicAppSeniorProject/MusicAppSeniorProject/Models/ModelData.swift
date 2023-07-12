@@ -424,6 +424,7 @@ final class ModelData: ObservableObject{
         //populate Matched teachers
 
         matchedTeachersRef.addSnapshotListener { querySnapshot, error in
+            print("**MATCHED TEACHERS")
             self.matchedTeachers = []
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
@@ -440,6 +441,7 @@ final class ModelData: ObservableObject{
                         else if let snapshot = snapshot, snapshot.exists {
                             let data = snapshot.data()
                             if let data = data{
+                                print("**ADDING A MATCHED TEACHER")
                                 let matchedTeacher = self.createTeacherFromData(documentSnapshot: snapshot)
                                 self.matchedTeachers.append(matchedTeacher)
                             }

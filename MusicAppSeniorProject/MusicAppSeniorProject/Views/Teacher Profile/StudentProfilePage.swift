@@ -33,7 +33,8 @@ struct StudentProfilePage: View {
                     .font(.title)
                 
             }
-            if(status == "Matched Teachers"){
+            if(status == "Matched Students"){
+                Text("Expect an email from this student to schedule a lesson!")
             }
             
             Section {
@@ -55,14 +56,16 @@ struct StudentProfilePage: View {
         
 
                 
-            if(displayText != "Declined Students" && displayText != "Matched Students"){
+            if(status != "Declined Students" && status != "Matched Students"){
                 Button("Decline Student"){
                     Text("If you think this student is not a good fit, you can decline them. ")
                     modelData.declineStudent(studentUID: student.uid)
+                    dismiss()
                 }
                 Button("Match Student"){
                     Text("If you think this student is a good fit, you can match with them, allowing them to see your contact info. ")
                     modelData.matchStudent(studentUID: student.uid)
+                    dismiss()
                 }
             }
 
