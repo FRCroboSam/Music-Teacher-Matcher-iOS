@@ -372,10 +372,13 @@ final class TeacherModelData: ObservableObject{
         let declinedTeachersRef = db.collection("StudentUser").document(studentUID).collection("Declined Teachers")
         let studentRef = db.collection("StudentUser").document(studentUID)
         let requestedStudentsRef = db.collection("Teachers").document(uid).collection("Requested Students")
-        let requestedTeachersRef = db.collection("StudentUser").document(uid).collection("Requested Teachers")
-
+        let requestedTeachersRef = db.collection("StudentUser").document(studentUID).collection("Requested Teachers")
+        print("DECLINING STUDENT")
         declinedStudentsRef.document(studentUID).setData([
             "title": "Declined Student"
+        ])
+        declinedTeachersRef.document(uid).setData([
+            "title": "Declined Teacher"
         ])
         requestedStudentsRef.document(studentUID).delete() { err in
              if let err = err {
