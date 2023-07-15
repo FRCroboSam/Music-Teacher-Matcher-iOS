@@ -397,7 +397,7 @@ final class ModelData: ObservableObject{
     //fetchTeacherData
     //called by StudentAppPage View onAppear
     func fetchTeacherData(completion: @escaping () -> Void){
-        print("FETCHING TEACHER DATAAA")
+        print("*FETCHING TEACHER DATA")
         let db = Firestore.firestore()
         let declinedTeachersRef = db.collection("StudentUser").document(uid).collection("Declined Teachers")
         let matchedTeachersRef = db.collection("StudentUser").document(uid).collection("Matched Teachers")
@@ -424,7 +424,7 @@ final class ModelData: ObservableObject{
         //populate Matched teachers
 
         matchedTeachersRef.addSnapshotListener { querySnapshot, error in
-            print("**MATCHED TEACHERS")
+            print("Matched Teachers Changing")
             self.matchedTeachers = []
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
@@ -435,13 +435,13 @@ final class ModelData: ObservableObject{
                 unavailableTeacherIDs.append(teacherId)
                 let teacherRef = db.collection("Teachers").document(teacherId)
                     teacherRef.getDocument { (snapshot, err) in
+                        let canAdd = !(self.matchedTeachers).contains { $0.uid == teacherId }
                         if let err = err {
                             print("Error getting document: \(err)")
                         }
-                        else if let snapshot = snapshot, snapshot.exists {
+                        else if let snapshot = snapshot, canAdd, snapshot.exists {
                             let data = snapshot.data()
                             if let data = data{
-                                print("**ADDING A MATCHED TEACHER")
                                 let matchedTeacher = self.createTeacherFromData(documentSnapshot: snapshot)
                                 self.matchedTeachers.append(matchedTeacher)
                             }
@@ -454,13 +454,11 @@ final class ModelData: ObservableObject{
 
         requestedTeachersRef.addSnapshotListener { querySnapshot, error in
             self.requestedTeachers = []
-
-            print("* UPDATING REQUESTED TEACHERS" )
+            print("Requested Teachers Changing" )
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
                 return
               }
-            print("* THERE ARE : " + String(documents.count) + " Documents requested")
             documents.forEach { documentSnapshot in
                 let teacherId = documentSnapshot.documentID
                 unavailableTeacherIDs.append(teacherId)
@@ -475,9 +473,7 @@ final class ModelData: ObservableObject{
                             let data = document.data()
                             if let data = data {
                                 let requestedTeacher = self.createTeacherFromData(documentSnapshot: document)
-                                print("* REQUESTED TEACHER ID: " + requestedTeacher.uid )
                                 self.requestedTeachers.append(requestedTeacher)
-                                print("* ADDING ANOTHER REQUESTED TEACHER")
                             }
 
                         }
@@ -495,7 +491,6 @@ final class ModelData: ObservableObject{
               }
             
             self.availableTeachers = documents.compactMap { (documentSnapshot) -> Teacher? in
-                print("REPOPULATING AVAILABLE TEACHERS")
                 let data = documentSnapshot.data()
                 let uid = data["uid"] as? String ?? ""
                 let name = data["name"] as? String ?? ""
@@ -505,7 +500,6 @@ final class ModelData: ObservableObject{
                 let canAdd = !(unavailableTeacherIDs.contains(uid))
                 let canMatch = instrument.compare(studentInstrument, options: .caseInsensitive) == .orderedSame
                 if canMatch && canAdd && !uid.isEmpty && !name.isEmpty && !(name.trimmingCharacters(in: .whitespaces) == ""){
-                    print("POPULATING AVAILABLE TEACHERS")
                     return self.createTeacherFromData(documentSnapshot: documentSnapshot)
                 } else {
                     return nil // Return nil if the condition is not met
@@ -533,8 +527,8 @@ final class ModelData: ObservableObject{
             "Musical Degree": (data!["Musical Degree"] ?? "Generic User") as! String,
             "Teaching Style": (data!["Teaching Style"] ?? "Generic User") as! String,
         ]
-        print("Teaching Style for : " + uid)
-        print((data!["Teaching Style"] ?? "Generic User") as! String)
+//        print("Teaching Style for : " + uid)
+//        print((data!["Teaching Style"] ?? "Generic User") as! String)
         let lessonInfo:KeyValuePairs = [
             "Lesson Length": (data!["Lesson Length"] ?? "Generic User") as! String,
             "Pricing": (data!["Pricing"] ?? "Generic User") as! String,
@@ -558,7 +552,7 @@ final class ModelData: ObservableObject{
         }
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
         fetchTeacherImage(teacher: teacher) { fetchedImage in
-            print("FETCHING TEACHER IMAGE")
+//            print("FETCHING TEACHER IMAGE")
             print(fetchedImage == nil)
             if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
                 if index < self.availableTeachers.count {

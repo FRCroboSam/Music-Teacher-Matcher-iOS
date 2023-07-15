@@ -21,20 +21,25 @@ struct HomePage: View {
             ZStack{
                 Image("music_background")
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
                     .edgesIgnoringSafeArea(.all)
 
                 VStack(alignment: .leading) {
                     Section{
-                        
-                        Text("Music Lessons for Everybody")
+                        Spacer()
+                        Text("Music Matcher")
                             .font(.system(size: 50))
                             .fontWeight(.bold)
+                            .foregroundColor(Color.purple)
+                            .shadow(color: .white, radius: 1)
+                            .multilineTextAlignment(.center)
+
+
                     }
                     Text("First time using the app as a student looking for a music teacher?")
                     NavigationLink(destination: CreateStudentProfilePage()){
                         Text("Click here")
                             .backgroundStyle(.green)
+                        
                     }
                     .buttonStyle(.bordered)
                     

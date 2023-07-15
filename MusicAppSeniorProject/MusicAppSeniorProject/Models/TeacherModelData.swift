@@ -223,7 +223,6 @@ final class TeacherModelData: ObservableObject{
     }
     //TODO: FIX THIS TO USE ID FETCHING SYSTEM FROM STUDENT USERS
     func fetchImage(completion:@escaping(Bool) -> Void ){
-        print("FETCHING THE IMAGE from USer: " + uid)
         let storage = Storage.storage()
         let storageRef = storage.reference(withPath: uid)
         storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
@@ -231,7 +230,6 @@ final class TeacherModelData: ObservableObject{
             // Uh-oh, an error occurred!
             completion(false)
           } else {
-              print("Successfully fetched image")
             // Data for "images/island.jpg" is returned
               self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
             completion(true)
@@ -240,7 +238,6 @@ final class TeacherModelData: ObservableObject{
     }
     //TODO: Test this
     func fetchImageAfterUploaded(completion:@escaping(Bool) -> Void ){
-        print("FETCHING THE IMAGE from USer: " + uid)
         let storage = Storage.storage()
         let storageRef = storage.reference(withPath: uid)
 
@@ -252,8 +249,6 @@ final class TeacherModelData: ObservableObject{
                     self.fetchImageAfterUploaded(completion:completion)
                 }
             } else {
-                
-                print("Successfully fetched image")
                 self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
                 completion(true)
             }
@@ -281,8 +276,6 @@ final class TeacherModelData: ObservableObject{
                     completion(true)
                     return
                 }
-
-                print("Successfully stored image with url: \(url?.absoluteString ?? "")")
                 print(url?.absoluteString)
                 completion(true)
             }
@@ -316,6 +309,7 @@ final class TeacherModelData: ObservableObject{
         }
         //populate Matched teachers
         matchedStudentsRef.addSnapshotListener { querySnapshot, error in
+            print("Matched Students Changing")
             self.matchedStudents = []
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
@@ -342,7 +336,7 @@ final class TeacherModelData: ObservableObject{
         }
         
         requestedStudentsRef.addSnapshotListener { querySnapshot, error in
-            print("POPULATING REQUESTED STUDENTS fet")
+            print("Requested Students Changing")
             self.requestedStudents = []
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
