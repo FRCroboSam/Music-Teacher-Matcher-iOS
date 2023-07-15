@@ -399,6 +399,7 @@ final class ModelData: ObservableObject{
     func fetchTeacherData(completion: @escaping () -> Void){
         print("*FETCHING TEACHER DATA")
         let db = Firestore.firestore()
+        print("DECLINED TEACHERS")
         let declinedTeachersRef = db.collection("StudentUser").document(uid).collection("Declined Teachers")
         let matchedTeachersRef = db.collection("StudentUser").document(uid).collection("Matched Teachers")
         let requestedTeachersRef = db.collection("StudentUser").document(uid).collection("Requested Teachers")

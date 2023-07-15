@@ -44,7 +44,12 @@ struct TeacherAppPage: View {
                 }
 
                 .onAppear() {
-//f
+                    if(modelData.uid != ""){
+                        print("FETCHING IN APP PAGE FOR: " + modelData.uid)
+                        self.modelData.fetchStudentData {
+                            
+                        }
+                    }
                 }
                 
                 

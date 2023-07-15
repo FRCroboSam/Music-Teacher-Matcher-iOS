@@ -59,6 +59,13 @@ struct StudentAppPage: View {
                             }
                         }
                     }
+                    if(modelData.uid != ""){
+                        print("FETCHING IN APP PAGE FOR: " + modelData.uid)
+                        self.modelData.fetchTeacherData {
+                            
+                        }
+                    }
+
                     
                     
                 }
