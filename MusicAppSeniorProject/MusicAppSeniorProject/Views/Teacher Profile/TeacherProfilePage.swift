@@ -81,6 +81,17 @@ struct TeacherProfilePage: View {
                 }
                 
             }
+            else if(status == "Requested Teachers"){
+                Button("Cancel Request"){
+                    if(teacher.uid != ""){
+                        modelData.cancelTeacherRequest(teacherId: teacher.uid)
+                        dismiss()
+                    }
+                    else{
+                        print("ID EMPTY")
+                    }
+                }
+            }
 
         }
         .padding()

@@ -396,6 +396,7 @@ final class ModelData: ObservableObject{
 
     //fetchTeacherData
     //called by StudentAppPage View onAppear
+    
     func fetchTeacherData(completion: @escaping () -> Void){
         print("*FETCHING TEACHER DATA")
         let db = Firestore.firestore()
@@ -615,6 +616,31 @@ final class ModelData: ObservableObject{
 //        }
 
 
+    }
+    //removes the teacher from the list of requested teachers, but teacher is available in available teachers
+    func cancelTeacherRequest(teacherId: String){
+        let db = Firestore.firestore()
+        let collectionRef = db.collection("Teachers")
+        let studentRef = db.collection("StudentUser").document(uid)
+        let teacherRef = db.collection("Teachers").document(teacherId)
+        let requestedStudentsRef = db.collection("Teachers").document(teacherId).collection("Requested Students")
+        let requestedTeachersRef = db.collection("StudentUser").document(uid).collection("Requested Teachers")
+        //remove student from teachers list of requested teachers
+        requestedStudentsRef.document(uid).delete() { err in
+             if let err = err {
+                 print("Error removing document: \(err)")
+             } else {
+                 print("Document successfully removed!")
+             }
+         }
+         requestedTeachersRef.document(teacherId).delete() { err in
+              if let err = err {
+                  print("Error removing document: \(err)")
+              } else {
+                  print("Document successfully removed!")
+              }
+          }
+        
     }
     func requestTeacher(teacherId: String){
         let db = Firestore.firestore()
