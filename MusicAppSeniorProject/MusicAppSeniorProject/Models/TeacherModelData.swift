@@ -231,7 +231,7 @@ final class TeacherModelData: ObservableObject{
             completion(false)
           } else {
             // Data for "images/island.jpg" is returned
-              self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
+              self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "person.fill")
             completion(true)
           }
         }
@@ -249,7 +249,7 @@ final class TeacherModelData: ObservableObject{
                     self.fetchImageAfterUploaded(completion:completion)
                 }
             } else {
-                self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "heart.fill")
+                self.uiImage = UIImage(data: data!) ?? UIImage(systemName: "person.fill")
                 completion(true)
             }
         }

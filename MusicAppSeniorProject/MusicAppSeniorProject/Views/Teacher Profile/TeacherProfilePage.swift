@@ -31,7 +31,7 @@ struct TeacherProfilePage: View {
         let uiImage = teacher.uiImage ?? UIImage(systemName: "person.fill")
         Form{
             Section{
-                ProfileImage(image: Image(uiImage:(teacherImage ?? UIImage(systemName: "heart.fill"))!), size:100)
+                ProfileImage(image: Image(uiImage:(teacherImage ?? UIImage(systemName: "person.fill"))!), size:100)
                 HStack{
                     Text((name ?? "No Name"))
                         .font(.title)

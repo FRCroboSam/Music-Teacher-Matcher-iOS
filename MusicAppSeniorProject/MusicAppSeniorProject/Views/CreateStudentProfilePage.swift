@@ -31,7 +31,7 @@ struct CreateStudentProfilePage: View{
     @State private var selectedInstrument: String = "Cello"
     @State private var studentLevel: String = ""
     @State private var description: String = ""
-    @State private var image = UIImage(systemName: "heart.fill")
+    @State private var image = UIImage(systemName: "person.fill")
     @State var displayImage: Bool = false
     @State private var useCamera = false
     @State private var toggle: Bool = false

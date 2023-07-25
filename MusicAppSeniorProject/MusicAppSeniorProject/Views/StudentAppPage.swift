@@ -26,6 +26,8 @@ struct StudentAppPage: View {
     var body: some View {
         NavigationStack{
             ZStack{
+
+                
                 TabView{
                     TeacherListView(displayArray: $modelData.availableTeachers, uiImage: $modelData.uiImage, status: "Available Teachers", displayText: availableTeacherDesc)
                         .tabItem{
@@ -46,7 +48,6 @@ struct StudentAppPage: View {
                 }.navigationDestination(isPresented: $loggedOut) {
                     HomePage()
                 }
-
                 .onAppear() {
                     if(modelData.uiImage == nil && !(modelData.uid == "")){
                         modelData.fetchImage { downloaded in
@@ -55,7 +56,7 @@ struct StudentAppPage: View {
                                 profilePhoto = modelData.uiImage
                             }
                             else{
-                                profilePhoto = UIImage(systemName: "heart.fill")
+                                profilePhoto = UIImage(systemName: "person.fill")
                             }
                         }
                     }

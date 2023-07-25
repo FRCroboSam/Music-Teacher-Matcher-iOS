@@ -27,11 +27,10 @@ struct StudentListView: View {
                 .padding(10)
             List(displayArray) { student in
                 NavigationLink{
-//                    TeacherProfilePage(teacher: modelData.teacherUser, displayText: displayText, status: status, teacherImage: (modelData.teacherUser.uiImage ?? UIImage(systemName: "heart.fill"))!)
-                    StudentProfilePage(student: student, displayText: displayText, status: status, studentImage: (student.uiImage ?? UIImage(systemName: "heart.fill"))!)
+                    StudentProfilePage(student: student, displayText: displayText, status: status, studentImage: (student.uiImage ?? UIImage(systemName: "person.fill"))!)
                 } label:{
                     HStack{
-                        ProfileImage(image: Image(uiImage: (student.uiImage ?? UIImage(systemName: "heart.fill"))!), size: 50)
+                        ProfileImage(image: Image(uiImage: (student.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
                         VStack(alignment: .leading) {
                             Spacer()
                             Text(student.name).font(.title)

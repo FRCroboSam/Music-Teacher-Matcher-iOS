@@ -50,7 +50,7 @@ struct PhotoCollectionView: View {
             .cornerRadius(Self.itemCornerRadius)
             .overlay(alignment: .bottomLeading) {
                 if asset.isFavorite {
-                    Image(systemName: "heart.fill")
+                    Image(systemName: "person.fill")
                         .foregroundColor(.white)
                         .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
                         .font(.callout)

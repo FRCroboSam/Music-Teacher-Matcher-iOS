@@ -19,10 +19,17 @@ struct HomePage: View {
     var body: some View {
         NavigationStack{
             ZStack{
+
+                RoundedRectangle(cornerRadius: 20)
+                    .strokeBorder()
+                    .padding(10)
                 Image("music_background")
                     .resizable()
-                    .edgesIgnoringSafeArea(.all)
+                    .padding(30)
 
+            }
+
+            ZStack{
                 VStack(alignment: .leading) {
                     Section{
                         Spacer()

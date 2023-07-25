@@ -85,7 +85,7 @@ struct Teacher:Identifiable, Hashable{
     }
     public func getUIImage() -> UIImage{
         print("GETTING THE UI IMAGE ")
-        let image = UIImage(systemName: "heart.fill")
+        let image = UIImage(systemName: "person.fill")
         return uiImage ?? image!
     }
     public mutating func setUIImage(uiImage: UIImage){

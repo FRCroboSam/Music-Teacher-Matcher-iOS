@@ -27,7 +27,7 @@ struct StudentProfilePage: View {
         let name: String? = student.name
 
         Form{
-            ProfileImage(image: Image(uiImage:(studentImage ?? UIImage(systemName: "heart.fill"))!), size:100)
+            ProfileImage(image: Image(uiImage:(studentImage ?? UIImage(systemName: "person.fill"))!), size:100)
             HStack{
                 Text((name ?? "No Name"))
                     .font(.title)

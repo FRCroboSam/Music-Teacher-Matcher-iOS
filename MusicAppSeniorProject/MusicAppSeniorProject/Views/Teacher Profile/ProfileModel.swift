@@ -104,7 +104,7 @@ class ProfileModel: ObservableObject {
         
     }
     public func getImage() -> UIImage{
-        let image = UIImage(systemName: "heart.fill")
+        let image = UIImage(systemName: "person.fill")
         return profileImage?.uiImage ?? image!
     }
 }

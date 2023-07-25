@@ -16,34 +16,91 @@ struct TeacherListView: View {
     let status: String
     let displayText: String
     @State private var loggedOut = false
+    @State private var showInfo  = false
+    @State private var isTapped = false
     var body: some View {
-        VStack{
-            Spacer(minLength:20)
-            ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
-
-            Text(status)
-                .font(.system(size: 40))
-                .fontWeight(.bold)
-                .padding(10)
-            Text(displayText)
-                .padding(10)
-            List(displayArray) { teacher in
-                NavigationLink{
-                    TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "heart.fill"))!)
-                } label:{
-                    HStack{
-                        ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "heart.fill"))!), size: 50)
-                        VStack(alignment: .leading) {
-                            Spacer()
-                            Text(teacher.name).font(.title)
-                            Text(teacher.instrument).font(.subheadline)
+            VStack{
+                ZStack{
+                    VStack{
+                        ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
+                            .overlay(Circle()
+                                .strokeBorder(Color.white,lineWidth: 5)
+                            )
+                        HStack{
+                            Text(" " + status + " ")
+                                .lineLimit(1)
+                                .font(.system(size: 100))
+                                .minimumScaleFactor(0.01)
+                            
+                                .background(Color.white)
+                                .clipShape(RoundedRectangle(cornerRadius:40))
+                            Button{
+                                showInfo.toggle()
+                            }label:{
+                                Image(systemName: "questionmark.circle.fill")
+                                    .resizable()
+                                    .frame(width: 50, height: 50)
+                                    .background {
+                                        Circle().fill(
+                                            Color.white
+                                        )
+                                    }
+                                    .overlay(Circle()
+                                        .strokeBorder(Color.white,lineWidth: 2))
+                            }
+                            
+                            
                         }
+
                     }
+                    if(showInfo){
+                        Spacer(minLength: 100)
+                        ZStack{
+                            Rectangle().strokeBorder(Color.black, lineWidth: 5)
+                                .background(Color.white)
+                                .padding(20)
 
+                            Text(" " + displayText + " ")
+                                .padding(25)
+                                .font(.system(size: 50))
+                                .minimumScaleFactor(0.01)
+
+                        }
+//
+//                            .background(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.black, lineWidth: 2))
+//                            .font(.system(size: 500))
+//                            .minimumScaleFactor(0.01)
+//                            .padding(20)
+                        
+                    }
                 }
-            }
 
-        }
+                List(displayArray) { teacher in
+                    NavigationLink{
+                        TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
+                    } label:{
+                        HStack{
+                            ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                            VStack(alignment: .leading) {
+                                Spacer()
+                                Text(teacher.name).font(.title)
+                                Text(teacher.instrument).font(.subheadline)
+                            }
+                        }
+
+                    }
+                }
+
+            }.background{
+                Image("music_background")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                    .aspectRatio(contentMode: .fill)
+            }
+            .onTapGesture{
+                showInfo = false 
+            }
         
 }
 
