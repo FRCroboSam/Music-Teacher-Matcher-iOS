@@ -45,8 +45,6 @@ struct TeacherListView: View {
                                             Color.white
                                         )
                                     }
-                                    .overlay(Circle()
-                                        .strokeBorder(Color.white,lineWidth: 2))
                             }
                             
                             
@@ -54,18 +52,20 @@ struct TeacherListView: View {
 
                     }
                     if(showInfo){
-                        Spacer(minLength: 100)
-                        ZStack{
-                            Rectangle().strokeBorder(Color.black, lineWidth: 5)
-                                .background(Color.white)
-                                .padding(20)
+//                        VStack{
+//                            Spacer()
+                            ZStack{
+                                RoundedRectangle(cornerRadius:10).strokeBorder(Color.black, lineWidth: 3).background(Color.white)
+                                    .padding(20)
 
-                            Text(" " + displayText + " ")
-                                .padding(25)
-                                .font(.system(size: 50))
-                                .minimumScaleFactor(0.01)
+                                Text(" " + displayText + " ")
+                                    .padding(25)
+                                    .font(.system(size: 30))
+                                    .minimumScaleFactor(0.01)
 
-                        }
+                            }
+//                        }
+    
 //
 //                            .background(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.black, lineWidth: 2))
 //                            .font(.system(size: 500))
@@ -73,6 +73,8 @@ struct TeacherListView: View {
 //                            .padding(20)
                         
                     }
+                }.onTapGesture {
+                    showInfo = false
                 }
 
                 List(displayArray) { teacher in
@@ -98,9 +100,7 @@ struct TeacherListView: View {
                     .edgesIgnoringSafeArea(.all)
                     .aspectRatio(contentMode: .fill)
             }
-            .onTapGesture{
-                showInfo = false 
-            }
+
         
 }
 
