@@ -53,6 +53,8 @@
 		3679178E29FA2DF400788878 /* iosCheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */; };
 		368CC60F2A54E39D00F36140 /* StudentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC60E2A54E39D00F36140 /* StudentListView.swift */; };
 		368CC6112A70659600F36140 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6102A70659600F36140 /* PopupView.swift */; };
+		368CC6132A726EE900F36140 /* NotificationNumLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6122A726EE900F36140 /* NotificationNumLabel.swift */; };
+		368CC6152A72C4B200F36140 /* TestCustomBadgeOnToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6142A72C4B200F36140 /* TestCustomBadgeOnToolbar.swift */; };
 		3697540429E766940035AD9B /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540329E766940035AD9B /* TestView.swift */; };
 		3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */; };
 		36BF5EF22A40FA3C00D0B15A /* TeacherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */; };
@@ -124,6 +126,8 @@
 		3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosCheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		368CC60E2A54E39D00F36140 /* StudentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentListView.swift; sourceTree = "<group>"; };
 		368CC6102A70659600F36140 /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
+		368CC6122A726EE900F36140 /* NotificationNumLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNumLabel.swift; sourceTree = "<group>"; };
+		368CC6142A72C4B200F36140 /* TestCustomBadgeOnToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCustomBadgeOnToolbar.swift; sourceTree = "<group>"; };
 		3697540329E766940035AD9B /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherListView.swift; sourceTree = "<group>"; };
@@ -310,8 +314,10 @@
 				363583FB2984F96C00C37596 /* CreateStudentProfilePage.swift */,
 				363583FD2984F99200C37596 /* StudentAppPage.swift */,
 				3642D16129EEF1E60052FF2E /* TeacherAppPage.swift */,
+				368CC6142A72C4B200F36140 /* TestCustomBadgeOnToolbar.swift */,
 				36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */,
 				368CC60E2A54E39D00F36140 /* StudentListView.swift */,
+				368CC6122A726EE900F36140 /* NotificationNumLabel.swift */,
 				3697540329E766940035AD9B /* TestView.swift */,
 				368CC6102A70659600F36140 /* PopupView.swift */,
 				360FDF04299B567200C8BAF3 /* MatchMakingPage.swift */,
@@ -484,6 +490,7 @@
 				36F4164229F2635A003583A1 /* TeacherModelData.swift in Sources */,
 				363583FE2984F99200C37596 /* StudentAppPage.swift in Sources */,
 				3679178E29FA2DF400788878 /* iosCheckboxToggleStyle.swift in Sources */,
+				368CC6152A72C4B200F36140 /* TestCustomBadgeOnToolbar.swift in Sources */,
 				364DEBEF29A80D1D00FFA18B /* Teacher.swift in Sources */,
 				36CADD5F2A08B778006F246F /* CachedImageManager.swift in Sources */,
 				364DEBF929A87B2900FFA18B /* ModelData.swift in Sources */,
@@ -514,6 +521,7 @@
 				360FDF05299B567200C8BAF3 /* MatchMakingPage.swift in Sources */,
 				364DEBF729A8634500FFA18B /* Student.swift in Sources */,
 				36CADD602A08B778006F246F /* PhotoCollectionView.swift in Sources */,
+				368CC6132A726EE900F36140 /* NotificationNumLabel.swift in Sources */,
 				36CADD592A08B778006F246F /* ThumbnailView.swift in Sources */,
 				3609437A299F1FA6000CE05C /* userViewModel.swift in Sources */,
 				36C403E329D261400015935A /* LoginPage.swift in Sources */,

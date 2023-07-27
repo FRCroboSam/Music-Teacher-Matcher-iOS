@@ -25,6 +25,7 @@ struct ContentView: View {
                 else{
                     StudentAppPage()
                 }
+//                TestView()
 //                HomePage()
 //                LoginPage()
             }

@@ -22,7 +22,7 @@ struct TeacherAppPage: View {
     private let availableTeacherDesc = "These are teachers in the area that you can request if you think they are a good fit or respectfully decline. Teachers will not see that you have declined them."
     private let requestedTeacherDesc = "These are teachers that you have requested but have not matched yet."
     private let matchedTeacherDesc = "These are teachers that you have requested and have matched your request. Feel Free to reach out to them by their email which you can find by clicking on their profile!"
-
+    @State var numNotifications = 4 
     var body: some View {
         NavigationStack{
             ZStack{
@@ -30,6 +30,7 @@ struct TeacherAppPage: View {
                     StudentListView(displayArray: $modelData.requestedStudents, uiImage: $modelData.uiImage, status: "Requested Students", displayText: availableTeacherDesc)
                         .tabItem{
                             Label("Requested", systemImage: "person.crop.circle.fill.badge.plus")
+                                .overlay(NotificationNumLabel(number: $numNotifications))
                         }
                     StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
                         .tabItem{

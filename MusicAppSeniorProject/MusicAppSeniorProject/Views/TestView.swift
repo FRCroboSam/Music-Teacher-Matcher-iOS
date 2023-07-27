@@ -5,25 +5,27 @@ struct TestView: View {
     @State var name: String = ""
     @State var password: String = ""
     @State var showPassword: Bool = false
-    
+    @State var numNotifications = 4 
     var isSignInButtonDisabled: Bool {
         [name, password].contains(where: \.isEmpty)
     }
     
     var body: some View {
-            ZStack{
-                Image("music_background")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .edgesIgnoringSafeArea(.all)
-                VStack {
-                    Text("Space Travel")
-                    Divider()
-                    Text("Finally, it's here: Travelling to space. With just a few simple clicks, you can book your ticket on the next shuttle to the Moon!\n\nFor real adventurous travellers, we also offer trips to Mars. In our new shuttle X1, you will be there in no time with the newest and most comfortable travelling options.")
-                    Divider()
-                }
-            }
+        Image(systemName: "person.crop.circle.fill.badge.plus")
+            .font(.system(size: 150)).overlay(NotificationNumLabel(number: $numNotifications))
+//            ZStack{
+//                Image("music_background")
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fill)
+//                    .frame(minWidth: 0, maxWidth: .infinity)
+//                    .edgesIgnoringSafeArea(.all)
+//                VStack {
+//                    Text("Space Travel")
+//                    Divider()
+//                    Text("Finally, it's here: Travelling to space. With just a few simple clicks, you can book your ticket on the next shuttle to the Moon!\n\nFor real adventurous travellers, we also offer trips to Mars. In our new shuttle X1, you will be there in no time with the newest and most comfortable travelling options.")
+//                    Divider()
+//                }
+//            }
                     
             
         

@@ -16,7 +16,7 @@ struct PopupView: View {
             
         }.padding()
             .multilineTextAlignment(.center)
-            .background(.pink)
+            .background(Color.red)
     }
 }
 
