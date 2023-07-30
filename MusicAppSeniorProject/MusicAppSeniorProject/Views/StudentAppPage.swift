@@ -62,7 +62,7 @@ struct StudentAppPage: View {
                 }
 
                 .onAppear() {
-                    UITabBarItem.appearance().badgeColor = .systemTeal
+                    UITabBarItem.appearance().badgeColor = .systemOrange
 
                     if(modelData.uiImage == nil && !(modelData.uid == "")){
                         modelData.fetchImage { downloaded in
