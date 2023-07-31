@@ -8,26 +8,58 @@
 import SwiftUI
 
 struct HomePageUI: View {
-
+    var deviceWidth: CGFloat {
+        UIScreen.main.bounds.width
+    }
     var body: some View {
-        ZStack{
-            Image("music_background2")
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-            VStack{
-                Image("app_icon")
-                    .frame(height:200)
-                Text("Music Matcher")
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
-                    .bold()
-                    .italic()
-                Button("Hello"){
+        GeometryReader{geometry in
+            ZStack{
+                Image("music_background2")
+                    .resizable()
+//                    .scaledToFill()
+                    .ignoresSafeArea()
+                VStack(spacing: 10){
                     
-                }.buttonStyle(BigButtonStyle(color:.orange))
-            }
-            
+                    Image("app_icon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height:200)
+                        .padding(.top, 30)
+                        .padding(.bottom,-30)
+                    Text("Music Matcher")
+                    //                    .font(.largeTitle)
+                        .font(.system(size: 50))
+                        .foregroundColor(.white)
+                        .bold()
+                        .italic()
+
+                    ZStack{
+                        RoundedRectangle(cornerRadius:10).strokeBorder(Color.white, lineWidth: 3)
+                            .padding(20)
+                        Text("Matching students to music teachers in their area ")
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 26))
+                            .foregroundColor(.white)
+                            .italic()
+
+
+
+                    }
+
+                        
+                    Button("Student Sign Up"){
+                    }.buttonStyle(BigButtonStyle(color:.orange))
+                        .padding(10)
+                    Button("Teacher Sign Up"){
+                    }.buttonStyle(BigButtonStyle(color:.orange))
+                        .padding(10)
+                    Button("Sign In"){
+                    }.buttonStyle(BigButtonStyle(color:.orange))
+                        .padding(10)
+                    Spacer()
+                }
+                
+            }.frame(maxWidth: geometry.size.width)
         }
     }
 }

@@ -11,24 +11,27 @@ struct TestView: View {
     }
     
     var body: some View {
-        Image(systemName: "person.crop.circle.fill.badge.plus")
-            .font(.system(size: 150)).overlay(NotificationNumLabel(number: $numNotifications))
-//            ZStack{
-//                Image("music_background")
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fill)
-//                    .frame(minWidth: 0, maxWidth: .infinity)
-//                    .edgesIgnoringSafeArea(.all)
-//                VStack {
-//                    Text("Space Travel")
-//                    Divider()
-//                    Text("Finally, it's here: Travelling to space. With just a few simple clicks, you can book your ticket on the next shuttle to the Moon!\n\nFor real adventurous travellers, we also offer trips to Mars. In our new shuttle X1, you will be there in no time with the newest and most comfortable travelling options.")
-//                    Divider()
-//                }
-//            }
-                    
-            
-        
+        GeometryReader { geometry in
+            ZStack {
+                Image("music_background2") // your image
+                    .resizable()
+//                    .scaledToFill()
+                    .ignoresSafeArea()
+                VStack() {
+                    Image("app_icon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height:200)
+                    Text("Music Matcher")
+                    //                    .font(.largeTitle)
+                        .font(.system(size: 45))
+                        .foregroundColor(.white)
+                        .bold()
+                        .italic()
+                    Text("Hello this is some sample text that i am writing to show that this text goes off the screen.")
+                }.foregroundColor(.white)
+            }.frame(maxWidth: geometry.size.width)
+        }
     }
 }
 
@@ -96,8 +99,8 @@ struct TestView: View {
         //        }
         //    }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}
+struct TestView_Previews: PreviewProvider {
+    static var previews: some View {
+        TestView()
+    }
+}

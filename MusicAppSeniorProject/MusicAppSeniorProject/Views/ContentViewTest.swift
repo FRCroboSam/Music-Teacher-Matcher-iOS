@@ -27,3 +27,8 @@ var body: some View {
       }
    }
 }
+struct ContentViewTest_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentViewTest()
+    }
+}
