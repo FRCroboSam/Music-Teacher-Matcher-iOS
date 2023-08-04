@@ -3,8 +3,13 @@
 //  MusicAppSeniorProject
 //
 //  Created by Samuel Wang on 2/23/23.
-//
-
+//TODO: Available Teacher algorithm -> populates all of the teachers that could be compatible with the student, irrespective of distance and level, only considering the instrument
+//TODO: method to determine compatibility of teacher - > level, years of experience, location
+//TODO: method to determine proximity between teacher and student
+//TODO: method to take top 5 best teachers for the student
+//TODO: button at bottom of screen for adding 5 more teachers
+//TODO: Save teachers into "available teachers
+//todo: dfdf
 import Foundation
 import Firebase
 import FirebaseAppCheck
@@ -12,6 +17,7 @@ import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
 import SwiftUI
+import CoreLocation
 final class ModelData: ObservableObject{
     @Published var students =  [Student]()
     @Published var teachers = [Teacher]()
@@ -54,6 +60,46 @@ final class ModelData: ObservableObject{
 //            self.user = user
 //        }
 //    }
+    //returns a score which measures how compatible a teacher is
+    //does not consider distance range the student sets in StudentAppPage -> that filters out the available teachers shown
+    //negative score means completely incompatible
+    //
+    func determineCompatibility(teacher: Teacher, student: Student) -> Int{
+        var score = 100.0
+        if(teacher.instrument != student.selectedInstrument){
+            return -1000
+        }
+//        score -= teacherDistance(teacher: teacher, student: student)
+//        //compare minimum student level with student's level
+//        score += 50 * Int(teacher.getProperty(key: "Student Level", pairs: teacher.musicalBackground)  - student.getProperty(key: "Minimum Student Level", pairs: student.musicalBackground))
+        return Int(score)
+    }
+    
+    func teacherDistance (teacher: Teacher, student: Student, completion: @escaping (Double?) -> Void) {
+        let geocoder = CLGeocoder()
+        let city1  = "Lynnwood, WA"
+        let city2 = "Bellevue, Delaware"
+        geocoder.geocodeAddressString(city1) { (placemarks1, error) in
+            if(error != nil){
+                print("CITY DOES NOT EXIST")
+            }
+            guard let location1 = placemarks1?.first?.location else {
+                completion(nil)
+                return
+            }
+            
+            geocoder.geocodeAddressString(city2) { (placemarks2, error) in
+                guard let location2 = placemarks2?.first?.location else {
+                    completion(nil)
+                    return
+                }
+                
+                let distance = location1.distance(from: location2) / 1000.0 // Convert meters to kilometers
+                print("DISTANCE " + String(distance))
+                completion(distance)
+            }
+        }
+    }
     func checkIfCollectionExists(collectionName: String, completion: @escaping (Bool) -> Void) {
         let db = Firestore.firestore()
         let collectionRef = db.collection("StudentUser").document(uid).collection(collectionName)

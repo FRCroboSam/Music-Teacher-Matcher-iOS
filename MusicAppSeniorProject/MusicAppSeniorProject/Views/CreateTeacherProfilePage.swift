@@ -8,7 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import Combine
-
+//TODO: make sure studentLevel new number logic works
 struct CreateTeacherProfilePage: View {
     @EnvironmentObject var modelData: TeacherModelData
     @EnvironmentObject var viewModel: ProfileModel
@@ -38,7 +38,7 @@ struct CreateTeacherProfilePage: View {
     @State private var pricingInfo = ""
 
     @State private var custom = false
-    @State private var studentLevel = "Beginner"
+    @State private var studentLevel = 0
     @State private var loginSuccessful = false
 
     @State private var useCamera = false
@@ -174,9 +174,9 @@ struct CreateTeacherProfilePage: View {
                             .font(.system(size: 30))
                         Text("Minimum Level of Student")
                         Picker("Instrument", selection: $studentLevel, content:{
-                            Text("Beginner").tag("Beginner")
-                            Text("Intermediate").tag("Intermediate")
-                            Text("Advanced").tag("Advanced")
+                            Text("Beginner").tag(0)
+                            Text("Intermediate").tag(1)
+                            Text("Advanced").tag(2)
 
                         }).pickerStyle(.segmented)
                         HStack{
@@ -338,7 +338,7 @@ struct CreateTeacherProfilePage: View {
         let lessonInfo:KeyValuePairs = [
             "Lesson Length": String(lessonLength),
             "Pricing": cost,
-            "Minimum Student Level": studentLevel,
+            "Minimum Student Level": String(studentLevel),
         ]
         let name = firstName + " " +  lastName
         let teacherInfo:KeyValuePairs = [
@@ -461,7 +461,7 @@ struct CreateTeacherProfilePage: View {
         
         instrument = value(key: "Instrument", pairs: teacher.musicalBackground)
         lessonLength = Int(value(key: "Lesson Length", pairs: teacher.lessonInfo)) ?? 60
-        studentLevel = value(key: "Minimum Student Level", pairs: teacher.lessonInfo)
+        studentLevel = Int(value(key: "Minimum Student Level", pairs: teacher.lessonInfo)) ?? 60
         teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
         musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)
         

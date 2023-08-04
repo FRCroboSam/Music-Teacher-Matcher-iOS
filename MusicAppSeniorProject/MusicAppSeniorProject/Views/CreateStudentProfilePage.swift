@@ -13,7 +13,7 @@ enum Instrument: String, CaseIterable, Identifiable {
     case cello, piano, violin
     var id: Self { self }
 }
-
+//TODO: redo the studentLevel logic for population in firebase
 
 struct CreateStudentProfilePage: View{
     @EnvironmentObject var modelData: ModelData
@@ -29,7 +29,7 @@ struct CreateStudentProfilePage: View{
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var selectedInstrument: String = "Cello"
-    @State private var studentLevel: String = ""
+    @State private var studentLevel: Int = 0
     @State private var description: String = ""
     @State private var image = UIImage(systemName: "person.fill")
     @State var displayImage: Bool = false
@@ -168,9 +168,9 @@ struct CreateStudentProfilePage: View{
                         }
                         Text("Skill Level")
                         Picker("Level", selection: $studentLevel, content:{
-                            Text("Beginner").tag("Beginner")
-                            Text("Intermediate").tag("Intermediate")
-                            Text("Advanced").tag("Advanced")
+                            Text("Beginner").tag(0)
+                            Text("Intermediate").tag(1)
+                            Text("Advanced").tag(2)
 
                         }).pickerStyle(.segmented)
                         Text("Prior Pieces played")
@@ -348,7 +348,7 @@ struct CreateStudentProfilePage: View{
             let musicalBackground:KeyValuePairs = [
                 "Instrument": selectedInstrument,
                 "Years Playing": String(yearsPlaying),
-                "Skill Level": studentLevel,
+                "Skill Level": String(studentLevel),
                 "Prior Pieces Played":  description,
                 "Budget": String(price)
             ]
@@ -489,7 +489,7 @@ struct CreateStudentProfilePage: View{
         //musical background
         selectedInstrument = value(key: "Instrument", pairs: student.musicalBackground)
         yearsPlaying = convertToDouble(s:value(key: "Years Playing", pairs: student.musicalBackground))
-        studentLevel = value(key: "Skill Level", pairs: student.musicalBackground)
+        studentLevel = Int(convertToDouble(s:value(key: "Skill Level", pairs: student.musicalBackground)))
         description = value(key: "Prior Pieces Played", pairs: student.musicalBackground)
         price = convertToDouble(s:value(key: "Budget", pairs: student.musicalBackground))
 

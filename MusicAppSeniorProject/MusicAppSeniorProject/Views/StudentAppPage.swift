@@ -28,7 +28,7 @@ struct StudentAppPage: View {
     var body: some View {
         NavigationStack{
             ZStack{
-
+                //slider to toggle distance between teacher and student
                 
                 TabView{
                     TeacherListView(displayArray: $modelData.availableTeachers, uiImage: $modelData.uiImage, status: "Available Teachers", displayText: availableTeacherDesc)
@@ -62,6 +62,10 @@ struct StudentAppPage: View {
                 }
 
                 .onAppear() {
+                    let teacher = Teacher(name: "DF")
+                    modelData.teacherDistance(teacher: teacher, student: modelData.studentUser, completion: { _ in
+                        
+                    })
                     UITabBarItem.appearance().badgeColor = .systemOrange
 
                     if(modelData.uiImage == nil && !(modelData.uid == "")){

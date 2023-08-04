@@ -18,65 +18,78 @@ struct HomePage: View {
 
     var body: some View {
         NavigationStack{
-            ZStack{
-
-                RoundedRectangle(cornerRadius: 20)
-                    .strokeBorder()
-                    .padding(10)
-                Image("music_background")
-                    .resizable()
-                    .padding(30)
-
-            }
-
-            ZStack{
-                VStack(alignment: .leading) {
-                    Section{
-                        Spacer()
+            GeometryReader{geometry in
+                ZStack{
+                    Image("music_background2")
+                        .resizable()
+                    //                    .scaledToFill()
+                        .ignoresSafeArea()
+                    VStack(spacing: 15){
+                        
+                        Image("app_icon")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height:200)
+                            .padding(.top, 30)
+                            .padding(.bottom,-30)
                         Text("Music Matcher")
-                            .font(.system(size: 50))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.purple)
-                            .shadow(color: .white, radius: 1)
-                            .multilineTextAlignment(.center)
-
-
-                    }
-                    Text("First time using the app as a student looking for a music teacher?")
-                    NavigationLink(destination: CreateStudentProfilePage()){
-                        Text("Click here")
-                            .backgroundStyle(.green)
+                        //                    .font(.largeTitle)
+                            .font(.custom("MarkerFelt-Wide", size: 50))
+                            .foregroundColor(.white)
+//                            .bold()
+//                            .italic()
                         
+                        ZStack{
+                            RoundedRectangle(cornerRadius:10).strokeBorder(Color.white, lineWidth: 3)
+                                .frame(maxWidth: 7/8 * deviceWidth)
+                                .frame(maxHeight: 1/7 * deviceHeight)
+//                                .padding(10)
+                            Text("Matching students to music teachers in their area ")
+                                .multilineTextAlignment(.center)
+                                .font(.system(size: 26))
+                                .minimumScaleFactor(0.01)
+                                .frame(maxWidth: 5/6 * deviceWidth)
+
+                                .foregroundColor(.white)
+                                .italic()
+//                                .overlay(RoundedRectangle(cornerRadius: 20)                                .strokeBorder(Color.white,lineWidth: 5)
+//                                    .padding(-10)
+//                                )
+
+
+                            
+                            
+                            
+                        }
+                        
+                        NavigationLink(destination: LoginPage()){
+                            Text("Sign In")
+                        }.buttonStyle(BigButtonStyle(color:.orange))
+                            .padding(10)
+                        NavigationLink(destination: CreateStudentProfilePage()){
+                            Text("Student Sign Up")
+                        }.buttonStyle(BigButtonStyle(color:.orange))
+                            .padding(10)
+                        NavigationLink(destination: CreateTeacherProfilePage()){
+                            Text("Teacher Sign Up")
+                        }.buttonStyle(BigButtonStyle(color:.orange))
+                            .padding(10)
+//                        Button("Student Sign Up"){
+//                            NavigationLink(CreateStudentProfilePage())
+//                        }
+//                        Button("Teacher Sign Up"){
+//                        }.buttonStyle(BigButtonStyle(color:.orange))
+//                            .padding(10)
+//                        Button("Sign In"){
+//                        }.buttonStyle(BigButtonStyle(color:.orange))
+//                            .padding(10)
+                        Spacer()
                     }
-                    .buttonStyle(.bordered)
                     
-                    Text("Music Teacher who wants to find students?")
-                    NavigationLink(destination: CreateTeacherProfilePage()){
-                        Text("Click here")
-                            .backgroundStyle(.green)
-                        //                        .navigationBarBackButtonHidden(true)
-                        
-                    }
-                    .buttonStyle(.bordered)
-                    Text("Already created an account?")
-                    NavigationLink(destination: LoginPage()){
-                        
-                        Text("Log in")
-                    }
-                    .buttonStyle(.bordered)
-                    Spacer()
-                    NavigationLink(destination: TestView()){
-                        Text("Test View")
-                    }
-                    .buttonStyle(.bordered)
-                    Spacer()
+                }.frame(maxWidth: geometry.size.width)
+                    .navigationBarBackButtonHidden(true)
             }
-                .padding(10)
-                Spacer()
-
-            }
-        }.navigationBarBackButtonHidden(true)
-        
+        }
     }
 }
 

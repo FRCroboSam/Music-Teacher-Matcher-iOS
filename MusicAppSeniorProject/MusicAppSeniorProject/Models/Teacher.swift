@@ -93,5 +93,12 @@ struct Teacher:Identifiable, Hashable{
     }
     func hash(into hasher: inout Hasher) {
     }
-
+    func getProperty(key: String, pairs: KeyValuePairs<String, String>) -> String {
+        if let index = pairs.firstIndex(where: { $0.0 == key }) {
+            print("KEY: " + key + " VALUE: " + pairs[index].value)
+            return pairs[index].value
+        } else {
+            return ""
+        }
+    }
 }
