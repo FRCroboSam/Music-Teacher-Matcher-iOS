@@ -37,7 +37,8 @@ struct CreateStudentProfilePage: View{
     @State private var toggle: Bool = false
     @State private var changePassword: Bool = false
     @State private var changeEmail: Bool = false
-
+    //TODO: Add feature where user can type a city name and locations will begin popping up
+    @State private var location: String = ""
 
     var editMode = false
     @State var newEmail = ""
@@ -208,6 +209,9 @@ struct CreateStudentProfilePage: View{
                                 TextField("Enter email (your's or parent's)", text: $email)
                                     .textFieldStyle(.roundedBorder)
                                 TextField("Enter a password", text: $password)
+                                    .textFieldStyle(.roundedBorder)
+                                    .listRowSeparator(.hidden)
+                                TextField("Enter your location in the following form: (City, State)", text: $location)
                                     .textFieldStyle(.roundedBorder)
                                     .listRowSeparator(.hidden)
                             }

@@ -25,7 +25,6 @@ struct HomePage: View {
                     //                    .scaledToFill()
                         .ignoresSafeArea()
                     VStack(spacing: 15){
-                        
                         Image("app_icon")
                             .resizable()
                             .aspectRatio(contentMode: .fill)
@@ -38,7 +37,6 @@ struct HomePage: View {
                             .foregroundColor(.white)
 //                            .bold()
 //                            .italic()
-                        
                         ZStack{
                             RoundedRectangle(cornerRadius:10).strokeBorder(Color.white, lineWidth: 3)
                                 .frame(maxWidth: 7/8 * deviceWidth)
@@ -60,8 +58,9 @@ struct HomePage: View {
                             
                             
                             
-                        }
-                        
+                        }.offset(y:15)
+
+                        Spacer(minLength: 20)
                         NavigationLink(destination: LoginPage()){
                             Text("Sign In")
                         }.buttonStyle(BigButtonStyle(color:.orange))

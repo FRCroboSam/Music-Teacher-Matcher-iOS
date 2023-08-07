@@ -22,7 +22,6 @@ struct CreateTeacherProfilePage: View {
     @State private var description: String = ""
     @State private var instrument: String = "Cello"
     @State private var lessonType: String = ""
-//    @State private var location: String = "" //TODO: Implement this
     @State private var cost: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
@@ -36,6 +35,7 @@ struct CreateTeacherProfilePage: View {
     //pricing if custom
     @State private var customPricing = false
     @State private var pricingInfo = ""
+    @State private var location = ""
 
     @State private var custom = false
     @State private var studentLevel = 0
@@ -230,6 +230,9 @@ struct CreateTeacherProfilePage: View {
                                 .textFieldStyle(.roundedBorder)
                             TextField("Password: ", text: $password)
                                 .textFieldStyle(.roundedBorder)
+                            TextField("Enter the location of your teaching area in the following form: (City, State), or type an exact address", text: $location)
+                                .textFieldStyle(.roundedBorder)
+                                .listRowSeparator(.hidden)
                         }
                     }
                     .padding(10)

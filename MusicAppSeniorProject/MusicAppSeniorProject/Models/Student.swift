@@ -81,12 +81,20 @@ struct Student: Identifiable{
         self.uiImage = uiImage 
     }
 
-    func getProperty(key: String, pairs: KeyValuePairs<String, String>) -> String {
+    func getStringProperty(key: String, pairs: KeyValuePairs<String, String>) -> String {
         if let index = pairs.firstIndex(where: { $0.0 == key }) {
             print("KEY: " + key + " VALUE: " + pairs[index].value)
             return pairs[index].value
         } else {
             return ""
+        }
+    }
+    func getDoubleProperty(key: String, pairs: KeyValuePairs<String, String>) -> Double{
+        let stringValue = getStringProperty(key: key, pairs: pairs)
+        if let doubleValue = Double(stringValue) {
+            return doubleValue
+        } else {
+            return 0
         }
     }
 }

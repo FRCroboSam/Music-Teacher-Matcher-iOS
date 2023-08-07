@@ -12,6 +12,7 @@ struct LoginPageUI: View {
     @State private var email = ""
     @State private var password = ""
     @State private var text = ""
+    @State private var userType = ""
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }
@@ -28,13 +29,25 @@ struct LoginPageUI: View {
                     .font(.custom("MarkerFelt-Wide", size: 50))
                     .minimumScaleFactor(0.01)
                     .frame(maxWidth: 5/6 * deviceWidth)
-
                     .lineLimit(1)
                     .foregroundColor(.white)
 //                    .bold()
 //                    .italic()
-                Image("app_icon")
                 
+                Image("app_icon")
+                HStack(spacing: 10){
+                    Text("Are you a: ")
+                        .font(.custom("MarkerFelt-Wide", size: 20))
+                        .foregroundColor(.white)
+
+                    
+                    Picker("UserType", selection: $userType, content:{
+                        Text("Student").tag("Student")
+                            .foregroundColor(Color.white)
+                        Text("Teacher").tag("Teacher")
+                            .foregroundColor(.white)
+                    })
+                }
                 HStack {
                     Image(systemName: "envelope")
                     TextField("Email", text: $text)

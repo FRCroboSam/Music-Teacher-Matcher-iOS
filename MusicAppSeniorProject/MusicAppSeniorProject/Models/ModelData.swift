@@ -10,6 +10,7 @@
 //TODO: button at bottom of screen for adding 5 more teachers
 //TODO: Save teachers into "available teachers
 //todo: dfdf
+//TODO: 8/6 work out available teachers logic
 import Foundation
 import Firebase
 import FirebaseAppCheck
@@ -23,6 +24,7 @@ final class ModelData: ObservableObject{
     @Published var teachers = [Teacher]()
     
     //for student users
+    private var allAvailableTeachers = [Teacher]()
     @Published var availableTeachers = [Teacher]()
     @Published var declinedTeachers = [Teacher]()
     @Published var requestedTeachers = [Teacher]()
@@ -64,17 +66,28 @@ final class ModelData: ObservableObject{
     //does not consider distance range the student sets in StudentAppPage -> that filters out the available teachers shown
     //negative score means completely incompatible
     //
-    func determineCompatibility(teacher: Teacher, student: Student) -> Int{
+    func determineCompatibility(teacher: Teacher, student: Student, completion:@escaping (Double?) -> Void){
         var score = 100.0
+        let teacherPreferredLevel = teacher.getDoubleProperty(key: "Minimum Student Level", pairs: teacher.musicalBackground)
+        let studentLevel = student.getDoubleProperty(key: "Student Level", pairs: student.musicalBackground)
+        //add more to score if student and teacher Level are the same with studentLevel >= teacherLevel
+        //TODO: Come up with a better one in the future
+        score += 50 + (-0.5 * (teacherPreferredLevel - studentLevel))
+        
         if(teacher.instrument != student.selectedInstrument){
-            return -1000
+            completion(-1000)
         }
-//        score -= teacherDistance(teacher: teacher, student: student)
-//        //compare minimum student level with student's level
-//        score += 50 * Int(teacher.getProperty(key: "Student Level", pairs: teacher.musicalBackground)  - student.getProperty(key: "Minimum Student Level", pairs: student.musicalBackground))
-        return Int(score)
+        teacherDistance(teacher:teacher, student: student){dist  in
+            if(dist != nil){
+                score -= dist ?? 0
+                completion(score)
+            }
+            else{
+                completion(score)
+            }
+        }
     }
-    
+
     func teacherDistance (teacher: Teacher, student: Student, completion: @escaping (Double?) -> Void) {
         let geocoder = CLGeocoder()
         let city1  = "Lynnwood, WA"
@@ -440,9 +453,66 @@ final class ModelData: ObservableObject{
 //        modelData.studentUser = Student(name: firstName + " " + lastName)
 //        modelData.studentUser.populateInfo(firstName: firstName, lastName: lastName, age: age, price: price, email: email, selectedInstrument: selectedInstrument)
 
+    //populates all the teachers with the same instrument as the user
+    //unavailableTeacherIDs - requested, declined, matched teachers
+    func addTeacherToAllAvailableTeachers(teacher: Teacher, teacherUID: String){
+        let db = Firestore.firestore()
+        let allAvailableTeachersRef = db.collection("StudentUser").document(uid).collection("All Available Teachers")
+        allAvailableTeachersRef.document(teacherUID).setData([
+            "name": teacher.name,
+            "score": teacher.score
+
+        ]) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            } else {
+                print("Document successfully written!")
+            }
+        }
+    }
+    func populateAllAvailableTeachers(student: Student, unavailableTeacherIDs: [String]){
+        //
+        let db = Firestore.firestore()
+        let allAvailableTeachersRef = db.collection("StudentUser").document(uid).collection("All Available Teachers")
+        //populate all available teachers with teachers with the same instrument
+        let teacherRef = db.collection("Teachers").document("Music Teachers").collection(student.selectedInstrument)
+            teacherRef.addSnapshotListener { querySnapshot, error in
+                guard let documents = querySnapshot?.documents else {
+                    print("Error fetching document: \(error!)")
+                    return
+                  }
+            
+            documents.forEach { documentSnapshot in
+                let teacherId = documentSnapshot.documentID
+                let teacherRef = db.collection("Teachers").document(teacherId)
+                    teacherRef.getDocument { (snapshot, err) in
+                        let canAdd = !(self.matchedTeachers).contains { $0.uid == teacherId }
+                        if let err = err {
+                            print("Error getting document: \(err)")
+                        }
+                        else if let snapshot = snapshot, canAdd, snapshot.exists {
+                            let data = snapshot.data()
+                            if let data = data{
+                                //create the teacher object
+                                var teacher = self.createTeacherFromData(documentSnapshot: snapshot)
+                                self.determineCompatibility(teacher: teacher, student: self.studentUser){ score in
+                                    teacher.score = score ?? 0
+                                    self.addTeacherToAllAvailableTeachers(teacher: teacher, teacherUID: teacherId)
+                                    //put the score in student's all available teachers
+                                    
+                                }
+                            }
+                        }
+                    }
+            }
+
+        }
+    }
     //fetchTeacherData
     //called by StudentAppPage View onAppear
-    
+    func createTeacherFromUID(uid: String){
+        
+    }
     func fetchTeacherData(completion: @escaping () -> Void){
         print("*FETCHING TEACHER DATA")
         let db = Firestore.firestore()
