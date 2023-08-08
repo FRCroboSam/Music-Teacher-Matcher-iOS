@@ -24,7 +24,7 @@ final class ModelData: ObservableObject{
     @Published var teachers = [Teacher]()
     
     //for student users
-    private var allAvailableTeachers = [Teacher]()
+    private var allAvailableTeachers = [Teacher]() //dont use for now
     @Published var availableTeachers = [Teacher]()
     @Published var declinedTeachers = [Teacher]()
     @Published var requestedTeachers = [Teacher]()
@@ -159,6 +159,26 @@ final class ModelData: ObservableObject{
 //                print("Document successfully written!")
 //            }
 //        }
+        checkIfCollectionExists(collectionName: "All Available Teachers") { works in
+            if(!works){
+                docRef.collection("Matched Teachers").document().setData([  // 👈 Create a document in the subcollection
+                    "title": "testing"
+                ])
+            }
+            else{
+                print("FOUND MATCHED, not ADDING")
+            }
+        }
+        checkIfCollectionExists(collectionName: "Available Teachers") { works in
+            if(!works){
+                docRef.collection("Matched Teachers").document().setData([  // 👈 Create a document in the subcollection
+                    "title": "testing"
+                ])
+            }
+            else{
+                print("FOUND MATCHED, not ADDING")
+            }
+        }
         checkIfCollectionExists(collectionName: "Matched Teachers") { works in
             if(!works){
                 docRef.collection("Matched Teachers").document().setData([  // 👈 Create a document in the subcollection
@@ -455,7 +475,7 @@ final class ModelData: ObservableObject{
 
     //populates all the teachers with the same instrument as the user
     //unavailableTeacherIDs - requested, declined, matched teachers
-    func addTeacherToAllAvailableTeachers(teacher: Teacher, teacherUID: String){
+    func addTeacherToAllAvailableTeachers(teacher: Teacher, teacherUID: String, unavailableTeachers: [Teacher]){
         let db = Firestore.firestore()
         let allAvailableTeachersRef = db.collection("StudentUser").document(uid).collection("All Available Teachers")
         allAvailableTeachersRef.document(teacherUID).setData([
@@ -469,14 +489,17 @@ final class ModelData: ObservableObject{
                 print("Document successfully written!")
             }
         }
+        allAvailableTeachers.append(teacher)
+        
+        
     }
-    func populateAllAvailableTeachers(student: Student, unavailableTeacherIDs: [String]){
+    func populateAllAvailableTeachers(student: Student, unavailableTeachers: [Teacher]){
         //
         let db = Firestore.firestore()
         let allAvailableTeachersRef = db.collection("StudentUser").document(uid).collection("All Available Teachers")
         //populate all available teachers with teachers with the same instrument
-        let teacherRef = db.collection("Teachers").document("Music Teachers").collection(student.selectedInstrument)
-            teacherRef.addSnapshotListener { querySnapshot, error in
+        let teacherRef = db.collection("Teachers").document("Music Teachers").collection("Cello") //TODO: FIX LOGIC
+        teacherRef.addSnapshotListener { querySnapshot, error in
                 guard let documents = querySnapshot?.documents else {
                     print("Error fetching document: \(error!)")
                     return
@@ -486,7 +509,7 @@ final class ModelData: ObservableObject{
                 let teacherId = documentSnapshot.documentID
                 let teacherRef = db.collection("Teachers").document(teacherId)
                     teacherRef.getDocument { (snapshot, err) in
-                        let canAdd = !(self.matchedTeachers).contains { $0.uid == teacherId }
+                        let canAdd = !(unavailableTeachers).contains { $0.uid == teacherId }
                         if let err = err {
                             print("Error getting document: \(err)")
                         }
@@ -497,7 +520,7 @@ final class ModelData: ObservableObject{
                                 var teacher = self.createTeacherFromData(documentSnapshot: snapshot)
                                 self.determineCompatibility(teacher: teacher, student: self.studentUser){ score in
                                     teacher.score = score ?? 0
-                                    self.addTeacherToAllAvailableTeachers(teacher: teacher, teacherUID: teacherId)
+                                    self.addTeacherToAllAvailableTeachers(teacher: teacher, teacherUID: teacherId, unavailableTeachers: unavailableTeachers)
                                     //put the score in student's all available teachers
                                     
                                 }
@@ -516,10 +539,11 @@ final class ModelData: ObservableObject{
     func fetchTeacherData(completion: @escaping () -> Void){
         print("*FETCHING TEACHER DATA")
         let db = Firestore.firestore()
-        print("DECLINED TEACHERS")
         let declinedTeachersRef = db.collection("StudentUser").document(uid).collection("Declined Teachers")
         let matchedTeachersRef = db.collection("StudentUser").document(uid).collection("Matched Teachers")
         let requestedTeachersRef = db.collection("StudentUser").document(uid).collection("Requested Teachers")
+        let availableTeachersRef = db.collection("StudentUser").document(uid).collection("Available Teachers")
+        let allAvailableTeachersRef = db.collection("Student User").document(uid).collection("All Available Teachers")
         let teacherRef = db.collection("Teachers")
         
         var unavailableTeacherIDs = [""]
@@ -600,32 +624,76 @@ final class ModelData: ObservableObject{
                 }
             }
         }
-        //populate available teachers with all teachers in "Teachers" that are not in the other arrays
-        
-        db.collection("Teachers").addSnapshotListener { querySnapshot, error in
+        //populate available teachers with everything in the available
+        availableTeachersRef.addSnapshotListener { querySnapshot, error in
+            self.availableTeachers = []
+            print("Available Teachers Changing" )
             guard let documents = querySnapshot?.documents else {
                 print("Error fetching document: \(error!)")
                 return
               }
-            
-            self.availableTeachers = documents.compactMap { (documentSnapshot) -> Teacher? in
-                let data = documentSnapshot.data()
-                let uid = data["uid"] as? String ?? ""
-                let name = data["name"] as? String ?? ""
-                let instrument = data["Instrument"] as? String ?? data["instrument"] as? String ?? ""
-                let studentInstrument = self.studentUser.musicalBackground[0].value
-                print(studentInstrument)
-                let canAdd = !(unavailableTeacherIDs.contains(uid))
-                let canMatch = instrument.compare(studentInstrument, options: .caseInsensitive) == .orderedSame
-                if canMatch && canAdd && !uid.isEmpty && !name.isEmpty && !(name.trimmingCharacters(in: .whitespaces) == ""){
-                    return self.createTeacherFromData(documentSnapshot: documentSnapshot)
-                } else {
-                    return nil // Return nil if the condition is not met
+            documents.forEach { documentSnapshot in
+                let teacherId = documentSnapshot.documentID
+                let teacherRef = teacherRef.document(teacherId)
+                teacherRef.getDocument { (document, err) in
+                    if let err = err {
+                        print("Error getting document: \(err)")
+                    }
+                    else if let document = document, document.exists {
+                        let data = document.data()
+                        if let data = data {
+                            let availableTeacher = self.createTeacherFromData(documentSnapshot: document)
+                            self.availableTeachers.append(availableTeacher)
+                        }
+
+                    }
                 }
             }
-
-            completion()
+            let numAvailable = querySnapshot?.count ?? 0
+            //loop through 5 - numAvailable documents (fill in the remainder so user has 5 available teachers at all times)
+            if(5 - numAvailable >= 1){
+                for i in 1...(5 - numAvailable){
+                    let query = allAvailableTeachersRef
+                        .order(by: "Score", descending: true)
+                        .limit(to: numAvailable)
+                    //get documents from the AllAvailableTeachers ref query
+                    query.getDocuments{(querySnapshot, error) in
+                        if let error = error {
+                            print("Error getting documents: \(error)")
+                            return
+                        }
+                        if let documents = querySnapshot?.documents {
+                            //for each document add to all available teachers
+                            documents.forEach { documentSnapshot in
+                                let teacherId = documentSnapshot.documentID
+                                let teacherRef = teacherRef.document(teacherId)
+                                teacherRef.getDocument { (document, err) in
+                                    if let err = err {
+                                        print("Error getting document: \(err)")
+                                    }
+                                    else if let document = document, document.exists {
+                                        let data = document.data()
+                                        if let data = data {
+                                            let availableTeacher = self.createTeacherFromData(documentSnapshot: document)
+                                            self.availableTeachers.append(availableTeacher)
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            
+                
         }
+        var unavailableTeachers = [Teacher]()
+        unavailableTeachers.append(contentsOf: (self.availableTeachers + self.declinedTeachers + self.matchedTeachers + self.requestedTeachers))
+        //populate all available teachers
+        populateAllAvailableTeachers(student: self.studentUser, unavailableTeachers: unavailableTeachers)
+
         
     }
     func teacherIsCompatible(){
