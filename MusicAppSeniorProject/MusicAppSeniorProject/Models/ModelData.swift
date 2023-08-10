@@ -499,8 +499,11 @@ final class ModelData: ObservableObject{
         let db = Firestore.firestore()
         let allAvailableTeachersRef = db.collection("StudentUser").document(uid).collection("All Available Teachers")
         //populate all available teachers with teachers with the same instrument
-        let teacherRef = db.collection("Teachers").document("Teacher Instruments").collection("Cello") //TODO: FIX LOGIC
-        teacherRef.addSnapshotListener { querySnapshot, error in
+        let teacherRef = db.collection("Teachers")//.document("Teacher Instruments").collection("Cello") //TODO: FIX LOGIC
+        let query = teacherRef
+            .whereField("Instrument", isEqualTo: "Cello")
+//            .whereField("Name", isGreaterThan: "")
+        query.addSnapshotListener { querySnapshot, error in
             var unavailableTeachers = [Teacher]()
             unavailableTeachers.append(contentsOf: (self.availableTeachers + self.declinedTeachers + self.matchedTeachers + self.requestedTeachers))
             print("UNAVAILABLE TEACHERS SIZE: " + String(unavailableTeachers.count))
@@ -645,6 +648,7 @@ final class ModelData: ObservableObject{
         let query = allAvailableTeachersRef
             .order(by:"Score", descending:true)
             .limit(to:5)
+
         let availableListener = query.addSnapshotListener { querySnapshot, error in
             self.availableTeachers = []
             print("Available Teachers Changing")
@@ -653,7 +657,17 @@ final class ModelData: ObservableObject{
 //                group.leave()
                 return
             }
-
+            //TODOL: TEST IF THIS STOPS IT OVERFLOWING
+            if(self.availableTeachers.count >= 5){
+                return
+            }
+//            let semaphore = DispatchSemaphore(value: 0)
+//
+//            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+//                semaphore.signal()
+//            }
+//
+//            semaphore.wait()
             documents.forEach { documentSnapshot in
 //                defer { dispatchGroup.leave() }
                 let teacherId = documentSnapshot.documentID
