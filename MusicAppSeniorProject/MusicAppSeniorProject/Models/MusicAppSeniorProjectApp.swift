@@ -63,6 +63,7 @@ struct MusicAppSeniorProjectApp: App {
                                         if(isStudent){
                                             modelData.createStudentFromId(uid: uid) { isCreated in
                                                 if isCreated {
+                                                    print("FIRST TIME FETCHING TEACHER DATA")
                                                     modelData.fetchTeacherData() {
                                                     }
                                                     modelData.fetchImage{_ in

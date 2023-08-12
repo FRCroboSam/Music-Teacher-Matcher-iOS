@@ -76,7 +76,7 @@ struct TeacherListView: View {
                 }.onTapGesture {
                     showInfo = false
                 }
-
+//TODO: FIX REQUEST TEACHER
                 List(displayArray) { teacher in
                     NavigationLink{
                         TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)

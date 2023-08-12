@@ -47,7 +47,7 @@ final class ModelData: ObservableObject{
     
     @Published var loggedIn: Bool?
     @Published var isStudent: Bool?
-
+    @Published var hasFetchedData: Bool? 
 //    var user: User? {
 //        didSet {
 //            objectWillChange.send()
@@ -484,10 +484,9 @@ final class ModelData: ObservableObject{
 
         ]) { err in
             if let err = err {
-                print("Error writing document: \(err)")
+                print("@@@Error writing document: \(err)")
             } else {
-                print("Document successfully written to AllAvailableTeachers!")
-
+                print("@@@Document successfully written to AllAvailableTeachers at "  + allAvailableTeachersRef.document(teacherUID).path)
             }
         }
         allAvailableTeachers.append(teacher)
@@ -502,18 +501,16 @@ final class ModelData: ObservableObject{
         let teacherRef = db.collection("Teachers")//.document("Teacher Instruments").collection("Cello") //TODO: FIX LOGIC
         let query = teacherRef
             .whereField("Instrument", isEqualTo: "Cello")
-//            .whereField("Name", isGreaterThan: "")
+            .whereField("name", isGreaterThan: "A")
         query.addSnapshotListener { querySnapshot, error in
             var unavailableTeachers = [Teacher]()
             unavailableTeachers.append(contentsOf: (self.availableTeachers + self.declinedTeachers + self.matchedTeachers + self.requestedTeachers))
-            print("UNAVAILABLE TEACHERS SIZE: " + String(unavailableTeachers.count))
                 guard let documents = querySnapshot?.documents else {
                     print("Error fetching document: \(error!)")
                     return
                   }
             
             documents.forEach { documentSnapshot in
-                print("NEW DOCUMENT")
                 let teacherId = documentSnapshot.documentID
                 let teacherRef = db.collection("Teachers").document(teacherId)
                     teacherRef.getDocument { (snapshot, err) in
@@ -643,56 +640,63 @@ final class ModelData: ObservableObject{
                 }
             }
         }
+        //CODE IS USELESS JUST A PLACEHOLDER
         let unavailableTeachers = self.requestedTeachers + self.declinedTeachers + self.matchedTeachers
-        populateAllAvailableTeachers(student: studentUser, unavailableTeachers: unavailableTeachers )
-        let query = allAvailableTeachersRef
-            .order(by:"Score", descending:true)
-            .limit(to:5)
+        print("dECLINED TEACHERS SIZE: " + String(declinedTeachers.count))
+            // Perform the population process here
+            // This can involve fetching data, processing, and writing to Firestore
+            print("@@@POPULATING ALL AVAILABLE TEACHERS@@@")
+            self.populateAllAvailableTeachers(student: self.studentUser, unavailableTeachers: unavailableTeachers )
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                // Put your code which should be executed with a delay here
+                print("@@@POPULATING AVAILABLE TEACHERS")
+                let query = allAvailableTeachersRef
+                    .order(by: "Score", descending: true)
+                    .limit(to: 10)
 
-        let availableListener = query.addSnapshotListener { querySnapshot, error in
-            self.availableTeachers = []
-            print("Available Teachers Changing")
-            guard let documents = querySnapshot?.documents else {
-                print("Error fetching document: \(error!)")
-//                group.leave()
-                return
-            }
-            //TODOL: TEST IF THIS STOPS IT OVERFLOWING
-            if(self.availableTeachers.count >= 5){
-                return
-            }
-//            let semaphore = DispatchSemaphore(value: 0)
-//
-//            DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
-//                semaphore.signal()
-//            }
-//
-//            semaphore.wait()
-            documents.forEach { documentSnapshot in
-//                defer { dispatchGroup.leave() }
-                let teacherId = documentSnapshot.documentID
-                unavailableTeacherIDs.append(teacherId)
-                let teacherRef = teacherRef.document(teacherId)
-                teacherRef.getDocument { (document, err) in
-                    if let err = err {
-                        print("Error getting document: \(err)")
-                    } else if let document = document, document.exists {
-                        let canAdd = !(self.requestedTeachers + self.declinedTeachers + self.matchedTeachers).contains { $0.uid == teacherId }
-                        if canAdd {
-                            let data = document.data()
-                            if let data = data {
-                                print("ADDING AVAAILABLE TEACHER: " + teacherId)
+                let availableListener = query.addSnapshotListener { querySnapshot, error in
+                    if(!(self.availableTeachers.count >= 5)){
+                    self.availableTeachers = []
+                    print("Available Teachers Changing")
+                    guard let documents = querySnapshot?.documents else {
+                        print("Error fetching document: \(error!)")
+        //                group.leave()
+                        return
+                    }
+                    //TODOL: TEST IF THIS STOPS IT OVERFLOWING
 
-                                let availableTeacher = self.createTeacherFromData(documentSnapshot: document)
-                                self.availableTeachers.append(availableTeacher)
+
+                    documents.forEach { documentSnapshot in
+        //                defer { dispatchGroup.leave() }
+                        let teacherId = documentSnapshot.documentID
+                        unavailableTeacherIDs.append(teacherId)
+                        let teacherRef = teacherRef.document(teacherId)
+                        teacherRef.getDocument { (document, err) in
+                            if let err = err {
+                                print("Error getting document: \(err)")
+                            } else if let document = document, document.exists {
+                                let canAdd = !(self.requestedTeachers + self.declinedTeachers + self.matchedTeachers).contains { $0.uid == teacherId }
+                                if canAdd {
+                                    let data = document.data()
+                                    if let data = data {
+                                        print("ADDING AVAILABLE TEACHER: " + teacherId)
+                                        if(self.availableTeachers.count < 5){
+                                            let availableTeacher = self.createTeacherFromData(documentSnapshot: document)
+                                            print("ADDING AVAILABLE TEACHER WITH NAME: " + availableTeacher.name)
+                                            self.availableTeachers.append(availableTeacher)
+                                        }
+                                        
+                                    }
+                                }
+                                else{
+                                    print("CANT ADD UID IS: " + teacherId)
+                                }
                             }
                         }
                     }
-
                 }
             }
         }
-        
     }
 //    func populateAllAndAvailableTeachers(){
 //        let db = Firestore.firestore()
@@ -752,12 +756,7 @@ final class ModelData: ObservableObject{
         var teacher = Teacher(name: name)
         teacher.email = (data!["email"] ?? "Generic User") as! String
         teacher.uid = uid
-        if(uid == "vy1cNne4wef1MfdQZgkxvmHYMHa2"){
-            print("TEACHER INFO:")
-            print(teacherInfo)
-            print(musicalBackground)
-            print(lessonInfo)
-        }
+
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
         fetchTeacherImage(teacher: teacher) { fetchedImage in
 //            print("FETCHING TEACHER IMAGE")
@@ -797,7 +796,7 @@ final class ModelData: ObservableObject{
     
 
     //meant to be called when student presses "decline teacher button"
-    //TESTED - WORKS
+    //TODO: FIX THIS
     func declineTeacher(teacherId: String){
         var teacherData: [String: Any]?
         let db = Firestore.firestore()
@@ -808,10 +807,13 @@ final class ModelData: ObservableObject{
         studentRef.collection("Declined Teachers").document(teacherId).setData([  // 👈 Create a document in the subcollection
             "title": "Declined Teacher"
         ])
-        //refresh teacher data -> May not need
-        self.fetchTeacherData {
-        }
-        
+        studentRef.collection("All Available Teachers").document(teacherId).delete() { err in
+             if let err = err {
+                 print("Error removing document: \(err)")
+             } else {
+                 print("Document successfully removed!")
+             }
+         }
         //OLD METHOD: adding the students data to declined teacher
 //        getUserData(docRef: teacherRef){ data in
 //            studentRef.collection("Declined Teachers").document(teacherId).setData(data as [String : Any])
@@ -863,17 +865,13 @@ final class ModelData: ObservableObject{
         studentRef.collection("Requested Teachers").document(teacherId).setData([
             "title": "Requested Teacher"
         ])
-        studentRef.collection("Available Teachers").document(teacherId).delete() { err in
+        studentRef.collection("All Available Teachers").document(teacherId).delete() { err in
              if let err = err {
                  print("Error removing document: \(err)")
              } else {
                  print("Document successfully removed!")
              }
          }
-        
-
-            self.fetchTeacherData{
-            }
 //        }
     }
     func searchForUserInCollection(userName: String, collectionRef: CollectionReference, completion: @escaping (Bool) -> Void){

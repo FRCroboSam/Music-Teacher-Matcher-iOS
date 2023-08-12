@@ -14,6 +14,7 @@ struct StudentAppPage: View {
     @State private var description: String = ""
     @State private var infoText: String = ""
     @State private var currentPage: Int = 0
+    @State private var fetchedTeacherData: Bool = false
     @State private var selection = 0
     @State private var doStuff = 0
     @State private var loggedOut = false
@@ -79,12 +80,12 @@ struct StudentAppPage: View {
                             }
                         }
                     }
-                    if(modelData.uid != ""){
-                        print("FETCHING IN APP PAGE FOR: " + modelData.uid)
-                        self.modelData.fetchTeacherData {
-                            
-                        }
-                    }
+//                    if(modelData.uid != ""){
+//                        print("ACTUALLY FETCHING TEACHER DATA")
+//                        self.modelData.fetchTeacherData {
+//
+//                        }
+//                    }
 
                     
                     
