@@ -14,8 +14,8 @@ struct Teacher:Identifiable, Hashable{
         return lhs.name == rhs.name && lhs.id == rhs.id
     }
     let id = UUID()
-    var score = -10000.0
     var name: String
+    var score = 0.0
     var firstName: String = ""
     var yearsExperience: Int = 0
     var lastName: String = ""
@@ -30,7 +30,7 @@ struct Teacher:Identifiable, Hashable{
     var uiImage: UIImage?
 
     var uid: String = "NULL"
-    
+
     var loginInfo:KeyValuePairs = KeyValuePairs(dictionaryLiteral: ("", ""))
     var musicalBackground:KeyValuePairs = KeyValuePairs(dictionaryLiteral: ("", ""))
     var lessonInfo:KeyValuePairs = KeyValuePairs(dictionaryLiteral: ("", ""))
@@ -81,7 +81,7 @@ struct Teacher:Identifiable, Hashable{
         ]
         bob.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
         return bob
-        
+
     }
     public func getUIImage() -> UIImage{
         print("GETTING THE UI IMAGE ")

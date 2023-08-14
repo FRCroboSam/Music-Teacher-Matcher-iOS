@@ -647,12 +647,12 @@ final class ModelData: ObservableObject{
             // This can involve fetching data, processing, and writing to Firestore
             print("@@@POPULATING ALL AVAILABLE TEACHERS@@@")
             self.populateAllAvailableTeachers(student: self.studentUser, unavailableTeachers: unavailableTeachers )
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 // Put your code which should be executed with a delay here
                 print("@@@POPULATING AVAILABLE TEACHERS")
                 let query = allAvailableTeachersRef
                     .order(by: "Score", descending: true)
-                    .limit(to: 10)
+                    .limit(to: 20)
 
                 let availableListener = query.addSnapshotListener { querySnapshot, error in
                     if(!(self.availableTeachers.count >= 5)){
@@ -675,7 +675,7 @@ final class ModelData: ObservableObject{
                             if let err = err {
                                 print("Error getting document: \(err)")
                             } else if let document = document, document.exists {
-                                let canAdd = !(self.requestedTeachers + self.declinedTeachers + self.matchedTeachers).contains { $0.uid == teacherId }
+                                let canAdd = !(self.requestedTeachers + self.availableTeachers + self.declinedTeachers + self.matchedTeachers).contains { $0.uid == teacherId }
                                 if canAdd {
                                     let data = document.data()
                                     if let data = data {
