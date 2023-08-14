@@ -12,7 +12,7 @@ struct LoginPageUI: View {
     @State private var email = ""
     @State private var password = ""
     @State private var text = ""
-    @State private var userType = ""
+    @State private var userType = "Student"
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }
@@ -24,6 +24,7 @@ struct LoginPageUI: View {
 //                    .scaledToFill()
                 .ignoresSafeArea()
             VStack(spacing: 0) {
+                Spacer(minLength: 20)
                 Text("Music Matcher Login ")
                 //                    .font(.largeTitle)
                     .font(.custom("MarkerFelt-Wide", size: 50))
@@ -35,19 +36,28 @@ struct LoginPageUI: View {
 //                    .italic()
                 
                 Image("app_icon")
+                    .resizable()
+                    .aspectRatio(contentMode:.fill)
+                    .padding(.bottom,-30)
                 HStack(spacing: 10){
                     Text("Are you a: ")
-                        .font(.custom("MarkerFelt-Wide", size: 20))
+                        .font(.custom("MarkerFelt-Wide", size: 30))
                         .foregroundColor(.white)
 
-                    
-                    Picker("UserType", selection: $userType, content:{
-                        Text("Student").tag("Student")
-                            .foregroundColor(Color.white)
-                        Text("Teacher").tag("Teacher")
-                            .foregroundColor(.white)
-                    })
+                    Menu {
+                        Button("Student") {
+                            userType = "Student "
+                        }
+                        Button("Teacher") {
+                            userType = "Teacher"
+                        }
+                    } label: {
+                        Text(userType)
+                            .font(.title)
+                            .foregroundColor(.orange)
+                    }
                 }
+                Spacer(minLength: 30)
                 HStack {
                     Image(systemName: "envelope")
                     TextField("Email", text: $text)
@@ -61,11 +71,11 @@ struct LoginPageUI: View {
                         .foregroundColor(.white)
 
                 }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
-
+                Spacer(minLength: 50)
                 Button("Sign In") {
                     
-                }
-                Spacer()
+                }.buttonStyle(BigButtonStyle())
+                Spacer(minLength: 20)
             }.padding()
             
             

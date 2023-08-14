@@ -5,32 +5,23 @@ struct TestView: View {
     @State var name: String = ""
     @State var password: String = ""
     @State var showPassword: Bool = false
-    @State var numNotifications = 4 
+    @State var numNotifications = 4
+    @State var userType = "Student"
     var isSignInButtonDisabled: Bool {
         [name, password].contains(where: \.isEmpty)
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                Image("music_background2") // your image
-                    .resizable()
-//                    .scaledToFill()
-                    .ignoresSafeArea()
-                VStack() {
-                    Image("app_icon")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height:200)
-                    Text("Music Matcher")
-                    //                    .font(.largeTitle)
-                        .font(.system(size: 45))
-                        .foregroundColor(.white)
-                        .bold()
-                        .italic()
-                    Text("Hello this is some sample text that i am writing to show that this text goes off the screen.")
-                }.foregroundColor(.white)
-            }.frame(maxWidth: geometry.size.width)
+        Menu {
+            Button("Student") {
+                userType = "Student"
+            }
+            Button("Teacher") {
+                userType = "Teacher"
+            }
+        } label: {
+            Text("\(userType)")
+                .font(.title)
         }
     }
 }
