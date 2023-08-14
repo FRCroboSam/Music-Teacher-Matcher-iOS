@@ -22,64 +22,76 @@ struct LoginPage: View {
     @State private var selectedInstrument: String = "Cello"
     @State private var moveOn = false;
     //new navigation stack stuff
+    var deviceWidth: CGFloat {
+        UIScreen.main.bounds.width
+    }
     var body: some View {
-//        NavigationStack{
-            VStack(alignment: .leading, spacing: 0) {
-                Text("Login")
-                    .font(.system(size: 40))
-                    .fontWeight(.bold)
-                    .padding(10)
-//                Spacer()
-//                    .frame(height: 0)
-//                    .font(.system(size: 30))
-//                    .padding(10)
-//                HStack(spacing: 10){
-//                    Text("Name: ")
-//                        .font(.system(size: 20))
-//                    TextField("First Name ", text: $firstName)
-//                        .textFieldStyle(.roundedBorder)
-//                        .font(.system(size: 20))
-//                        .keyboardType(.asciiCapable)
-//                        .autocorrectionDisabled()
-//                    TextField("Last Name ", text: $lastName)
-//                        .textFieldStyle(.roundedBorder)
-//                        .font(.system(size: 20))
-//                        .keyboardType(.asciiCapable)
-//                        .autocorrectionDisabled()
-//
-//
-//                }
-                TextField("Email ", text: $email)
-                    .textFieldStyle(.roundedBorder)
-                    .font(.system(size: 20))
-                    .keyboardType(.asciiCapable)
-                    .autocorrectionDisabled()
-                    .padding(10)
-                SecureField("Password ", text: $password)
-                    .textFieldStyle(.roundedBorder)
-                    .textContentType(.newPassword)
-                    .font(.system(size: 20))
-                    .keyboardType(.asciiCapable)
-                    .autocorrectionDisabled()
-
-                    
-                .padding(10)
+        ZStack{
+            Image("music_background2")
+                .resizable()
+//                    .scaledToFill()
+                .ignoresSafeArea()
+            VStack(spacing: 0) {
+                Spacer(minLength: 20)
+                Text("Music Matcher Login ")
+                //                    .font(.largeTitle)
+                    .font(.custom("MarkerFelt-Wide", size: 50))
+                    .minimumScaleFactor(0.01)
+                    .frame(maxWidth: 5/6 * deviceWidth)
+                    .lineLimit(1)
+                    .foregroundColor(.white)
+//                    .bold()
+//                    .italic()
+                
+                Image("app_icon")
+                    .resizable()
+                    .aspectRatio(contentMode:.fill)
+                    .padding(.bottom,-30)
                 HStack(spacing: 10){
                     Text("Are you a: ")
-                        .font(.system(size: 20))
-                    Picker("UserType", selection: $userType, content:{
-                        Text("Student").tag("Student")
-                        Text("Teacher").tag("Teacher")
-                    })
+                        .font(.custom("MarkerFelt-Wide", size: 30))
+                        .foregroundColor(.white)
+
+                    Menu {
+                        Button("Student") {
+                            userType = "Student  "
+                        }
+                        Button("Teacher") {
+                            userType = "Teacher"
+                        }
+                    } label: {
+                        Text(userType)
+                            .font(.title)
+                            .foregroundColor(.orange)
+                    }
                 }
-                .padding(10)
-                
-                
-                Button("Login") {
-                    if(userType == "Student"){
+                Spacer(minLength: 30)
+                HStack {
+                    Image(systemName: "envelope")
+                    TextField("Email", text: $email)
+                        .foregroundColor(.white)
+                        .keyboardType(.asciiCapable)
+                        .autocorrectionDisabled()
+                    
+                }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
+                    .padding(20)
+                HStack {
+                    Image(systemName: "lock")
+                    SecureField("Password", text: $password)
+                        .foregroundColor(.white)
+                        .textContentType(.newPassword)
+                        .keyboardType(.asciiCapable)
+                        .autocorrectionDisabled()
+
+                }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
+                Spacer(minLength: 50)
+                Button("Sign In") {
+                    print("USER TYPE IS: " + userType)
+                    if(userType != "Teacher"){
+                        print("SIGNING IN FOR STUDENT")
                         modelData.signinWithEmail(email: email, password: password){ isFound in
                             if isFound {
-                                print("LoginSuccessful")
+                                print("Login Successful")
                                 noUserFound = false
                                 studentLoginSuccessful = true
                             } else {
@@ -89,7 +101,7 @@ struct LoginPage: View {
                             }
                         }
                     }
-                    else if(userType == "Teacher"){
+                    else{
                         teacherModelData.signinWithEmail(email: email, password: password){ isFound in
                             if isFound {
                                 print("LoginSuccessful")
@@ -102,56 +114,25 @@ struct LoginPage: View {
                             }
                         }
                     }
+                }.buttonStyle(BigButtonStyle())
 
-//                    let name = firstName + " " + lastName
-//                    if(userType == "Student"){
-//                        print("Searching for a student ")
-//                        modelData.searchForStudent(studentName: name) { isFound in
-//                            if isFound {
-//                                print("NO user found")
-//                                noUserFound = false
-//                                loginSuccessful = true
-//                            } else {
-//                                noUserFound = true
-//                                loginSuccessful = false
-//                            }
-//                        }
-//                    }
-//                    else{
-//                        print("Searching for a teacher")
-//                        modelData.searchForTeacher(teacherName: name) { isFound in
-//                            if isFound {
-//                                noUserFound = false
-//                                loginSuccessful = true
-//                            } else {
-//                                print("failed to find a teacher")
-//                                noUserFound = true
-//                                loginSuccessful = false
-//                            }
-//                        }
-//                    }
-                    
-                }
-                .buttonStyle(.bordered)
-                .padding(10)
                 .alert("No User Found", isPresented: $noUserFound) {
-                    Button("Try Again", role: .destructive) { }
-                }
+                     Button("Try Again", role: .destructive) { }
+                 }
+                
+                Spacer(minLength: 20)
+            }.padding()
 
-                Spacer()
-            }
             .navigationDestination(isPresented: $studentLoginSuccessful) {
                 StudentAppPage()
             }
             .navigationDestination(isPresented: $teacherLoginSuccessful) {
                 TeacherAppPage()
             }
-            .navigationTitle("Logout")
-//            .toolbar(.hidden, for:.navigationBar)
-            .navigationBarTitleDisplayMode(.inline)
+        }
 
-       }
-//    }
+    }
+
     
 
 }

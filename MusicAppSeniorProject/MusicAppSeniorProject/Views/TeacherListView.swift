@@ -15,9 +15,7 @@ struct TeacherListView: View {
     @Binding var uiImage: UIImage?
     let status: String
     let displayText: String
-    @State private var loggedOut = false
     @State private var showInfo  = false
-    @State private var isTapped = false
     var body: some View {
             VStack{
                 ZStack{
@@ -76,7 +74,6 @@ struct TeacherListView: View {
                 }.onTapGesture {
                     showInfo = false
                 }
-//TODO: FIX REQUEST TEACHER
                 List(displayArray) { teacher in
                     NavigationLink{
                         TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)

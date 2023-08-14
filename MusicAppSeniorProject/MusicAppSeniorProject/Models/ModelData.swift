@@ -358,8 +358,10 @@ final class ModelData: ObservableObject{
             self.uid = user?.uid ?? "null"
             self.createStudentFromId(uid: self.uid){ isCreated in
                 if(isCreated){
+                    print("IS CREATED")
+                    completion(true)
                     self.fetchTeacherData(){
-                        completion(true)
+                        print("DONE FETCHING")
                     }
 
                 }

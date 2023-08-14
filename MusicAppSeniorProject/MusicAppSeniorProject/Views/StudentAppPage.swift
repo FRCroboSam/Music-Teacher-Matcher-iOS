@@ -36,8 +36,7 @@ struct StudentAppPage: View {
                         .tabItem{
 
                             Label("Available", systemImage: "person.crop.circle.fill.badge.plus")
-                                .font(.system(size: 150)).overlay(NotificationNumLabel(number: $numNotifications))
-                                .overlay(NotificationNumLabel(number: $numNotifications))
+                                .font(.system(size: 150))
                         }
                         .badge(modelData.availableTeachers.count > 0 ? "\(modelData.availableTeachers.count)" : nil)
                             

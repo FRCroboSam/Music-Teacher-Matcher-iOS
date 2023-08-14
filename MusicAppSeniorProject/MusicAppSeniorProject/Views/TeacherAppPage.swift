@@ -30,12 +30,12 @@ struct TeacherAppPage: View {
                     StudentListView(displayArray: $modelData.requestedStudents, uiImage: $modelData.uiImage, status: "Requested Students", displayText: availableTeacherDesc)
                         .tabItem{
                             Label("Requested", systemImage: "person.crop.circle.fill.badge.plus")
-                                .overlay(NotificationNumLabel(number: $numNotifications))
-                        }
+
+                        }                        .badge(modelData.requestedStudents.count > 0 ? "\(modelData.requestedStudents.count)" : nil)
                     StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
                         .tabItem{
                             Label("Matched", systemImage: "person.crop.circle.badge.questionmark")
-                        }
+                        }                        .badge(modelData.matchedStudents.count > 0 ? "\(modelData.matchedStudents.count)" : nil)
                     CreateTeacherProfilePage(teacher: modelData.teacherUser, editMode:true)
                         .tabItem{
                             Label("Edit Profile", systemImage: "person.crop.circle.fill")
@@ -50,17 +50,14 @@ struct TeacherAppPage: View {
                         self.modelData.fetchStudentData {
                             
                         }
+                        modelData.fetchImage{_ in
+                            
+                        }
                     }
                 }
                 
                 
             }
-            //            TabView{
-            //
-            //                    .tabItem{
-            //                        Label("Menu", systemImage: "list.dash")
-            //                    }
-            //            }
         }
     }
     
