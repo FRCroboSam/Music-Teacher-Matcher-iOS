@@ -22,27 +22,31 @@ struct TeacherAppPage: View {
     private let availableTeacherDesc = "These are teachers in the area that you can request if you think they are a good fit or respectfully decline. Teachers will not see that you have declined them."
     private let requestedTeacherDesc = "These are teachers that you have requested but have not matched yet."
     private let matchedTeacherDesc = "These are teachers that you have requested and have matched your request. Feel Free to reach out to them by their email which you can find by clicking on their profile!"
-    @State var numNotifications = 4 
+    @State var numNotifications = 4
+    @State private var tabSelected: Tab = .requested
+
     var body: some View {
         NavigationStack{
             ZStack{
-                TabView{
-                    StudentListView(displayArray: $modelData.requestedStudents, uiImage: $modelData.uiImage, status: "Requested Students", displayText: availableTeacherDesc)
-                        .tabItem{
-                            Label("Requested", systemImage: "person.crop.circle.fill.badge.plus")
+                VStack {
+                    switch(tabSelected){
+                    case .available:
+                        Text("NO")
+                    case .requested:
+                            StudentListView(displayArray: $modelData.requestedStudents, uiImage: $modelData.uiImage, status: "Requested Students", displayText: availableTeacherDesc)
+                    case .matched:
+                        StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
 
-                        }                        .badge(modelData.requestedStudents.count > 0 ? "\(modelData.requestedStudents.count)" : nil)
-
-                    StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
-                        .tabItem{
-                            Label("Matched", systemImage: "person.crop.circle.badge.questionmark")
-                        }                        .badge(modelData.matchedStudents.count > 0 ? "\(modelData.matchedStudents.count)" : nil)
-
-                    CreateTeacherProfilePage(teacher: modelData.teacherUser, editMode:true)
-                        .tabItem{
-                            Label("Edit Profile", systemImage: "person.crop.circle.fill")
-                        }
+                    case .editProfile:
+                        CreateStudentProfilePage(editMode: true)
                         
+                        
+                        
+                    }
+                }
+                VStack {
+                    Spacer()
+//                    TabBarView(selectedTab: $tabSelected, isTeacher: .constant(true))
                 }
 
 

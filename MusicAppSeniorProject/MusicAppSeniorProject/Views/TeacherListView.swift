@@ -91,13 +91,13 @@ struct TeacherListView: View {
                     }
                 }
 
-            }.background{
-                Image("music_background")
-                    .resizable()
-                    .scaledToFill()
-                    .edgesIgnoringSafeArea(.all)
-                    .aspectRatio(contentMode: .fill)
-            }
+            }//.background{
+//                Image("music_background")
+//                    .resizable()
+//                    .scaledToFill()
+//                    .edgesIgnoringSafeArea(.all)
+//                    .aspectRatio(contentMode: .fill)
+//            }
 
         
 }

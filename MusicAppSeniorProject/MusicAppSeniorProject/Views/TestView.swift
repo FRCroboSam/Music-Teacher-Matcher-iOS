@@ -15,7 +15,8 @@ struct TestView: View {
 
 
     var body: some View {
-        TabBarView(tabbarItems: [ "Random", "Travel", "Wallpaper", "Food", "Interior Design" ])
+//        TabBarView(tabbarItems: [ "Random", "Travel", "Wallpaper", "Food", "Interior Design" ])
+        Text("EF")
     }
 }
 

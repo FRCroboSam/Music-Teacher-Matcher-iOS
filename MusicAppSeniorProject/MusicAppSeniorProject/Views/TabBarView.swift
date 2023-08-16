@@ -1,70 +1,111 @@
+//
+//  CustomTabBar.swift
+//  TestProject0105
+//
+//  Created by Federico on 01/05/2022.
+//
+
 import SwiftUI
+
+enum Tab: String, CaseIterable {
+    case available
+    case requested
+    case matched
+    case editProfile
+}
+
 struct TabBarView: View {
-    var tabbarItems: [String]
+    @Binding var selectedTab: Tab
+    @Binding var isTeacher: Bool
+    @Binding var modelData: ModelData
+//    private var fillImage: String {
+//        switch selectedTab{
+//            case .available:
+//                return "person.crop.circle.fill.badge.plus"
+//            case .requested:
+//                return "person.crop.circle.badge.questionmark"
+//            case .matched:
+//                return "person.crop.circle.badge.checkmark"
+//            case .editProfile:
+//                return "person.crop.circle.fill"
+//        }
+//    }
+    private var tabColor: Color {
+        switch selectedTab {
+        case .available:
+            return .blue
+        case .requested:
+            return .purple
+        case .matched:
+            return .green
+        case .editProfile:
+            return .teal
+        }
+    }
+    private var tabNotifs: [Int]
+    func getImageName(tab: Tab) -> String{
+        switch tab {
+            case .available:
+                return "person.crop.circle.fill.badge.plus"
+            case .requested:
+                return "person.crop.circle.badge.questionmark"
+            case .matched:
+                return "person.crop.circle.badge.checkmark"
+            case .editProfile:
+                return "person.crop.circle.fill"
+        }
+    }
 
-    @State var selectedIndex = 0
-    @Namespace private var menuItemTransition
-
+    
     var body: some View {
-        ScrollViewReader { scrollView in
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(tabbarItems.indices, id: \.self) { index in
-                     
-                        TabbarItem(imageIcon: "", name: tabbarItems[index], isActive: selectedIndex == index, namespace: menuItemTransition)
+        VStack {
+            HStack {
+                ForEach(Tab.allCases, id: \.rawValue) { tab in
+                    let show = (!isTeacher && tab == .available) || (tab != .available)
+                    let name = getImageName(tab: tab)
+                    if(show){
+                        Spacer()
+                        Image(systemName: name)
+                            .scaleEffect(tab == selectedTab ? 1.25 : 1.0)
+                            .foregroundColor(tab == selectedTab ? tabColor : .gray)
+                            .font(.system(size: 20))
                             .onTapGesture {
-                                withAnimation(.easeInOut) {
-                                    selectedIndex = index
+                                withAnimation(.easeInOut(duration: 0.1)) {
+                                    selectedTab = tab
                                 }
                             }
+                        Spacer()
                     }
+
                 }
             }
+            .frame(width: nil, height: 60)
+            .background(.orange)
+            .cornerRadius(20)
             .padding()
-            .background(Color(.systemGray6))
-            .cornerRadius(25)
-
         }
+    }
+}
 
-    }
-}
-struct TabBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        TabBarView(tabbarItems: [ "Random", "Travel", "Wallpaper", "Food", "Interior Design" ])
-    }
-}
-struct TabbarItem: View {
-    var imageIcon: String
-    var name: String
-    var isActive: Bool = false
-    let namespace: Namespace.ID
- 
+//struct CustomTabBar_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TabBarView(selectedTab: .constant(.requested), isTeacher: .constant(false), modelData: ModelData())
+//    }
+//}
+
+struct TabBarItem<Content: View>: View {
+    let tab: Tab
+    let isSelected: Bool
+    let onTap: () -> Void
+    let tabColor: Color
+    let imageName: String
+    
     var body: some View {
-        if isActive {
-            VStack{
-                Image(systemName: "person.crop.circle.fill.badge.plus")
-                    .aspectRatio(contentMode:.fill)
-                    
-                Text(name)
-                    .font(.subheadline)
-                    .padding(.horizontal)
-                    .padding(.vertical, 4)
-                    .foregroundColor(.white)
-                    .background(Capsule().foregroundColor(.purple))
-                    .matchedGeometryEffect(id: "highlightmenuitem", in: namespace)
-            }
-
-        } else {
-            VStack{
-                Image(systemName: "person.crop.circle.fill.badge.plus")
-                Text(name)
-                    .font(.subheadline)
-                    .padding(.horizontal)
-                    .padding(.vertical, 4)
-                    .foregroundColor(.black)
-            }
-
-        }
- 
+        Image(systemName: imageName)
+            .scaleEffect(isSelected ? 1.25 : 1.0)
+            .foregroundColor(isSelected ? tabColor : .gray)
+            .font(.system(size: 20))
+            .onTapGesture(perform: onTap)
     }
 }
+
