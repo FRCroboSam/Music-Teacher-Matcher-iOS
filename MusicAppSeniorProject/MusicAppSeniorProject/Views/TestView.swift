@@ -1,4 +1,6 @@
 import SwiftUI
+import UIKit
+
 
 struct TestView: View {
     
@@ -10,19 +12,10 @@ struct TestView: View {
     var isSignInButtonDisabled: Bool {
         [name, password].contains(where: \.isEmpty)
     }
-    
+
+
     var body: some View {
-        Menu {
-            Button("Student") {
-                userType = "Student"
-            }
-            Button("Teacher") {
-                userType = "Teacher"
-            }
-        } label: {
-            Text("\(userType)")
-                .font(.title)
-        }
+        TabBarView(tabbarItems: [ "Random", "Travel", "Wallpaper", "Food", "Interior Design" ])
     }
 }
 

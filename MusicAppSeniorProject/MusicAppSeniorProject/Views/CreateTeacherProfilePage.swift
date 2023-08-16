@@ -99,6 +99,7 @@ struct CreateTeacherProfilePage: View {
                     }
                 }
                 .onAppear{
+                    UITableView.appearance().backgroundView = UIImageView(image: UIImage(named: "music_background"))
                     print("APPEARING")
                         if(editMode && !hasPopulated){
                             if(teacher != nil){
@@ -200,12 +201,19 @@ struct CreateTeacherProfilePage: View {
                                 Text("Hybrid").tag("Hybrid")
                             })
                         }
-                        Text("Payment Info (Optional)")
-                            .font(.system(size: 20))
-                        HStack{
-                            Text("Custom pricing?")
-                            iosCheckboxToggleStyle(checked:$customPricing)
+                        Section{
+                            Text("Enter your location: city, state")
+                            TextField("Location, ie 'Seattle, Washington'", text: $location, axis:.vertical)
+                                .modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
+                                    .padding(20)
+                            Text("Payment Info (Optional)")
+                                .font(.system(size: 20))
+                            HStack{
+                                Text("Custom pricing?")
+                                iosCheckboxToggleStyle(checked:$customPricing)
+                            }
                         }
+        
                         if(customPricing){
                             TextField("Describe pricing/tuition rates", text: $pricingInfo, axis:.vertical)
                                 .textFieldStyle(.roundedBorder)
@@ -230,9 +238,9 @@ struct CreateTeacherProfilePage: View {
                                 .textFieldStyle(.roundedBorder)
                             TextField("Password: ", text: $password)
                                 .textFieldStyle(.roundedBorder)
-                            TextField("Enter the location of your teaching area in the following form: (City, State), or type an exact address", text: $location)
-                                .textFieldStyle(.roundedBorder)
-                                .listRowSeparator(.hidden)
+//                            TextField("Enter the location of your teaching area in the following form: (City, State), or type an exact address", text: $location)
+//                                .textFieldStyle(.roundedBorder)
+//                                .listRowSeparator(.hidden)
                         }
                     }
                     .padding(10)
@@ -321,7 +329,11 @@ struct CreateTeacherProfilePage: View {
                 })
                 .navigationTitle("Edit Profile")
                 .toolbar(.hidden, for: .navigationBar)
+            }.modifier(FormHiddenBackground())
+            .background{
+                Image("music_background")
             }
+
 
 //        }
     }
@@ -546,3 +558,18 @@ struct iOSCheckboxToggleStyle: ToggleStyle {
     }
 }
 
+struct FormHiddenBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 16.0, *) {
+            content.scrollContentBackground(.hidden)
+            
+        } else {
+            content.onAppear {
+                UITableView.appearance().backgroundColor = .blue
+            }
+            .onDisappear {
+                UITableView.appearance().backgroundColor = .systemGroupedBackground
+            }
+        }
+    }
+}

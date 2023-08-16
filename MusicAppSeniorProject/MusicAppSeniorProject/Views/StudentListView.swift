@@ -44,7 +44,7 @@ struct StudentListView: View {
                         }
                         
                         
-                    }
+                    }.padding(10)
 
                 }
                 if(showInfo){
@@ -81,6 +81,10 @@ struct StudentListView: View {
 
                 }
             }
+
+            .scrollContentBackground(.hidden)
+                .background(LinearGradient(gradient: Gradient(colors: [.yellow, .pink]), startPoint: .topLeading, endPoint: .bottomTrailing))
+
 
         }.background{
             Image("music_background")

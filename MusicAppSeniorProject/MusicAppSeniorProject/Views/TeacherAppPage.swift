@@ -32,19 +32,29 @@ struct TeacherAppPage: View {
                             Label("Requested", systemImage: "person.crop.circle.fill.badge.plus")
 
                         }                        .badge(modelData.requestedStudents.count > 0 ? "\(modelData.requestedStudents.count)" : nil)
+
                     StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
                         .tabItem{
                             Label("Matched", systemImage: "person.crop.circle.badge.questionmark")
                         }                        .badge(modelData.matchedStudents.count > 0 ? "\(modelData.matchedStudents.count)" : nil)
+
                     CreateTeacherProfilePage(teacher: modelData.teacherUser, editMode:true)
                         .tabItem{
                             Label("Edit Profile", systemImage: "person.crop.circle.fill")
                         }
-                }.navigationDestination(isPresented: $loggedOut) {
+                        
+                }
+
+
+                .navigationDestination(isPresented: $loggedOut) {
                     HomePage()
                 }
 
                 .onAppear() {
+                    let tabBarAppearance = UITabBarAppearance()
+                    tabBarAppearance.configureWithDefaultBackground()
+                    UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+                    tabBarAppearance.backgroundColor = .systemPurple
                     if(modelData.uid != ""){
                         print("FETCHING IN APP PAGE FOR: " + modelData.uid)
                         self.modelData.fetchStudentData {
@@ -62,12 +72,12 @@ struct TeacherAppPage: View {
     }
     
 }
-struct TeacherAppPage_Previews: PreviewProvider {
-    static var previews: some View {
-        TeacherAppPage()
-            .environmentObject(TeacherModelData())
-    }
-}
+//struct TeacherAppPage_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TeacherAppPage()
+//            .environmentObject(TeacherModelData())
+//    }
+//}
 
 
 

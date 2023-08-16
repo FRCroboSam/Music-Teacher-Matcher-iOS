@@ -15,6 +15,7 @@ struct TeacherListView: View {
     @Binding var uiImage: UIImage?
     let status: String
     let displayText: String
+    @State private var loggedOut = false
     @State private var showInfo  = false
     var body: some View {
             VStack{

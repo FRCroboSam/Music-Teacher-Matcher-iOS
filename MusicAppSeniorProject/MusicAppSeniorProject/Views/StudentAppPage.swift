@@ -57,7 +57,8 @@ struct StudentAppPage: View {
                             Label("Edit Profile", systemImage: "person.crop.circle.fill")
                         }
 
-                }.navigationDestination(isPresented: $loggedOut) {
+                }
+                .navigationDestination(isPresented: $loggedOut) {
                     HomePage()
                 }
 
