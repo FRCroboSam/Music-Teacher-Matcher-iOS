@@ -23,31 +23,24 @@ struct TeacherAppPage: View {
     private let requestedTeacherDesc = "These are teachers that you have requested but have not matched yet."
     private let matchedTeacherDesc = "These are teachers that you have requested and have matched your request. Feel Free to reach out to them by their email which you can find by clicking on their profile!"
     @State var numNotifications = 4
-    @State private var tabSelected: Tab = .requested
+    @State private var tabSelection: TabBarItem = .home
 
     var body: some View {
         NavigationStack{
             ZStack{
-                VStack {
-                    switch(tabSelected){
-                    case .available:
-                        Text("NO")
-                    case .requested:
-                            StudentListView(displayArray: $modelData.requestedStudents, uiImage: $modelData.uiImage, status: "Requested Students", displayText: availableTeacherDesc)
-                    case .matched:
-                        StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
+                CustomTabBarContainerView(selection: $tabSelection) {
+                    CreateTeacherProfilePage(editMode: true)
+                               .tabBarItem(tab: .profile, selection: $tabSelection)
+                    CreateTeacherProfilePage(editMode: true)
 
-                    case .editProfile:
-                        CreateStudentProfilePage(editMode: true)
-                        
-                        
-                        
-                    }
-                }
-                VStack {
-                    Spacer()
-//                    TabBarView(selectedTab: $tabSelected, isTeacher: .constant(true))
-                }
+                               .tabBarItem(tab: .messages, selection: $tabSelection)
+                    CreateTeacherProfilePage(editMode: true)
+                               .tabBarItem(tab: .home, selection: $tabSelection)
+                    CreateTeacherProfilePage(editMode: true)
+                               .tabBarItem(tab: .favorites, selection: $tabSelection)
+                       }
+                       .ignoresSafeArea(.keyboard, edges: .bottom)
+                   }
 
 
                 .navigationDestination(isPresented: $loggedOut) {
@@ -72,7 +65,7 @@ struct TeacherAppPage: View {
                 
                 
             }
-        }
+        
     }
     
 }

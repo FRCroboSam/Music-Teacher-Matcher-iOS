@@ -327,7 +327,7 @@ struct CreateTeacherProfilePage: View {
                 .navigationDestination(isPresented: $loggedOut, destination: {
                     HomePage()
                 })
-                .navigationTitle("Edit Profile")
+//                .navigationTitle("Edit Profile")
                 .toolbar(.hidden, for: .navigationBar)
             }.modifier(FormHiddenBackground())
             .background{

@@ -57,7 +57,10 @@
 		368CC6172A76B85100F36140 /* HomePageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6162A76B85100F36140 /* HomePageUI.swift */; };
 		368CC6192A787E8100F36140 /* LoginPageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6182A787E8100F36140 /* LoginPageUI.swift */; };
 		368CC61B2A787FB200F36140 /* OvalTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC61A2A787FB200F36140 /* OvalTextFieldStyle.swift */; };
-		368CC61D2A8C464D00F36140 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC61C2A8C464D00F36140 /* TabBarView.swift */; };
+		368CC6202A8C74A900F36140 /* CustomTabBarContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC61F2A8C74A900F36140 /* CustomTabBarContainerView.swift */; };
+		368CC6222A8C74C200F36140 /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6212A8C74C200F36140 /* CustomTabBarView.swift */; };
+		368CC6242A8C74D800F36140 /* TabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6232A8C74D800F36140 /* TabBarItem.swift */; };
+		368CC6262A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6252A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift */; };
 		3697540429E766940035AD9B /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540329E766940035AD9B /* TestView.swift */; };
 		3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */; };
 		36BF5EF22A40FA3C00D0B15A /* TeacherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */; };
@@ -133,7 +136,10 @@
 		368CC6162A76B85100F36140 /* HomePageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageUI.swift; sourceTree = "<group>"; };
 		368CC6182A787E8100F36140 /* LoginPageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPageUI.swift; sourceTree = "<group>"; };
 		368CC61A2A787FB200F36140 /* OvalTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OvalTextFieldStyle.swift; sourceTree = "<group>"; };
-		368CC61C2A8C464D00F36140 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		368CC61F2A8C74A900F36140 /* CustomTabBarContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarContainerView.swift; sourceTree = "<group>"; };
+		368CC6212A8C74C200F36140 /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
+		368CC6232A8C74D800F36140 /* TabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItem.swift; sourceTree = "<group>"; };
+		368CC6252A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 		3697540329E766940035AD9B /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherListView.swift; sourceTree = "<group>"; };
@@ -323,7 +329,7 @@
 				363583FB2984F96C00C37596 /* CreateStudentProfilePage.swift */,
 				363583FD2984F99200C37596 /* StudentAppPage.swift */,
 				3642D16129EEF1E60052FF2E /* TeacherAppPage.swift */,
-				368CC61C2A8C464D00F36140 /* TabBarView.swift */,
+				368CC61E2A8C746900F36140 /* TabBar */,
 				36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */,
 				368CC60E2A54E39D00F36140 /* StudentListView.swift */,
 				368CC6122A726EE900F36140 /* NotificationNumLabel.swift */,
@@ -333,6 +339,17 @@
 				3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		368CC61E2A8C746900F36140 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				368CC61F2A8C74A900F36140 /* CustomTabBarContainerView.swift */,
+				368CC6212A8C74C200F36140 /* CustomTabBarView.swift */,
+				368CC6232A8C74D800F36140 /* TabBarItem.swift */,
+				368CC6252A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift */,
+			);
+			path = TabBar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -496,6 +513,7 @@
 				364DEBED29A80CD600FFA18B /* TeacherProfilePage.swift in Sources */,
 				36094374299F1A38000CE05C /* FileStoreManager.swift in Sources */,
 				36BF5EF22A40FA3C00D0B15A /* TeacherListView.swift in Sources */,
+				368CC6202A8C74A900F36140 /* CustomTabBarContainerView.swift in Sources */,
 				36F4164229F2635A003583A1 /* TeacherModelData.swift in Sources */,
 				363583FE2984F99200C37596 /* StudentAppPage.swift in Sources */,
 				368CC6172A76B85100F36140 /* HomePageUI.swift in Sources */,
@@ -506,10 +524,12 @@
 				36CADD652A08B778006F246F /* PhotoAsset.swift in Sources */,
 				3697540429E766940035AD9B /* TestView.swift in Sources */,
 				3603941E29F5B353004D5094 /* StudentProfilePage.swift in Sources */,
+				368CC6262A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift in Sources */,
 				36CADD622A08B778006F246F /* Camera.swift in Sources */,
 				36CADD5C2A08B778006F246F /* PhotoCollection.swift in Sources */,
 				36CADD5A2A08B778006F246F /* PhotoItemView.swift in Sources */,
 				364DEBF229A8130500FFA18B /* CircleProfileImage.swift in Sources */,
+				368CC6242A8C74D800F36140 /* TabBarItem.swift in Sources */,
 				36D7DF5A29A45CE800273F78 /* CreateTeacherProfilePage.swift in Sources */,
 				36CADD5B2A08B778006F246F /* PhotoAssetCollection.swift in Sources */,
 				36CADD632A08B778006F246F /* ViewfinderView.swift in Sources */,
@@ -520,7 +540,7 @@
 				363583D02984F91900C37596 /* MusicAppSeniorProjectApp.swift in Sources */,
 				3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */,
 				368CC6192A787E8100F36140 /* LoginPageUI.swift in Sources */,
-				368CC61D2A8C464D00F36140 /* TabBarView.swift in Sources */,
+				368CC6222A8C74C200F36140 /* CustomTabBarView.swift in Sources */,
 				36CADD642A08B778006F246F /* PhotoView.swift in Sources */,
 				36CADD612A08B778006F246F /* DataModel.swift in Sources */,
 				36CADD682A0E9508006F246F /* ProfileModel.swift in Sources */,
