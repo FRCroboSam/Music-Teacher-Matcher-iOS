@@ -319,7 +319,7 @@ struct CreateTeacherProfilePage: View {
                         .padding(10)
                     }
 
-                    Spacer()
+                Spacer(minLength: 100)
                         .navigationBarBackButtonHidden(true)
                 .navigationDestination(isPresented: $loginSuccessful) {
                     TeacherAppPage()

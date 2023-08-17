@@ -23,21 +23,19 @@ struct TeacherAppPage: View {
     private let requestedTeacherDesc = "These are teachers that you have requested but have not matched yet."
     private let matchedTeacherDesc = "These are teachers that you have requested and have matched your request. Feel Free to reach out to them by their email which you can find by clicking on their profile!"
     @State var numNotifications = 4
-    @State private var tabSelection: TabBarItem = .home
+    @State private var tabSelection: TabBarItem = .requested
 
     var body: some View {
         NavigationStack{
             ZStack{
                 CustomTabBarContainerView(selection: $tabSelection) {
-                    CreateTeacherProfilePage(editMode: true)
-                               .tabBarItem(tab: .profile, selection: $tabSelection)
-                    CreateTeacherProfilePage(editMode: true)
+                    StudentListView(displayArray: $modelData.requestedStudents, uiImage: $modelData.uiImage, status: "Requested Students", displayText: requestedTeacherDesc)
+                               .tabBarItem(tab: .requested, selection: $tabSelection)
+                    StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
 
-                               .tabBarItem(tab: .messages, selection: $tabSelection)
+                        .tabBarItem(tab: .matched, selection: $tabSelection)
                     CreateTeacherProfilePage(editMode: true)
-                               .tabBarItem(tab: .home, selection: $tabSelection)
-                    CreateTeacherProfilePage(editMode: true)
-                               .tabBarItem(tab: .favorites, selection: $tabSelection)
+                               .tabBarItem(tab: .editProfile, selection: $tabSelection)
                        }
                        .ignoresSafeArea(.keyboard, edges: .bottom)
                    }

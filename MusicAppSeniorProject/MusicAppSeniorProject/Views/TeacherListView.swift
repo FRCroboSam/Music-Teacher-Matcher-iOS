@@ -19,6 +19,7 @@ struct TeacherListView: View {
     @State private var showInfo  = false
     var body: some View {
             VStack{
+                Spacer(minLength: 100)
                 ZStack{
                     VStack{
                         ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
@@ -47,7 +48,7 @@ struct TeacherListView: View {
                             }
                             
                             
-                        }
+                        }.padding(10)
 
                     }
                     if(showInfo){
@@ -91,13 +92,13 @@ struct TeacherListView: View {
                     }
                 }
 
-            }//.background{
-//                Image("music_background")
-//                    .resizable()
-//                    .scaledToFill()
-//                    .edgesIgnoringSafeArea(.all)
-//                    .aspectRatio(contentMode: .fill)
-//            }
+            }.background{
+                Image("music_background")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                    .aspectRatio(contentMode: .fill)
+            }
 
         
 }

@@ -25,39 +25,24 @@ struct StudentAppPage: View {
     private let matchedTeacherDesc = "These are teachers that you have requested and have matched your request. Feel Free to reach out to them by their email which you can find by clicking on their profile!"
     private let declinedTeacherDesc = "These are teachers that you have declined since they did not fit your needs."
     @State var numNotifications = 4
+    @State private var tabSelection: TabBarItem = .requested
 
     var body: some View {
         NavigationStack{
             ZStack{
                 //slider to toggle distance between teacher and student
                 
-                TabView{
+                CustomTabBarContainerView(selection: $tabSelection) {
                     TeacherListView(displayArray: $modelData.availableTeachers, uiImage: $modelData.uiImage, status: "Available Teachers", displayText: availableTeacherDesc)
-                        .tabItem{
-
-                            Label("Available", systemImage: "person.crop.circle.fill.badge.plus")
-                                .font(.system(size: 150))
-                        }
-                        .badge(modelData.availableTeachers.count > 0 ? "\(modelData.availableTeachers.count)" : nil)
-                            
-
+                               .tabBarItem(tab: .available, selection: $tabSelection)
                     TeacherListView(displayArray: $modelData.requestedTeachers, uiImage: $modelData.uiImage, status: "Requested Teachers", displayText: requestedTeacherDesc)
-                        .tabItem{
-                            Label("Requested", systemImage: "person.crop.circle.badge.questionmark")
-                        }
-                        .badge(modelData.requestedTeachers.count > 0 ? "\(modelData.requestedTeachers.count)" : nil)
+                               .tabBarItem(tab: .requested, selection: $tabSelection)
                     TeacherListView(displayArray: $modelData.matchedTeachers, uiImage: $modelData.uiImage, status: "Matched Teachers", displayText: matchedTeacherDesc)
-                        .tabItem{
-                            Label("Matched", systemImage: "person.crop.circle.badge.checkmark")
-                        }
-                        .badge(modelData.matchedTeachers.count > 0 ? "\(modelData.matchedTeachers.count)" : nil)
 
-                    CreateStudentProfilePage(editMode:true, student: modelData.studentUser)
-                        .tabItem{
-                            Label("Edit Profile", systemImage: "person.crop.circle.fill")
-                        }
-
-                }
+                        .tabBarItem(tab: .matched, selection: $tabSelection)
+                    CreateStudentProfilePage(editMode: true)
+                               .tabBarItem(tab: .editProfile, selection: $tabSelection)
+                       }
                 .navigationDestination(isPresented: $loggedOut) {
                     HomePage()
                 }

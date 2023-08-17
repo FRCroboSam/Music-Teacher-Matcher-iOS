@@ -15,32 +15,31 @@ import SwiftUI
 //}
 
 enum TabBarItem: Hashable {
-    case home, favorites, profile, messages
-    
+    case available, requested, matched, editProfile
     var iconName: String {
         switch self {
-        case .home: return "house"
-        case .favorites: return "heart"
-        case .profile: return "person"
-        case .messages: return "message"
+        case .available: return "person.crop.circle.fill.badge.plus"
+        case .requested: return "person.crop.circle.badge.questionmark"
+        case .matched: return "person.crop.circle.badge.checkmark"
+        case .editProfile: return "person.crop.circle.fill"
         }
     }
     
     var title: String {
         switch self {
-        case .home: return "Home"
-        case .favorites: return "Favorites"
-        case .profile: return "Profile"
-        case .messages: return "Messages"
+        case .available: return "Available"
+        case .requested: return "Requested"
+        case .matched: return "Matched"
+        case .editProfile: return "Edit Profile"
         }
     }
     
     var color: Color {
         switch self {
-        case .home: return Color.red
-        case .favorites: return Color.blue
-        case .profile: return Color.green
-        case .messages: return Color.orange
+        case .available: return Color.teal
+        case .requested: return Color.blue
+        case .matched: return Color.green
+        case .editProfile: return Color.orange
         }
     }
 }

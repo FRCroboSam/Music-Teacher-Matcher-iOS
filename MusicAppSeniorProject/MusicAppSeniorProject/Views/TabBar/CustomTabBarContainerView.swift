@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct CustomTabBarContainerView<Content:View>: View {
-    
     @Binding var selection: TabBarItem
     let content: Content
     @State private var tabs: [TabBarItem] = []
@@ -34,15 +33,15 @@ struct CustomTabBarContainerView<Content:View>: View {
     }
 }
 
-struct CustomTabBarContainerView_Previews: PreviewProvider {
-    
-    static let tabs: [TabBarItem] = [
-        .home, .favorites, .profile
-    ]
-    
-    static var previews: some View {
-        CustomTabBarContainerView(selection: .constant(tabs.first!)) {
-            Color.red
-        }
-    }
-}
+//struct CustomTabBarContainerView_Previews: PreviewProvider {
+//    
+//    static let tabs: [TabBarItem] = [
+//        .home, .favorites, .profile
+//    ]
+//    
+//    static var previews: some View {
+//        CustomTabBarContainerView(selection: .constant(tabs.first!)) {
+//            Color.red
+//        }
+//    }
+//}

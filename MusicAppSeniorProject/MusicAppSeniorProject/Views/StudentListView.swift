@@ -16,6 +16,7 @@ struct StudentListView: View {
     let displayText: String
     var body: some View {
         VStack{
+            Spacer(minLength: 100)
             ZStack{
                 VStack{
                     ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)

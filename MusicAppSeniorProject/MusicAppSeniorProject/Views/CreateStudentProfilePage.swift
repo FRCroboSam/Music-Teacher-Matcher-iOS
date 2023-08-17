@@ -98,10 +98,11 @@ struct CreateStudentProfilePage: View{
                         }
                     }
                     .onAppear{
+                        UITableView.appearance().backgroundView = UIImageView(image: UIImage(named: "music_background"))
                         print("APPEARING")
                         if(editMode && !hasPopulated){
                             if(student != nil){
-                                populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
+//                                populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
                                 hasPopulated = true
                             }
                             if(modelData.uiImage == nil){
@@ -512,6 +513,7 @@ struct CreateStudentProfilePage: View{
                         // uiImage is not nil, execute the desired method
                         if !isCancelled {
                             DispatchQueue.main.async {
+                                print("SETTING THE IMAGE")
                                 let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "camera.macro")!)
                                 viewModel.setImageState(imageState: .success(image2))
                                 toggle.toggle()
