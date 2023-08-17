@@ -102,7 +102,7 @@ struct CreateStudentProfilePage: View{
                         print("APPEARING")
                         if(editMode && !hasPopulated){
                             if(student != nil){
-//                                populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
+                                populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
                                 hasPopulated = true
                             }
                             if(modelData.uiImage == nil){
@@ -478,6 +478,7 @@ struct CreateStudentProfilePage: View{
         }
     }
     func populateProfileEditor(student:Student){
+        print("POPULATING PROFILE EDITOR")
         //personal info
         name = student.name
         print("PERSONAL INFO: ")
@@ -497,8 +498,8 @@ struct CreateStudentProfilePage: View{
         studentLevel = Int(convertToDouble(s:value(key: "Skill Level", pairs: student.musicalBackground)))
         description = value(key: "Prior Pieces Played", pairs: student.musicalBackground)
         price = convertToDouble(s:value(key: "Budget", pairs: student.musicalBackground))
-
-        let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
+        print("SEtting profile image 2")
+        let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "heart.fill")!)
         viewModel.setImageState(imageState: .success(image2))//                            let image =
 
     }

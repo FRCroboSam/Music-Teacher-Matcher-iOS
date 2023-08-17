@@ -40,7 +40,7 @@ struct StudentAppPage: View {
                     TeacherListView(displayArray: $modelData.matchedTeachers, uiImage: $modelData.uiImage, status: "Matched Teachers", displayText: matchedTeacherDesc)
 
                         .tabBarItem(tab: .matched, selection: $tabSelection)
-                    CreateStudentProfilePage(editMode: true)
+                    CreateStudentProfilePage(editMode: true, student:modelData.studentUser)
                                .tabBarItem(tab: .editProfile, selection: $tabSelection)
                        }
                 .navigationDestination(isPresented: $loggedOut) {
