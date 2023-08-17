@@ -47,7 +47,8 @@ final class ModelData: ObservableObject{
     
     @Published var loggedIn: Bool?
     @Published var isStudent: Bool?
-    @Published var hasFetchedData: Bool? 
+    @Published var hasFetchedData: Bool?
+    @Published var hasPopulated: Bool = false
 //    var user: User? {
 //        didSet {
 //            objectWillChange.send()
@@ -414,6 +415,8 @@ final class ModelData: ObservableObject{
                 ]
                 let studentInfo:KeyValuePairs = [
                     "name": (data!["name"] ?? "Generic User") as! String,
+                    "lastName": (data!["lastName"] ?? "Generic User") as! String,
+                    "firstName": (data!["firstName"] ?? "Generic User") as! String,
                     "age": (data!["age"] ?? "Generic User") as! String
 
                 ]
@@ -423,8 +426,6 @@ final class ModelData: ObservableObject{
                 self.studentUser.uid = uid
                 self.uid = uid
                 self.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
-                self.studentUser.firstName = (data!["firstName"] ?? "Generic User") as! String
-                self.studentUser.lastName = (data!["lastName"] ?? "Generic User") as! String
                 completion(true)
                 
             } else {

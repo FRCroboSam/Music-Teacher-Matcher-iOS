@@ -359,7 +359,8 @@ struct CreateTeacherProfilePage: View {
         let teacherInfo:KeyValuePairs = [
             "name": name,
             "firstName": firstName,
-            "lastName": lastName
+            "lastName": lastName,
+            "Location": location
         ]
         modelData.teacherUser = Teacher(name: firstName + " " + lastName)
         modelData.teacherUser.email = email
@@ -469,7 +470,8 @@ struct CreateTeacherProfilePage: View {
         name = teacher.name
         firstName = value(key: "firstName", pairs: teacher.teacherInfo)
         lastName = value(key: "lastName", pairs: teacher.teacherInfo)
-        
+        location = value(key:"Location", pairs: teacher.teacherInfo)
+
         yearsTeaching = convertToDouble(s:value(key: "Years Teaching", pairs: teacher.musicalBackground))
         email = modelData.email ?? "template@gmail.com"
         cost = value(key: "Pricing", pairs: teacher.lessonInfo)
@@ -479,7 +481,6 @@ struct CreateTeacherProfilePage: View {
         studentLevel = Int(value(key: "Minimum Student Level", pairs: teacher.lessonInfo)) ?? 60
         teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
         musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)
-        
         let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
         viewModel.setImageState(imageState: .success(image2))//                            let image =
 

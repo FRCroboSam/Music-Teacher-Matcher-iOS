@@ -43,13 +43,13 @@ struct CreateStudentProfilePage: View{
     var editMode = false
     @State var newEmail = ""
     @State var newPassword = ""
-    @State var hasPopulated = false
     var student: Student?
     
     @State var invalidEmail = false
     @State var invalidNewPassword = false
     @State var invalidPassword = false
     @State var loggedOut = false
+    
     //    @State var tag:Int? = nil
     
     //    @State private var sldkfj: String = ""
@@ -100,10 +100,11 @@ struct CreateStudentProfilePage: View{
                     .onAppear{
                         UITableView.appearance().backgroundView = UIImageView(image: UIImage(named: "music_background"))
                         print("APPEARING")
-                        if(editMode && !hasPopulated){
+                        if(editMode){
                             if(student != nil){
+                                print("REPOPULATING THE PROFILE EDITOR")
                                 populateProfileEditor(student: student ?? Student(name: "DKFJDJ"))
-                                hasPopulated = true
+                                modelData.hasPopulated = true
                             }
                             if(modelData.uiImage == nil){
                                 Task {
@@ -362,7 +363,8 @@ struct CreateStudentProfilePage: View{
                 "name": name,
                 "firstName": firstName,
                 "lastName": lastName,
-                "age": String(age)
+                "age": String(age),
+                "Location": location
             ]
             newEmail = ""
             newPassword = ""
@@ -485,8 +487,8 @@ struct CreateStudentProfilePage: View{
         print(student.personalInfo)
         name = value(key: "name", pairs: student.personalInfo)
 
-        firstName = student.firstName
-        lastName = student.lastName
+        firstName = value(key: "firstName", pairs: student.personalInfo)
+        lastName = value(key: "lastName", pairs: student.personalInfo)
         print("FIRSTNAME: " + firstName)
         print("LASTNAME: " + lastName)
         age = convertToDouble(s:value(key: "age", pairs: student.personalInfo))
@@ -500,7 +502,9 @@ struct CreateStudentProfilePage: View{
         price = convertToDouble(s:value(key: "Budget", pairs: student.musicalBackground))
         print("SEtting profile image 2")
         let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "heart.fill")!)
-        viewModel.setImageState(imageState: .success(image2))//                            let image =
+        if(!modelData.hasPopulated){
+            viewModel.setImageState(imageState: .success(image2))//                            let ima
+        }
 
     }
     func populateImage() async {
