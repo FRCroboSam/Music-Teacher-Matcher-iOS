@@ -417,7 +417,8 @@ final class ModelData: ObservableObject{
                     "name": (data!["name"] ?? "Generic User") as! String,
                     "lastName": (data!["lastName"] ?? "Generic User") as! String,
                     "firstName": (data!["firstName"] ?? "Generic User") as! String,
-                    "age": (data!["age"] ?? "Generic User") as! String
+                    "age": (data!["age"] ?? "Generic User") as! String,
+                    "Location": (data!["Location"] ?? "Generic User") as! String
 
                 ]
                 
@@ -496,7 +497,7 @@ final class ModelData: ObservableObject{
         
         
     }
-    func populateAllAvailableTeachers(student: Student, unavailableTeachers: [Teacher]){
+    func populateAllAvailableTeachers(student: Student){
         //
         let db = Firestore.firestore()
         let allAvailableTeachersRef = db.collection("StudentUser").document(uid).collection("All Available Teachers")
@@ -517,6 +518,7 @@ final class ModelData: ObservableObject{
                 let teacherId = documentSnapshot.documentID
                 let teacherRef = db.collection("Teachers").document(teacherId)
                     teacherRef.getDocument { (snapshot, err) in
+                        print("UNAVAILALBE TEACHERS COUNT:" + String(unavailableTeachers.count))
                         let canAdd = !(unavailableTeachers).contains { $0.uid == teacherId }
                         if let err = err {
                             print("Error getting document: \(err)")
@@ -611,6 +613,18 @@ final class ModelData: ObservableObject{
                 }
             }
         }
+        //REDO THIS ORDERING LOGIC
+        //THIS BREAKS IT the order and the limit 
+        let query = allAvailableTeachersRef
+            .order(by: "Score", descending: true)
+            .limit(to: 20)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+            var allAvailableTeachersListener = query.addSnapshotListener { snapshot, error in
+                print("ALL AVAILABLE TEACHERS LISTENER IS CHANGING")
+            }
+        }
+
+
         var requestedListener = requestedTeachersRef.addSnapshotListener { querySnapshot, error in
             self.requestedTeachers = []
             print("Requested Teachers Changing")
@@ -649,8 +663,10 @@ final class ModelData: ObservableObject{
             // Perform the population process here
             // This can involve fetching data, processing, and writing to Firestore
             print("@@@POPULATING ALL AVAILABLE TEACHERS@@@")
-            self.populateAllAvailableTeachers(student: self.studentUser, unavailableTeachers: unavailableTeachers )
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+            self.populateAllAvailableTeachers(student: self.studentUser)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 // Put your code which should be executed with a delay here
                 print("@@@POPULATING AVAILABLE TEACHERS")
                 let query = allAvailableTeachersRef
@@ -658,14 +674,17 @@ final class ModelData: ObservableObject{
                     .limit(to: 20)
 
                 let availableListener = query.addSnapshotListener { querySnapshot, error in
+                    print("ALREADY 5 AVAILALBE TEACHERS")
                     if(!(self.availableTeachers.count >= 5)){
-                    self.availableTeachers = []
-                    print("Available Teachers Changing")
-                    guard let documents = querySnapshot?.documents else {
-                        print("Error fetching document: \(error!)")
-        //                group.leave()
-                        return
-                    }
+                        self.availableTeachers = []
+                        print("Available Teachers Changing")
+                        guard let documents = querySnapshot?.documents else {
+                            print("Error fetching document: \(error!)")
+            //                group.leave()
+                            return
+                        }
+
+                
                     //TODOL: TEST IF THIS STOPS IT OVERFLOWING
 
 
@@ -851,6 +870,10 @@ final class ModelData: ObservableObject{
                   print("Document successfully removed!")
               }
           }
+        studentRef.collection("All Available Teachers").document(teacherId).setData([
+            "title": "Available Teacher"
+        ])
+        
         
     }
     func requestTeacher(teacherId: String){
@@ -875,7 +898,9 @@ final class ModelData: ObservableObject{
                  print("Document successfully removed!")
              }
          }
-//        }
+        availableTeachers.removeAll { teacher in
+            return teacher.uid == teacherId
+        }
     }
     func searchForUserInCollection(userName: String, collectionRef: CollectionReference, completion: @escaping (Bool) -> Void){
         collectionRef.whereField("name", isEqualTo: userName).getDocuments { (snapshot, err) in

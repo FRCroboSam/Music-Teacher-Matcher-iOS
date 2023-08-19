@@ -49,6 +49,8 @@ struct CreateStudentProfilePage: View{
     @State var invalidNewPassword = false
     @State var invalidPassword = false
     @State var loggedOut = false
+    @State private var value:CGFloat = 0
+    @State var offset: CGFloat = 0
     
     //    @State var tag:Int? = nil
     
@@ -136,14 +138,38 @@ struct CreateStudentProfilePage: View{
                     .padding(10)
                     
                     HStack(spacing: 10){
-                        Text("Age")
-                            .font(.system(size: 20))
-                        Text("\(Int(age))")
-                        Slider(
-                            value: $age,
-                            in: 6...25,
-                            step: 1
-                        )
+//                        Text("Age")
+//                            .font(.system(size: 20))
+//                        Text("\(Int(age))")
+//                        Slider(
+//                            value: $age,
+//                            in: 0...25,
+//                            step: 1
+//                        )
+                        CustomSlider(value: $offset, maxValue: 100)
+//                        ZStack(alignment: Alignment (horizontal: .leading, vertical: .center), content: {
+//                            Capsule()
+//                                    .fill(Color.black.opacity(0.25))
+//                                    .frame(height: 30)
+//                            Capsule()
+//                                    .fill(Color.purple)
+//                                    .frame(width: offset + 20, height: 30)
+//                            Circle()
+//                                .fill(Color.orange)
+//                                .frame(width: 35, height: 35)
+//                                .background (Circle().stroke (Color.white, lineWidth: 5))
+//                                .offset(x: offset)
+//                                .gesture (DragGesture().onChanged({ (value) in
+//                                // Padding Horizontal....
+//                                // Padding Horizontal = 30
+//                                // Circle radius = 20
+//                                // Total
+//                            if value.location.x > 15 && value.location.x <=
+//                                UIScreen.main.bounds.width - 120{
+//                                offset = value.location.x - 20
+//                            }
+//                        }))
+//                        })
                     }
                     .padding(10)
                     HStack(spacing: 10){
@@ -162,30 +188,36 @@ struct CreateStudentProfilePage: View{
                         HStack(spacing: 10){
                             Text("Years Playing:  ")
                                 .font(.system(size: 20))
+                                .padding(10)
                             Text("\(Int(yearsPlaying))")
                             Slider(
                                 value: $yearsPlaying,
                                 in: 6...25,
                                 step: 1
-                            )
+                            ).padding(5)
                         }
                         Text("Skill Level")
+                            .font(.system(size: 20))
+
+                            .padding(10)
                         Picker("Level", selection: $studentLevel, content:{
                             Text("Beginner").tag(0)
                             Text("Intermediate").tag(1)
                             Text("Advanced").tag(2)
+                                .padding(10)
 
                         }).pickerStyle(.segmented)
                         Text("Prior Pieces played")
+                            .font(.system(size: 20))
+                            .padding(10)
                         TextField("Names of pieces if applicable", text: $description, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
+                            .padding(10)
                     }
                     .padding(10)
                     Group{
                         VStack(alignment: .leading, spacing: 10){
                             Text("Preferred Cost (Max) of teacher")
-                                .font(.system(size: 20))
-                            Text("($0 for free teacher)")
                                 .font(.system(size: 20))
                             Text("$\(Int(price))")
                             Slider(
@@ -204,6 +236,10 @@ struct CreateStudentProfilePage: View{
                                 .font(.system(size: 20))
                             Text("Email: " + email)
                                 .font(.system(size: 20))
+                            Text("Location (City, State)")
+                            TextField("ie. Seattle, WA", text: $location)
+                                .textFieldStyle(.roundedBorder)
+                                .listRowSeparator(.hidden)
                             if(editMode){
                                 //https://www.hackingwithswift.com/quick-start/swiftui/how-to-add-a-textfield-to-an-alert
                             }
@@ -213,9 +249,7 @@ struct CreateStudentProfilePage: View{
                                 TextField("Enter a password", text: $password)
                                     .textFieldStyle(.roundedBorder)
                                     .listRowSeparator(.hidden)
-                                TextField("Enter your location in the following form: (City, State)", text: $location)
-                                    .textFieldStyle(.roundedBorder)
-                                    .listRowSeparator(.hidden)
+
                             }
 
                         }
@@ -320,7 +354,9 @@ struct CreateStudentProfilePage: View{
                     }
 
 
-                    Spacer()
+                Spacer(minLength: 100)
+//                    .listRowSeparator(.hidden)
+
             .navigationDestination(isPresented: $loginSuccessful) {
                 StudentAppPage()
             }
@@ -330,7 +366,12 @@ struct CreateStudentProfilePage: View{
 //            .navigationTitle("Edit Profile")
 //            .toolbar(.hidden, for: .navigationBar)
                 
-            }.listRowSeparator(.hidden)
+            }
+            .listRowSeparator(.hidden)
+            .modifier(FormHiddenBackground())
+            .background{
+                Image("music_background")
+            }
             .alert("Failed to update info: Check password and email", isPresented: $failedUpdate) {
                 Button("Try Again", role: .destructive) { }
             }
@@ -338,7 +379,7 @@ struct CreateStudentProfilePage: View{
                 Button("Ok", role: .destructive) { }
             }
             
-        }
+    }
         
         //creates Student and sets it to modelData.studentUser
         func createStudentObject(){
@@ -492,7 +533,8 @@ struct CreateStudentProfilePage: View{
         print("FIRSTNAME: " + firstName)
         print("LASTNAME: " + lastName)
         age = convertToDouble(s:value(key: "age", pairs: student.personalInfo))
-        //loginInfo 
+        //loginInfo
+        location = value(key: "Location", pairs: student.personalInfo)
         email = modelData.email ?? "template@gmail.com"
         //musical background
         selectedInstrument = value(key: "Instrument", pairs: student.musicalBackground)
@@ -563,4 +605,5 @@ struct CreateStudentProfilePage: View{
     }
     //command 0 for show navigate pane
     
+//MAKES THE KEYBOARD GO AEAY
 

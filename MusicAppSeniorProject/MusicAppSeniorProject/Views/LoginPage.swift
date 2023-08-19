@@ -136,7 +136,13 @@ struct LoginPage: View {
     
 
 }
+extension UIView{
 
+ override open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+
+  }
+}
 struct LoginPagePreview: PreviewProvider {
     static var previews: some View {
         LoginPage()
