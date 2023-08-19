@@ -65,6 +65,7 @@ struct LoginPage: View {
                             .foregroundColor(.orange)
                     }
                 }
+
                 Spacer(minLength: 30)
                 HStack {
                     Image(systemName: "envelope")
@@ -129,10 +130,15 @@ struct LoginPage: View {
             .navigationDestination(isPresented: $teacherLoginSuccessful) {
                 TeacherAppPage()
             }
-        }
+        }.gesture(
+            TapGesture().onEnded { value in
+              self.dismissKeyboard()
+            })
 
     }
-
+    private func dismissKeyboard() {
+      UIApplication.shared.dismissKeyboard()
+    }
     
 
 }
@@ -143,6 +149,10 @@ struct LoginPage: View {
 //
 //  }
 //}
+extension UIApplication {
+  func dismissKeyboard() {
+    sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    } }
 struct LoginPagePreview: PreviewProvider {
     static var previews: some View {
         LoginPage()
