@@ -870,9 +870,11 @@ final class ModelData: ObservableObject{
                   print("Document successfully removed!")
               }
           }
-        studentRef.collection("All Available Teachers").document(teacherId).setData([
-            "title": "Available Teacher"
-        ])
+        //TODO RESTRUCTURE FETCH LOGIC SO YOU DONT need to call this
+        //fix allAvailableTeachersLIstener	
+        fetchTeacherData{
+            
+        }
         
         
     }
