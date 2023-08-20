@@ -72,7 +72,7 @@ struct TeacherProfilePage: View {
                 }
                 Button("Request Teacher"){
                     if(teacher.uid != ""){
-                        modelData.requestTeacher(teacherId: teacher.uid)
+                        modelData.requestTeacher(teacherId: teacher.uid, score: teacher.score)
                         dismiss()
                     }
                     else{
@@ -84,7 +84,7 @@ struct TeacherProfilePage: View {
             else if(status == "Requested Teachers"){
                 Button("Cancel Request"){
                     if(teacher.uid != ""){
-                        modelData.cancelTeacherRequest(teacherId: teacher.uid)
+                        modelData.cancelTeacherRequest(teacherId: teacher.uid, score: teacher.score)
                         dismiss()
                     }
                     else{
