@@ -47,10 +47,11 @@ struct CustomSlider: View {
     func getValue(offset: CGFloat, totalAmount: Double) -> String{
         print("OFFSET: " + String(Double(offset)))
         print("SCREEN SIZE IS: " + String(Double(UIScreen.current?.bounds.size.width ?? 0.0)))
-        let percent = offset / (UIScreen.current?.bounds.size.width ?? 700 - 120)
+        let percent = (offset + 1/8 * UIScreen.main.bounds.width) / (3/4 * UIScreen.main.bounds.width)
+        //percent = (distance of offset on x)/3/4 * UIScreen.main.bounds.widt
         print("PERCENT: " + String(Double(percent)))
         let amount = percent * totalAmount
-        return String(amount)
+        return String(Double(percent))
     }
     
 }
