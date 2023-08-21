@@ -50,7 +50,7 @@ struct CreateStudentProfilePage: View{
     @State var invalidPassword = false
     @State var loggedOut = false
     @State private var value:CGFloat = 0
-    @State var offset: CGFloat = 0
+    @State var offset: CGFloat = 25
     
     //    @State var tag:Int? = nil
     
@@ -146,7 +146,7 @@ struct CreateStudentProfilePage: View{
 //                            in: 0...25,
 //                            step: 1
 //                        )
-                        CustomSlider(value: $offset, maxValue: 20, minValue: 5)
+                        CustomSlider(value: $offset, maxValue: 25, minValue: 4)
 //                        ZStack(alignment: Alignment (horizontal: .leading, vertical: .center), content: {
 //                            Capsule()
 //                                    .fill(Color.black.opacity(0.25))

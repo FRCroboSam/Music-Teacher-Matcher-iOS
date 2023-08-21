@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct CustomSlider: View {
-    @Binding var offset:CGFloat
+    @Binding var value:CGFloat
+    @State var offset: CGFloat
     private var maxValue:CGFloat
     private var minValue: CGFloat
     
     init(value: Binding<CGFloat>, maxValue: CGFloat, minValue: CGFloat) {
-        self._offset = value
+        self._value = value
         self.maxValue = maxValue
         self.minValue = minValue
+        self.offset = 0
+
     }
     var body: some View {
         VStack{
@@ -37,14 +40,23 @@ struct CustomSlider: View {
                         // Padding Horizontal = 30
                         // Circle radius = 20
                         // Total
-                        if value.location.x >= 13 && value.location.x <=
+                        if value.location.x >= 17.5 && value.location.x <=
                             3/4 * UIScreen.main.bounds.width - 13 {
                             offset = value.location.x - 17.5
                         }
                     }))
             })
+        }.onAppear {
+            // Initialize offset based on the provided value
+            offset = getOffset(value: value)
         }
 
+    }
+    func getOffset(value: CGFloat) -> CGFloat{
+        let percent = (value - minValue) / (maxValue - minValue)
+        let maxOffset = 3/4 * (UIScreen.main.bounds.width - 13 - 17.5)
+        let offset = percent * (3/4 * UIScreen.main.bounds.width - 13 - 17.5)
+        return offset
     }
     func getValue(offset: CGFloat) -> String{
         let totalAmount = maxValue - minValue
