@@ -10,14 +10,16 @@ import SwiftUI
 struct CustomSlider: View {
     @Binding var offset:CGFloat
     private var maxValue:CGFloat
+    private var minValue: CGFloat
     
-    init(value: Binding<CGFloat>, maxValue: CGFloat) {
+    init(value: Binding<CGFloat>, maxValue: CGFloat, minValue: CGFloat) {
         self._offset = value
         self.maxValue = maxValue
+        self.minValue = minValue
     }
     var body: some View {
         VStack{
-            Text(getValue(offset:offset, totalAmount: maxValue))
+            Text(getValue(offset:offset))
             ZStack(alignment: Alignment (horizontal: .leading, vertical: .center), content: {
                 Capsule()
                     .fill(Color.black.opacity(0.25))
@@ -44,14 +46,18 @@ struct CustomSlider: View {
         }
 
     }
-    func getValue(offset: CGFloat, totalAmount: Double) -> String{
+    func getValue(offset: CGFloat) -> String{
+        let totalAmount = maxValue - minValue
         print("OFFSET: " + String(Double(offset)))
         print("SCREEN SIZE IS: " + String(Double(UIScreen.current?.bounds.size.width ?? 0.0)))
-        let percent = (offset + 1/8 * UIScreen.main.bounds.width) / (3/4 * UIScreen.main.bounds.width)
+        let maxOffset = 3/4 * UIScreen.main.bounds.width - 13 - 17.5
+        var percent = (offset / maxOffset)
+        percent = min(1, max(0, percent))
         //percent = (distance of offset on x)/3/4 * UIScreen.main.bounds.widt
         print("PERCENT: " + String(Double(percent)))
-        let amount = percent * totalAmount
-        return String(Double(percent))
+        let amount = Double(Double((percent * totalAmount)).rounded() + minValue)
+        
+        return String(amount)
     }
     
 }

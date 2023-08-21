@@ -146,7 +146,7 @@ struct CreateStudentProfilePage: View{
 //                            in: 0...25,
 //                            step: 1
 //                        )
-                        CustomSlider(value: $offset, maxValue: 100)
+                        CustomSlider(value: $offset, maxValue: 20, minValue: 5)
 //                        ZStack(alignment: Alignment (horizontal: .leading, vertical: .center), content: {
 //                            Capsule()
 //                                    .fill(Color.black.opacity(0.25))
