@@ -137,16 +137,15 @@ struct CreateStudentProfilePage: View{
                     }
                     .padding(10)
                     
-                    HStack(spacing: 10){
-//                        Text("Age")
-//                            .font(.system(size: 20))
+                    VStack(spacing: 5){
+
 //                        Text("\(Int(age))")
 //                        Slider(
 //                            value: $age,
 //                            in: 0...25,
 //                            step: 1
 //                        )
-                        CustomSlider(value: $age , maxValue: 25, minValue: 4)
+                        CustomSlider(value: $age , name: "Select Your Age", maxValue: 25, minValue: 4)
 //                        ZStack(alignment: Alignment (horizontal: .leading, vertical: .center), content: {
 //                            Capsule()
 //                                    .fill(Color.black.opacity(0.25))
@@ -183,16 +182,13 @@ struct CreateStudentProfilePage: View{
                 }
                     .padding(10)
                     VStack(alignment: .leading, spacing: 5){
-                        Text("Musical background (Optional)")
+                        Text("Musical background")
                             .font(.system(size: 25))
-                        HStack(spacing: 10){
-                            Text("Years Playing:  ")
-                                .font(.system(size: 20))
-                                .padding(10)
-                            Text("\(Int(yearsPlaying))")
+                        Spacer(minLength: 5)
+                        VStack(spacing: 10){
                             CustomSlider(
                                 value: $yearsPlaying,
-                                maxValue: 20, minValue: 0
+                                name: "Years Playing: ", maxValue: 20, minValue: 0
                             ).padding(5)
                         }
                         Text("Skill Level")

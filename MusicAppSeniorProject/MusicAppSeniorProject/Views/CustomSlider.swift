@@ -10,19 +10,37 @@ import SwiftUI
 struct CustomSlider: View {
     @Binding var value:CGFloat
     @State var offset: CGFloat
+    private var name: String
     private var maxValue:CGFloat
     private var minValue: CGFloat
     
-    init(value: Binding<CGFloat>, maxValue: CGFloat, minValue: CGFloat) {
+    init(value: Binding<CGFloat>, name: String, maxValue: CGFloat, minValue: CGFloat) {
         self._value = value
         self.maxValue = maxValue
         self.minValue = minValue
         self.offset = 0
+        self.name = name 
 
     }
     var body: some View {
+        let shape = RoundedRectangle(cornerRadius: 5)
         VStack{
-            Text(getValue(offset:offset))
+            ZStack{
+                HStack{
+                    Text(name)
+                    Spacer(minLength: 10)
+                    Text(getValue(offset:offset))
+                        .font(.system(size: 20))
+                        .background(
+                            shape
+                                .strokeBorder(Color.black,lineWidth: 2)
+                                .background(Color.white, in: shape)
+                                .padding(-5)
+                        )
+                }
+           
+            }
+
             ZStack(alignment: Alignment (horizontal: .leading, vertical: .center), content: {
                 Capsule()
                     .fill(Color.black.opacity(0.25))
