@@ -47,8 +47,13 @@ final class ModelData: ObservableObject{
     
     @Published var loggedIn: Bool?
     @Published var isStudent: Bool?
-    @Published var hasFetchedData: Bool?
     @Published var hasPopulated: Bool = false
+    private var teacherListener: ListenerRegistration?
+    private var requestedListener: ListenerRegistration?
+    private var matchedListener: ListenerRegistration?
+    private var availableListener: ListenerRegistration?
+    private var declinedListener: ListenerRegistration?
+
 //    var user: User? {
 //        didSet {
 //            objectWillChange.send()
@@ -376,9 +381,30 @@ final class ModelData: ObservableObject{
 
     }
     func logOut(){
+        reset()
         try! Auth.auth().signOut()
+
+    }
+    func reset(){
+        uid = ""
+        uiImage = nil
+        email = ""
+        password = ""
+        loggedIn = false
+        isStudent = false
+        hasPopulated = false
+        declinedListener?.remove()
+        matchedListener?.remove()
+        availableListener?.remove()
+        requestedListener?.remove()
+        teacherListener?.remove()
+        availableTeachers.removeAll()
+        requestedTeachers.removeAll()
+        matchedTeachers.removeAll()
+        declinedTeachers.removeAll()
     }
     
+    //TODO: FIX MODIFIED TEACCHERS LOGIC - if a teacher's data changes you should update the teacher here by first checking if rthre modified teeacher is contained in any of the arrays
     func userIsStudent(completion:@escaping (Bool) -> Void){
         let db = Firestore.firestore()
         let docRef = db.collection("StudentUser").document(uid)
@@ -500,13 +526,62 @@ final class ModelData: ObservableObject{
     func populateAllAvailableTeachers(student: Student){
         //
         let db = Firestore.firestore()
+        print("UID IS: " + uid)
         let allAvailableTeachersRef = db.collection("StudentUser").document(uid).collection("All Available Teachers")
         //populate all available teachers with teachers with the same instrument
         let teacherRef = db.collection("Teachers")//.document("Teacher Instruments").collection("Cello") //TODO: FIX LOGIC
         let query = teacherRef
             .whereField("Instrument", isEqualTo: "Cello")
             .whereField("name", isGreaterThan: "A")
-        query.addSnapshotListener { querySnapshot, error in
+        teacherListener = query.addSnapshotListener { querySnapshot, error in
+            querySnapshot?.documentChanges.forEach{ diff in
+                if (diff.type == .added) {
+                    print("***New All AVAILABLE TEACHER: \(diff.document.data())")
+                }
+                if (diff.type == .modified) {
+                    print("***Modified ALL AVAILABLE TEACHER: \(diff.document.data())")
+                    let modifiedTeacherID = diff.document.documentID
+                    if let index = self.matchedTeachers.firstIndex(where: { $0.uid == modifiedTeacherID }) {
+                        // You've found the index of the matched teacher with the specified ID
+                        // Update the teacher object at the found index with new data
+                        let updatedTeacher = self.createTeacherFromData(documentSnapshot: diff.document)
+                        self.matchedTeachers[index] = updatedTeacher
+                        print("Updated matched teacher at index \(index)")
+                    } else {
+                        // Teacher with the specified ID not found in the 'matchedTeachers' array
+                        print("Teacher with ID \(modifiedTeacherID) not found in matchedTeachers")
+                    }
+                    if let index = self.requestedTeachers.firstIndex(where: { $0.uid == modifiedTeacherID }) {
+                        // You've found the index of the matched teacher with the specified ID
+                        // Update the teacher object at the found index with new data
+                        let updatedTeacher = self.createTeacherFromData(documentSnapshot: diff.document)
+                        self.requestedTeachers[index] = updatedTeacher
+                        print("Updated matched teacher at index \(index)")
+                    } else {
+                        // Teacher with the specified ID not found in the 'matchedTeachers' array
+                        print("Teacher with ID \(modifiedTeacherID) not found in matchedTeachers")
+                    }
+                    if let index = self.availableTeachers.firstIndex(where: { $0.uid == modifiedTeacherID }) {
+                        // You've found the index of the matched teacher with the specified ID
+                        // Update the teacher object at the found index with new data
+                        let updatedTeacher = self.createTeacherFromData(documentSnapshot: diff.document)
+                        self.availableTeachers[index] = updatedTeacher
+                        print("Updated matched teacher at index \(index)")
+                    } else {
+                        // Teacher with the specified ID not found in the 'matchedTeachers' array
+                        print("Teacher with ID \(modifiedTeacherID) not found in matchedTeachers")
+                    }
+
+
+                    // if teacher is in available teachers set it to the stufdnt using the new data
+                }
+                if (diff.type == .removed) {
+                    print("***REMOVED AVAILABLE TEACHER: \(diff.document.data())")
+                    let removedDocID = diff.document.documentID
+                    self.availableTeachers.removeAll { $0.uid == removedDocID }
+
+                }
+            }
             var unavailableTeachers = [Teacher]()
             unavailableTeachers.append(contentsOf: (self.availableTeachers + self.declinedTeachers + self.matchedTeachers + self.requestedTeachers))
                 guard let documents = querySnapshot?.documents else {
@@ -573,7 +648,7 @@ final class ModelData: ObservableObject{
         var unavailableTeacherIDs = [""]
 
         //populate declined teachers from firestore
-        var declinedListener = declinedTeachersRef.addSnapshotListener { querySnapshot, error in
+        declinedListener = declinedTeachersRef.addSnapshotListener { querySnapshot, error in
             self.declinedTeachers = []
 
             guard let documents = querySnapshot?.documents else {
@@ -597,7 +672,7 @@ final class ModelData: ObservableObject{
             }
         }
         //populate matched teachers from firestore
-        var matchedListener = matchedTeachersRef.addSnapshotListener { querySnapshot, error in
+        matchedListener = matchedTeachersRef.addSnapshotListener { querySnapshot, error in
             print("Matched Teachers Changing")
             self.matchedTeachers = []
             guard let documents = querySnapshot?.documents else {
@@ -632,7 +707,7 @@ final class ModelData: ObservableObject{
             .limit(to: 20)
 
 
-        var requestedListener = requestedTeachersRef.addSnapshotListener { querySnapshot, error in
+        requestedListener = requestedTeachersRef.addSnapshotListener { querySnapshot, error in
             self.requestedTeachers = []
             print("Requested Teachers Changing")
             guard let documents = querySnapshot?.documents else {
@@ -684,20 +759,21 @@ final class ModelData: ObservableObject{
                 let query = allAvailableTeachersRef
                     .order(by: "Score", descending: true)
                     .limit(to: 20)
-            let availableListener = allAvailableTeachersRef.addSnapshotListener { querySnapshot, error in
+            self.availableListener = allAvailableTeachersRef.addSnapshotListener { querySnapshot, error in
                 //todo implement this later
                 print("Available Teachers is changing ")
-                var shouldRepopulate = true
                 querySnapshot?.documentChanges.forEach{ diff in
                     if (diff.type == .added) {
                         print("***New All AVAILABLE TEACHER: \(diff.document.data())")
                     }
                     if (diff.type == .modified) {
                         print("***Modified ALL AVAILABLE TEACHER: \(diff.document.data())")
+                        let modifiedDocID = diff.document.documentID
+
+
                         // if teacher is in available teachers set it to the stufdnt using the new data
                     }
                     if (diff.type == .removed) {
-                        shouldRepopulate = false
                         print("***REMOVED AVAILABLE TEACHER: \(diff.document.data())")
                         let removedDocID = diff.document.documentID
                         self.availableTeachers.removeAll { $0.uid == removedDocID }
@@ -706,9 +782,6 @@ final class ModelData: ObservableObject{
                 }
                 if(self.availableTeachers.count < 5){
                     query.getDocuments{ querySnapshot, err in
-                        // delete the if statement 
-                        if(!(self.availableTeachers.count >= 5)){
-
                             print("Available Teachers Changing")
                             if let err = err {
                                 print("Error getting documents: \(err)")
@@ -745,12 +818,6 @@ final class ModelData: ObservableObject{
                                 }
                             }
                         }
-                    }
-
-                
-                    //TODOL: TEST IF THIS STOPS IT OVERFLOWING
-
-
                 }
             }
         }
@@ -855,6 +922,8 @@ final class ModelData: ObservableObject{
     //meant to be called when student presses "decline teacher button"
     //TODO: FIX THIS
     func declineTeacher(teacherId: String){
+        //TODO: TEST THIS
+        print("DECLINING TEACHER FOR UID:" + uid)
         var teacherData: [String: Any]?
         let db = Firestore.firestore()
         let collectionRef = db.collection("Teachers")
@@ -940,7 +1009,7 @@ final class ModelData: ObservableObject{
              if let err = err {
                  print("Error removing document: \(err)")
              } else {
-                 print("Document successfully removed!")
+                 print("Document successfully removed for All Available Teachers!")
              }
          }
         availableTeachers.removeAll { teacher in
