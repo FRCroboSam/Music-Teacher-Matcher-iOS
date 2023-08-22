@@ -23,8 +23,8 @@ struct CreateStudentProfilePage: View{
     @State private var noUserFound = true
     @State private var firstName: String = ""
     @State private var lastName: String = ""
-    @State private var age : Double = 0
-    @State private var yearsPlaying: Double = 0
+    @State private var age : CGFloat = 0
+    @State private var yearsPlaying: CGFloat = 0
     @State private var price: Double = 0
     @State private var email: String = ""
     @State private var password: String = ""
@@ -146,7 +146,7 @@ struct CreateStudentProfilePage: View{
 //                            in: 0...25,
 //                            step: 1
 //                        )
-                        CustomSlider(value: $offset, maxValue: 25, minValue: 4)
+                        CustomSlider(value: $age , maxValue: 25, minValue: 4)
 //                        ZStack(alignment: Alignment (horizontal: .leading, vertical: .center), content: {
 //                            Capsule()
 //                                    .fill(Color.black.opacity(0.25))
@@ -190,10 +190,9 @@ struct CreateStudentProfilePage: View{
                                 .font(.system(size: 20))
                                 .padding(10)
                             Text("\(Int(yearsPlaying))")
-                            Slider(
+                            CustomSlider(
                                 value: $yearsPlaying,
-                                in: 6...25,
-                                step: 1
+                                maxValue: 20, minValue: 0
                             ).padding(5)
                         }
                         Text("Skill Level")
@@ -394,7 +393,7 @@ struct CreateStudentProfilePage: View{
             ]
             let musicalBackground:KeyValuePairs = [
                 "Instrument": selectedInstrument,
-                "Years Playing": String(yearsPlaying),
+                "Years Playing": String(Double(yearsPlaying)),
                 "Skill Level": String(studentLevel),
                 "Prior Pieces Played":  description,
                 "Budget": String(price)
@@ -404,7 +403,7 @@ struct CreateStudentProfilePage: View{
                 "name": name,
                 "firstName": firstName,
                 "lastName": lastName,
-                "age": String(age),
+                "age": String(Double(age)),
                 "Location": location
             ]
             newEmail = ""

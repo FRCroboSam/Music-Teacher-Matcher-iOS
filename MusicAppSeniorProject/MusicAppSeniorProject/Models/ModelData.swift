@@ -546,8 +546,21 @@ final class ModelData: ObservableObject{
     func createTeacherFromUID(uid: String){
         
     }
+    func cleanUpFirestore(){
+        let db = Firestore.firestore()
+        let studentRef = db.collection("StudentUser")
+        studentRef.whereField("name", isLessThan: "A")
+            .getDocuments { querySnapshot, error in
+                for document in querySnapshot!.documents{
+                    let docId = document.documentID
+                    studentRef.document(docId).delete()
+                }
+            }
+                            
+    }
     func fetchTeacherData(completion: @escaping () -> Void){
         print("*FETCHING TEACHER DATA")
+        cleanUpFirestore()
         let dispatchGroup = DispatchGroup()
 
         let db = Firestore.firestore()
@@ -686,6 +699,9 @@ final class ModelData: ObservableObject{
                     if (diff.type == .removed) {
                         shouldRepopulate = false
                         print("***REMOVED AVAILABLE TEACHER: \(diff.document.data())")
+                        let removedDocID = diff.document.documentID
+                        self.availableTeachers.removeAll { $0.uid == removedDocID }
+
                     }
                 }
                 if(shouldRepopulate){
