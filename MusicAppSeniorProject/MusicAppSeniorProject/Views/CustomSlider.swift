@@ -50,10 +50,14 @@ struct CustomSlider: View {
             // Initialize offset based on the provided value
             offset = getOffset(value: value)
         }
+        .onChange(of: value) { newValue in
+            print("VALUE IS CHANGING" + String(Double(newValue)))
+            offset = getOffset(value: newValue)
+        }
 
     }
     func getOffset(value: CGFloat) -> CGFloat{
-        let percent = (value - minValue) / (maxValue - minValue)
+        let percent = (min(maxValue, max(minValue, value)) - minValue) / (maxValue - minValue)
         let maxOffset = 3/4 * (UIScreen.main.bounds.width - 13 - 17.5)
         let offset = percent * (3/4 * UIScreen.main.bounds.width - 13 - 17.5)
         return offset
