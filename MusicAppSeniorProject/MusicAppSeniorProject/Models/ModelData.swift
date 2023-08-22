@@ -560,7 +560,6 @@ final class ModelData: ObservableObject{
     }
     func fetchTeacherData(completion: @escaping () -> Void){
         print("*FETCHING TEACHER DATA")
-        cleanUpFirestore()
         let dispatchGroup = DispatchGroup()
 
         let db = Firestore.firestore()
@@ -675,10 +674,10 @@ final class ModelData: ObservableObject{
             // Perform the population process here
             // This can involve fetching data, processing, and writing to Firestore
             print("@@@POPULATING ALL AVAILABLE TEACHERS@@@")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
             self.populateAllAvailableTeachers(student: self.studentUser)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 // Put your code which should be executed with a delay here
                 print("@@@POPULATING AVAILABLE TEACHERS")
 
@@ -691,10 +690,11 @@ final class ModelData: ObservableObject{
                 var shouldRepopulate = true
                 querySnapshot?.documentChanges.forEach{ diff in
                     if (diff.type == .added) {
-                        print("***New AVAILABLE TEACHER: \(diff.document.data())")
+                        print("***New All AVAILABLE TEACHER: \(diff.document.data())")
                     }
                     if (diff.type == .modified) {
-                        print("***Modified AVAILABLE TEACHER: \(diff.document.data())")
+                        print("***Modified ALL AVAILABLE TEACHER: \(diff.document.data())")
+                        // if teacher is in available teachers set it to the stufdnt using the new data
                     }
                     if (diff.type == .removed) {
                         shouldRepopulate = false
@@ -704,10 +704,11 @@ final class ModelData: ObservableObject{
 
                     }
                 }
-                if(shouldRepopulate){
+                if(self.availableTeachers.count < 5){
                     query.getDocuments{ querySnapshot, err in
+                        // delete the if statement 
                         if(!(self.availableTeachers.count >= 5)){
-                            self.availableTeachers = []
+
                             print("Available Teachers Changing")
                             if let err = err {
                                 print("Error getting documents: \(err)")
