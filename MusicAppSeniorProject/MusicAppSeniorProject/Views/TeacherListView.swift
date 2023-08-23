@@ -10,6 +10,7 @@ enum teacherType{
     case AVAILABLE, REQUESTED, DECLINED, MATCHED
 }
 struct TeacherListView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var modelData: ModelData
     @Binding var displayArray: [Teacher]
     @Binding var uiImage: UIImage?
@@ -18,6 +19,7 @@ struct TeacherListView: View {
     @State private var loggedOut = false
     @State private var showInfo  = false
     var body: some View {
+        NavigationStack{
             VStack{
                 Spacer(minLength: 100)
                 ZStack{
@@ -49,28 +51,33 @@ struct TeacherListView: View {
                             
                             
                         }.padding(10)
-
+                        Button("Log Out"){
+                            modelData.logOut()
+                            loggedOut = true
+                        }.buttonStyle(BigButtonStyle())
+                            
+                        
                     }
                     if(showInfo){
-//                        VStack{
-//                            Spacer()
-                            ZStack{
-                                RoundedRectangle(cornerRadius:10).strokeBorder(Color.black, lineWidth: 3).background(Color.white)
-                                    .padding(20)
-
-                                Text(" " + displayText + " ")
-                                    .padding(25)
-                                    .font(.system(size: 30))
-                                    .minimumScaleFactor(0.01)
-
-                            }
-//                        }
-    
-//
-//                            .background(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.black, lineWidth: 2))
-//                            .font(.system(size: 500))
-//                            .minimumScaleFactor(0.01)
-//                            .padding(20)
+                        //                        VStack{
+                        //                            Spacer()
+                        ZStack{
+                            RoundedRectangle(cornerRadius:10).strokeBorder(Color.black, lineWidth: 3).background(Color.white)
+                                .padding(20)
+                            
+                            Text(" " + displayText + " ")
+                                .padding(25)
+                                .font(.system(size: 30))
+                                .minimumScaleFactor(0.01)
+                            
+                        }
+                        //                        }
+                        
+                        //
+                        //                            .background(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.black, lineWidth: 2))
+                        //                            .font(.system(size: 500))
+                        //                            .minimumScaleFactor(0.01)
+                        //                            .padding(20)
                         
                     }
                 }.onTapGesture {
@@ -88,10 +95,10 @@ struct TeacherListView: View {
                                 Text(teacher.instrument).font(.subheadline)
                             }
                         }
-
+                        
                     }
                 }
-
+                
             }.background{
                 Image("music_background")
                     .resizable()
@@ -99,8 +106,10 @@ struct TeacherListView: View {
                     .edgesIgnoringSafeArea(.all)
                     .aspectRatio(contentMode: .fill)
             }
-
-        
+            
+        }.navigationDestination(isPresented: $loggedOut, destination: {
+            HomePage()
+        })
 }
 
 //struct TeacherListView_Previews: PreviewProvider {

@@ -45,14 +45,15 @@ struct CustomBackButton: View {
 //    }
 //}
 struct CustomLogoutButton: View {
-
-    let dismiss: DismissAction
+//    let action: () -> Void
+//    let dismiss: DismissAction
     
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 20)
 
         Button {
-            dismiss()
+//            action()
+//            dismiss()
         } label: {
             HStack(spacing: 3){
                 Image(systemName: "arrow.uturn.backward")

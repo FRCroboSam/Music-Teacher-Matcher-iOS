@@ -33,7 +33,6 @@ struct StudentAppPage: View {
         NavigationStack{
             ZStack{
                 //slider to toggle distance between teacher and student
-                
                 CustomTabBarContainerView(selection: $tabSelection) {
                     TeacherListView(displayArray: $modelData.availableTeachers, uiImage: $modelData.uiImage, status: "Available Teachers", displayText: availableTeacherDesc)
                                .tabBarItem(tab: .available, selection: $tabSelection)
@@ -87,13 +86,8 @@ struct StudentAppPage: View {
             //                    }
             //            }
         }     .navigationBarBackButtonHidden(true) // Hide default button
-            .navigationBarItems(leading: moveOn ? CustomLogoutButton(dismiss: dismiss).padding(10) : nil)
-            
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // Delay for 2 seconds
-                    moveOn = true
-                }
-            }
+
+
     }
     
 }
