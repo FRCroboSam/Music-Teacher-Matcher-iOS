@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct StudentAppPage: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var moveOn: Bool = false 
     @EnvironmentObject var modelData: ModelData
     @State private var displayArray: [Teacher] = [Teacher]()
     @State private var displayText: String = ""
@@ -84,16 +86,23 @@ struct StudentAppPage: View {
             //                        Label("Menu", systemImage: "list.dash")
             //                    }
             //            }
-        }
+        }     .navigationBarBackButtonHidden(true) // Hide default button
+            .navigationBarItems(leading: moveOn ? CustomLogoutButton(dismiss: dismiss).padding(10) : nil)
+            
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // Delay for 2 seconds
+                    moveOn = true
+                }
+            }
     }
     
 }
-struct MainAppPage_Previews: PreviewProvider {
-    static var previews: some View {
-        StudentAppPage()
-            .environmentObject(ModelData())
-    }
-}
+//struct MainAppPage_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StudentAppPage(dismiss: dismiss)
+//            .environmentObject(ModelData())
+//    }
+//}
 
 
 

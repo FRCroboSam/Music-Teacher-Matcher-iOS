@@ -8,8 +8,10 @@
 import SwiftUI
 import FirebaseAuth
 struct LoginPage: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var modelData : ModelData
     @EnvironmentObject var teacherModelData: TeacherModelData
+    @State private var showBackButton = false
     @State private var noUserFound = false
     @State private var email: String = ""
     @State private var password: String = ""
@@ -75,7 +77,7 @@ struct LoginPage: View {
                         .autocorrectionDisabled()
                     
                 }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
-                    .padding(20)
+                    .padding(.bottom, 20    )
                 HStack {
                     Image(systemName: "lock")
                     SecureField("Password", text: $password)
@@ -130,7 +132,16 @@ struct LoginPage: View {
             .navigationDestination(isPresented: $teacherLoginSuccessful) {
                 TeacherAppPage()
             }
-        }.gesture(
+        }
+        .navigationBarBackButtonHidden(true) // Hide default button
+        .navigationBarItems(leading: moveOn ? CustomBackButton(dismiss: dismiss).padding(10) : nil)
+        
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { // Delay for 2 seconds
+                moveOn = true
+            }
+        }
+        .gesture(
             TapGesture().onEnded { value in
               self.dismissKeyboard()
             })
@@ -153,9 +164,9 @@ extension UIApplication {
   func dismissKeyboard() {
     sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     } }
-struct LoginPagePreview: PreviewProvider {
-    static var previews: some View {
-        LoginPage()
-            .environmentObject(ModelData())
-    }
-}
+//struct LoginPagePreview: PreviewProvider {
+//    static var previews: some View {
+//        LoginPage(dismiss: dismiss)
+//            .environmentObject(ModelData())
+//    }
+//}

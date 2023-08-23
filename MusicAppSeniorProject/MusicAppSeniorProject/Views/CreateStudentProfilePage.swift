@@ -357,6 +357,7 @@ struct CreateStudentProfilePage: View{
             }
             .navigationDestination(isPresented: $loggedOut, destination: {
                 HomePage()
+                    .transition(.slide)
             })
 //            .navigationTitle("Edit Profile")
 //            .toolbar(.hidden, for: .navigationBar)

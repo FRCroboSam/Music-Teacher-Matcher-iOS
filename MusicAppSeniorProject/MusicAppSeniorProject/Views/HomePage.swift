@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HomePage: View {
+    @Environment(\.dismiss) private var dismiss
+
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }

@@ -62,6 +62,7 @@
 		368CC6242A8C74D800F36140 /* TabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6232A8C74D800F36140 /* TabBarItem.swift */; };
 		368CC6262A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6252A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift */; };
 		368CC62E2A8EA91700F36140 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC62D2A8EA91700F36140 /* CustomSlider.swift */; };
+		368CC6302A95C60200F36140 /* CustomBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC62F2A95C60200F36140 /* CustomBackButton.swift */; };
 		3697540429E766940035AD9B /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540329E766940035AD9B /* TestView.swift */; };
 		3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */; };
 		36BF5EF22A40FA3C00D0B15A /* TeacherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */; };
@@ -142,6 +143,7 @@
 		368CC6232A8C74D800F36140 /* TabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItem.swift; sourceTree = "<group>"; };
 		368CC6252A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 		368CC62D2A8EA91700F36140 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
+		368CC62F2A95C60200F36140 /* CustomBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackButton.swift; sourceTree = "<group>"; };
 		3697540329E766940035AD9B /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherListView.swift; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 				363583F92984F94C00C37596 /* HomePage.swift */,
 				368CC6162A76B85100F36140 /* HomePageUI.swift */,
 				36C403E229D261400015935A /* LoginPage.swift */,
+				368CC62F2A95C60200F36140 /* CustomBackButton.swift */,
 				368CC61A2A787FB200F36140 /* OvalTextFieldStyle.swift */,
 				368CC6182A787E8100F36140 /* LoginPageUI.swift */,
 				364DEBF029A8125900FFA18B /* Teacher Profile */,
@@ -543,6 +546,7 @@
 				363583FC2984F96C00C37596 /* CreateStudentProfilePage.swift in Sources */,
 				363583D02984F91900C37596 /* MusicAppSeniorProjectApp.swift in Sources */,
 				3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */,
+				368CC6302A95C60200F36140 /* CustomBackButton.swift in Sources */,
 				368CC6192A787E8100F36140 /* LoginPageUI.swift in Sources */,
 				368CC6222A8C74C200F36140 /* CustomTabBarView.swift in Sources */,
 				36CADD642A08B778006F246F /* PhotoView.swift in Sources */,
