@@ -47,7 +47,6 @@ struct StudentAppPage: View {
                 .navigationDestination(isPresented: $loggedOut) {
                     HomePage()
                 }
-
                 .onAppear() {
                     let teacher = Teacher(name: "DF")
                     modelData.teacherDistance(teacher: teacher, student: modelData.studentUser, completion: { _ in
@@ -66,25 +65,8 @@ struct StudentAppPage: View {
                             }
                         }
                     }
-//                    if(modelData.uid != ""){
-//                        print("ACTUALLY FETCHING TEACHER DATA")
-//                        self.modelData.fetchTeacherData {
-//
-//                        }
-//                    }
-
-                    
-                    
                 }
-                
-                
             }
-            //            TabView{
-            //
-            //                    .tabItem{
-            //                        Label("Menu", systemImage: "list.dash")
-            //                    }
-            //            }
         }     .navigationBarBackButtonHidden(true) // Hide default button
 
 
@@ -159,3 +141,4 @@ struct StudentAppPage: View {
      }
  }//.navigationBarTitle("Student User")
  */
+

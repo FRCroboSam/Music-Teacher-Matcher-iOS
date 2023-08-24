@@ -71,7 +71,7 @@ struct HomePageUI_Previews: PreviewProvider {
 }
 
 struct BigButtonStyle: ButtonStyle {
-
+    @State var percentWidth = 0.75
     @State var color: Color = .indigo
     @Environment(\.isEnabled) private var isEnabled: Bool
     var deviceWidth: CGFloat {
@@ -85,7 +85,7 @@ struct BigButtonStyle: ButtonStyle {
             configuration.label
             .font(.title.bold())
             .padding()
-            .frame(maxWidth: 3/4 * deviceWidth)
+            .frame(maxWidth: percentWidth * deviceWidth)
             .foregroundColor(isEnabled ? .white : Color(UIColor.systemGray3))
             .background(isEnabled ? color : Color(UIColor.systemGray5))
             .cornerRadius(12)

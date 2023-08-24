@@ -63,6 +63,7 @@
 		368CC6262A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6252A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift */; };
 		368CC62E2A8EA91700F36140 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC62D2A8EA91700F36140 /* CustomSlider.swift */; };
 		368CC6302A95C60200F36140 /* CustomBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC62F2A95C60200F36140 /* CustomBackButton.swift */; };
+		368CC6322A97214E00F36140 /* CustomizeListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6312A97214E00F36140 /* CustomizeListView.swift */; };
 		3697540429E766940035AD9B /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540329E766940035AD9B /* TestView.swift */; };
 		3697540629E8A2970035AD9B /* AdaptsToKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */; };
 		36BF5EF22A40FA3C00D0B15A /* TeacherListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */; };
@@ -144,6 +145,7 @@
 		368CC6252A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarItemsPreferenceKey.swift; sourceTree = "<group>"; };
 		368CC62D2A8EA91700F36140 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		368CC62F2A95C60200F36140 /* CustomBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackButton.swift; sourceTree = "<group>"; };
+		368CC6312A97214E00F36140 /* CustomizeListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeListView.swift; sourceTree = "<group>"; };
 		3697540329E766940035AD9B /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		3697540529E8A2970035AD9B /* AdaptsToKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptsToKeyboard.swift; sourceTree = "<group>"; };
 		36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherListView.swift; sourceTree = "<group>"; };
@@ -337,6 +339,7 @@
 				3642D16129EEF1E60052FF2E /* TeacherAppPage.swift */,
 				368CC61E2A8C746900F36140 /* TabBar */,
 				36BF5EF12A40FA3C00D0B15A /* TeacherListView.swift */,
+				368CC6312A97214E00F36140 /* CustomizeListView.swift */,
 				368CC60E2A54E39D00F36140 /* StudentListView.swift */,
 				368CC6122A726EE900F36140 /* NotificationNumLabel.swift */,
 				3697540329E766940035AD9B /* TestView.swift */,
@@ -526,6 +529,7 @@
 				368CC62E2A8EA91700F36140 /* CustomSlider.swift in Sources */,
 				3679178E29FA2DF400788878 /* iosCheckboxToggleStyle.swift in Sources */,
 				364DEBEF29A80D1D00FFA18B /* Teacher.swift in Sources */,
+				368CC6322A97214E00F36140 /* CustomizeListView.swift in Sources */,
 				36CADD5F2A08B778006F246F /* CachedImageManager.swift in Sources */,
 				364DEBF929A87B2900FFA18B /* ModelData.swift in Sources */,
 				36CADD652A08B778006F246F /* PhotoAsset.swift in Sources */,
