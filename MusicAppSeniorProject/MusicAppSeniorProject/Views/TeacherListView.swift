@@ -73,15 +73,6 @@ struct TeacherListView: View {
                             
                             
                         }
-//                        HStack {
-//                            Image(systemName: "magnifyingglass")
-//                            SecureField("Search", text: $searchTeacher)
-//                                .foregroundColor(.white)
-//                                .textContentType(.newPassword)
-//                                .keyboardType(.asciiCapable)
-//                                .autocorrectionDisabled()
-//
-//                        }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
                     }
                     if(showInfo){
                         //                        VStack{
@@ -105,10 +96,32 @@ struct TeacherListView: View {
                         //                            .padding(20)
                         
                     }
-                }.onTapGesture {
+
+                }
+                .background{
+                    Image("music_background")
+                        .resizable()
+                        .scaledToFill()
+                        .edgesIgnoringSafeArea(.all)
+                        .aspectRatio(contentMode: .fill)
+                }
+                .onTapGesture {
                     showInfo = false
                 }
-                Spacer(minLength: 30)
+                Spacer()
+                    .frame(height: 10)
+//                Section{
+//                    HStack {
+//                        Image(systemName: "magnifyingglass")
+//                        TextField("Search", text: $searchTeacher)
+//                            .foregroundColor(.white)
+//                            .textContentType(.newPassword)
+//                            .keyboardType(.asciiCapable)
+//                            .autocorrectionDisabled()
+//
+//                    }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white, ratio: 0.95))
+//                }
+
                 List{
                     Section{
                         ForEach(displayArray) { teacher in
@@ -116,33 +129,42 @@ struct TeacherListView: View {
                                 TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
                             } label:{
                                 HStack{
-                                    ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                    ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 80)
                                     VStack(alignment: .leading) {
                                         Spacer()
                                         Text(teacher.name).font(.title)
                                         Text(teacher.instrument).font(.subheadline)
-                                    }.foregroundColor(.white)
+                                    }.foregroundColor(.black)
                                 }
                                 
                             }
                             .listRowBackground(
-                                RoundedRectangle(cornerRadius: 20)
+                                Rectangle()
                                 //                                    .background(.clear)
-                                    .foregroundColor(Color.orange)
-                                    .padding(
-                                        EdgeInsets(
-                                            top: 5,
-                                            leading: 0,
-                                            bottom: 5,
-                                            trailing: 0
-                                        )
-                                    )
+                                    .foregroundColor(Color.white)
+//                                    .padding(
+//                                        EdgeInsets(
+//                                            top: 4,
+//                                            leading: 0,
+//                                            bottom: 4,
+//                                            trailing: 0
+//                                        )
+//                                    )
                             )
-                            .listRowSeparator(.hidden)
+//                            .listRowSeparator(.hidden)
                             
                             
                         }
                         
+                    }
+                    HStack{
+                        Button("Log Out"){
+                            modelData.logOut()
+                            loggedOut = true
+                        }
+                        .modifier(CenterModifier())
+                        .buttonStyle(BigButtonStyle())
+//                            Spacer(minLength: 2/3 * deviceWidth)
                     }
                     .listRowSeparator(.hidden)
                     
@@ -151,23 +173,20 @@ struct TeacherListView: View {
 //                        .frame(height: 1/25 * deviceHeight)
                     //                    Spacer(minLength: 100)
                 }
+                .frame( maxWidth: .infinity)
+                .edgesIgnoringSafeArea(.all)
+                .listStyle(GroupedListStyle())
                 .scrollContentBackground(.hidden)
-                .frame(maxWidth: 7/8 * deviceWidth)
-                .background{
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.teal)
-                }
+//                .frame(maxWidth: 7/8 * deviceWidth)
+//                .background{
+//                    RoundedRectangle(cornerRadius: 20)
+//                        .fill(Color.teal)
+//                }
                 Spacer()
                     .ignoresSafeArea(.all)
-                    .frame(height: 1/7 * deviceHeight)
+                    .frame(height: 1/10 * deviceHeight)
             }
-                .background{
-                    Image("music_background")
-                        .resizable()
-                        .scaledToFill()
-                        .edgesIgnoringSafeArea(.all)
-                        .aspectRatio(contentMode: .fill)
-                }
+
                 
                 .navigationDestination(isPresented: $loggedOut, destination: {
                     HomePage()

@@ -91,13 +91,14 @@ struct customViewModifier: ViewModifier {
     var startColor: Color
     var endColor: Color
     var textColor: Color
+    var ratio: Double = 5/6
 
     func body(content: Content) -> some View {
         content
             .padding()
             .background(LinearGradient(gradient: Gradient(colors: [startColor, endColor]), startPoint: .topLeading, endPoint: .bottomTrailing))
             .cornerRadius(roundedCornes)
-            .frame(maxWidth: 5/6 * deviceWidth)
+            .frame(maxWidth: ratio * deviceWidth)
 
             .padding(3)
             .foregroundColor(textColor)
