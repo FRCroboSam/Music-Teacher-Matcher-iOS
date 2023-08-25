@@ -17,6 +17,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
       let providerFactory = YourSimpleAppCheckProviderFactory()
       AppCheck.setAppCheckProviderFactory(providerFactory)
       FirebaseApp.configure()
+      Database.database().isPersistenceEnabled = true
+
       if(Auth.auth().currentUser != nil){
           loggedIn = true
       }
@@ -66,8 +68,9 @@ struct MusicAppSeniorProjectApp: App {
                                                     print("FIRST TIME FETCHING TEACHER DATA")
                                                     modelData.fetchTeacherData() {
                                                     }
-                                                    modelData.fetchImage{_ in
-                                                    }
+                                                    //TODO: Restructure to more efficient method of fetching photo urls
+//                                                    modelData.fetchImage{_ in
+//                                                    }
                                                 } else {
                                                     modelData.loggedIn = false
                                                 }

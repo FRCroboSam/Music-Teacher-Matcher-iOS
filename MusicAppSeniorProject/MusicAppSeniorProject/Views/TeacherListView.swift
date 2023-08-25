@@ -26,6 +26,7 @@ struct TeacherListView: View {
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }
+
     var body: some View {
         NavigationStack{
             VStack(spacing: 0){
@@ -67,133 +68,130 @@ struct TeacherListView: View {
                                                 Circle().fill(
                                                     Color.white
                                                 )
-                                            }
-                                    }.offset(x: 2, y: -15)
-                                }
-                            
-                            
-                        }
-                    }
-                    if(showInfo){
-                        //                        VStack{
-                        //                            Spacer()
-                        ZStack{
-                            RoundedRectangle(cornerRadius:10).strokeBorder(Color.black, lineWidth: 3).background(Color.white)
-                                .padding(20)
-                            
-                            Text(" " + displayText + " ")
-                                .padding(25)
-                                .font(.system(size: 30))
-                                .minimumScaleFactor(0.01)
-                            
-                        }
-                        //                        }
-                        
-                        //
-                        //                            .background(RoundedRectangle(cornerRadius: 4).strokeBorder(Color.black, lineWidth: 2))
-                        //                            .font(.system(size: 500))
-                        //                            .minimumScaleFactor(0.01)
-                        //                            .padding(20)
-                        
-                    }
+                                    ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
+                                        .overlay(Circle()
+                                            .strokeBorder(Color.white,lineWidth: 5)
+                                        ).modifier(CenterModifier())
+                                    HStack{
+                                        Text(" " + status + " ")
+                                            .lineLimit(1)
+                                            .font(.custom("MarkerFelt-Wide", size: 40))
+                                            .foregroundColor(.white)
+                                            .minimumScaleFactor(0.01)
 
+                                            .background(Color.teal)
+                                            .clipShape(RoundedRectangle(cornerRadius:10))
+                                            .overlay(alignment: .topTrailing){
+                                                Button{
+                                                    showInfo.toggle()
+                                                }label:{
+                                                    Image(systemName: "info.circle")
+                                                        .resizable()
+                                                        .frame(width: 20, height: 20)
+                                                        .background {
+                                                            Circle().fill(
+                                                                Color.white
+                                                            )
+                                                        }
+                                                }.offset(x: 2, y: -15)
+                                            }
+
+
+                                    }.modifier(CenterModifier())
+                                }
+                            }
+                        }
+                    }.frame(maxHeight: 1/5 * deviceHeight)
+                    .onTapGesture {
+                        showInfo = false
+                    }
+                    .background{
+                        Image("music_background")
+                            .resizable()
+                            .scaledToFill()
+                            .edgesIgnoringSafeArea(.all)
+                            .aspectRatio(contentMode: .fill)
+                    }
+                Spacer()
+                    .frame(height: 1/15 * deviceHeight)
+                VStack(spacing: 0){
+                    HStack{
+                        Rectangle()
+                            .fill(Color.white)
+                            .frame(maxWidth: 1)
+                            HStack {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundColor(.black)
+                                TextField("Enter a teacher name", text: $searchTeacher)
+                                    .foregroundColor(.white)
+                                    .textContentType(.newPassword)
+                                    .keyboardType(.asciiCapable)
+                                    .autocorrectionDisabled()
+                                    .listRowSeparator(.hidden)
+
+
+                            }.modifier(customViewModifier(roundedCornes: 30, startColor: .blue, endColor: .purple, textColor: .black))
+
+                        Rectangle()
+                            .fill(Color.white)
+                            .frame(maxWidth: 1)
+                    }.fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity)
+                    Spacer(minLength: 10)
+                    Divider()
+                    List{
+                        Section{
+                            ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
+                                NavigationLink{
+                                    TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
+                                } label:{
+                                    HStack{
+                                        ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                        VStack(alignment: .leading) {
+                                            Spacer()
+                                            Text(teacher.name).font(.system(size: 25))
+                                            Text(teacher.instrument).font(.subheadline)
+                                        }.foregroundColor(.black)
+                                    }
+                                   .padding(.top, index == 0 ? -30 : 0)
+
+
+                                }
+                            }
+                        }
+                        .listSectionSeparator(.hidden, edges: .top)
+                        HStack{
+                            Button("Log Out"){
+                                modelData.logOut()
+                                loggedOut = true
+                            }
+                            .modifier(CenterModifier())
+                            .buttonStyle(BigButtonStyle())
+                        }
+                        .listRowInsets(EdgeInsets(top: -20, leading: 0, bottom: 0, trailing: 0))
+                        .listRowSeparator(.hidden)
+                    }
+                    .frame( maxWidth: .infinity)
+                    .edgesIgnoringSafeArea(.all)
+                    .listStyle(GroupedListStyle())
+                    .scrollContentBackground(.hidden)
+                    Spacer()
+                        .ignoresSafeArea(.all)
+                        .frame(height: 1/10 * deviceHeight)
+                        .listRowSeparator(.hidden)
+                        .background(Color.orange)
+
+                        .navigationDestination(isPresented: $loggedOut, destination: {
+                            HomePage()
+                        })
                 }
                 .background{
-                    Image("music_background")
-                        .resizable()
-                        .scaledToFill()
-                        .edgesIgnoringSafeArea(.all)
-                        .aspectRatio(contentMode: .fill)
-                }
-                .onTapGesture {
-                    showInfo = false
-                }
-                Spacer()
-                    .frame(height: 10)
-//                Section{
-//                    HStack {
-//                        Image(systemName: "magnifyingglass")
-//                        TextField("Search", text: $searchTeacher)
-//                            .foregroundColor(.white)
-//                            .textContentType(.newPassword)
-//                            .keyboardType(.asciiCapable)
-//                            .autocorrectionDisabled()
-//
-//                    }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white, ratio: 0.95))
-//                }
-
-                List{
-                    Section{
-                        ForEach(displayArray) { teacher in
-                            NavigationLink{
-                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
-                            } label:{
-                                HStack{
-                                    ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 80)
-                                    VStack(alignment: .leading) {
-                                        Spacer()
-                                        Text(teacher.name).font(.title)
-                                        Text(teacher.instrument).font(.subheadline)
-                                    }.foregroundColor(.black)
-                                }
-                                
-                            }
-                            .listRowBackground(
-                                Rectangle()
-                                //                                    .background(.clear)
-                                    .foregroundColor(Color.white)
-//                                    .padding(
-//                                        EdgeInsets(
-//                                            top: 4,
-//                                            leading: 0,
-//                                            bottom: 4,
-//                                            trailing: 0
-//                                        )
-//                                    )
-                            )
-//                            .listRowSeparator(.hidden)
-                            
-                            
-                        }
-                        
-                    }
-                    HStack{
-                        Button("Log Out"){
-                            modelData.logOut()
-                            loggedOut = true
-                        }
-                        .modifier(CenterModifier())
-                        .buttonStyle(BigButtonStyle())
-//                            Spacer(minLength: 2/3 * deviceWidth)
-                    }
-                    .listRowSeparator(.hidden)
-                    
-//                    Spacer()
-//                        .listRowBackground(Color.teal)
-//                        .frame(height: 1/25 * deviceHeight)
-                    //                    Spacer(minLength: 100)
-                }
-                .frame( maxWidth: .infinity)
-                .edgesIgnoringSafeArea(.all)
-                .listStyle(GroupedListStyle())
-                .scrollContentBackground(.hidden)
-//                .frame(maxWidth: 7/8 * deviceWidth)
-//                .background{
-//                    RoundedRectangle(cornerRadius: 20)
-//                        .fill(Color.teal)
-//                }
-                Spacer()
-                    .ignoresSafeArea(.all)
-                    .frame(height: 1/10 * deviceHeight)
+                    Color.white
+                }.cornerRadius(20)
+                .frame(maxWidth: .infinity)
             }
-
-                
-                .navigationDestination(isPresented: $loggedOut, destination: {
-                    HomePage()
-                })
         }
     }
-
 //struct TeacherListView_Previews: PreviewProvider {
 //    static var previews: some View {
 ////        TeacherListView()
@@ -208,3 +206,6 @@ struct CenterModifier: ViewModifier {
         }
     }
 }
+
+
+

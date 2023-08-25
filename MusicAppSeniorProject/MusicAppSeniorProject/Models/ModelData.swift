@@ -272,7 +272,7 @@ final class ModelData: ObservableObject{
         storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
           if let error = error {
             // Uh-oh, an error occurred!
-              print("ERROR FETCHING IMAGE")
+              print("ERROR FETCHING IMAGE" + error.localizedDescription)
             completion(false)
           } else {
               print("Successfully fetched image")
@@ -882,39 +882,39 @@ final class ModelData: ObservableObject{
         teacher.uid = uid
 
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
-        fetchTeacherImage(teacher: teacher) { fetchedImage in
-//            print("FETCHING TEACHER IMAGE")
-            print(fetchedImage == nil)
-            if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                if index < self.availableTeachers.count {
-                    self.availableTeachers[index].uiImage = fetchedImage
-                } else {
-                    print("Index out of range")
-                }
-            }
-            else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                if index < self.requestedTeachers.count {
-                    self.requestedTeachers[index].uiImage = fetchedImage
-                } else {
-                    print("Index out of range")
-                }
-            }
-            else if let index = self.matchedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                if index < self.matchedTeachers.count {
-                    self.matchedTeachers[index].uiImage = fetchedImage
-                } else {
-                    print("Index out of range")
-                }
-            }
-//            else if let index = self.declinedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-//                if index < self.declinedTeachers.count {
+//        fetchTeacherImage(teacher: teacher) { fetchedImage in
+////            print("FETCHING TEACHER IMAGE")
+//            print(fetchedImage == nil)
+//            if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                if index < self.availableTeachers.count {
+//                    self.availableTeachers[index].uiImage = fetchedImage
+//                } else {
+//                    print("Index out of range")
+//                }
+//            }
+//            else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                if index < self.requestedTeachers.count {
 //                    self.requestedTeachers[index].uiImage = fetchedImage
 //                } else {
 //                    print("Index out of range")
 //                }
 //            }
-            
-        }
+//            else if let index = self.matchedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                if index < self.matchedTeachers.count {
+//                    self.matchedTeachers[index].uiImage = fetchedImage
+//                } else {
+//                    print("Index out of range")
+//                }
+//            }
+////            else if let index = self.declinedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+////                if index < self.declinedTeachers.count {
+////                    self.requestedTeachers[index].uiImage = fetchedImage
+////                } else {
+////                    print("Index out of range")
+////                }
+////            }
+//            
+//        }
         return teacher
     }
     
