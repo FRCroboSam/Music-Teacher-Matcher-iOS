@@ -282,6 +282,9 @@ final class ModelData: ObservableObject{
           }
         }
     }
+    func fetchImageWithURL(completion: @escaping(Bool) -> Void){
+        
+    }
     func fetchTeacherImage(teacher: Teacher, completion:@escaping(UIImage?) -> Void){
         print("Fetching Teacher Image" + uid)
         let storage = Storage.storage()
@@ -906,13 +909,6 @@ final class ModelData: ObservableObject{
 //                    print("Index out of range")
 //                }
 //            }
-////            else if let index = self.declinedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-////                if index < self.declinedTeachers.count {
-////                    self.requestedTeachers[index].uiImage = fetchedImage
-////                } else {
-////                    print("Index out of range")
-////                }
-////            }
 //            
 //        }
         return teacher

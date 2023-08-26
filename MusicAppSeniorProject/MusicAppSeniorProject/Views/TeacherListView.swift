@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import SDWebImageSwiftUI
 enum teacherType{
     case AVAILABLE, REQUESTED, DECLINED, MATCHED
 }
@@ -20,6 +20,9 @@ struct TeacherListView: View {
     @State private var loggedOut = false
     @State private var showInfo  = false
     @State private var searchTeacher = ""
+    @State private var listHeight = 500.0
+    @State private var offset: Double = 0.0
+
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -30,48 +33,35 @@ struct TeacherListView: View {
     var body: some View {
         NavigationStack{
             VStack(spacing: 0){
-                Spacer()
-                    .frame(height: 1/15 * deviceHeight)
-                ZStack{
-                    VStack(spacing: 10){
-                        HStack{
-                            Button("Log Out"){
-                                modelData.logOut()
-                                loggedOut = true
-                            }
-                            .scaleEffect(x:1/2, y: 1/2)
-                            .modifier(CenterModifier())
-                            .buttonStyle(BigButtonStyle())
-//                            Spacer(minLength: 2/3 * deviceWidth)
-                        }
-                        ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
-                            .overlay(Circle()
-                                .strokeBorder(Color.white,lineWidth: 5)
-                            )
-                        HStack{
-                            Text(" " + status + " ")
-                                .lineLimit(1)
-                                .font(.custom("MarkerFelt-Wide", size: 40))
-                                .foregroundColor(.white)
-                                .minimumScaleFactor(0.01)
-                            
-                                .background(Color.teal)
-                                .clipShape(RoundedRectangle(cornerRadius:10))
-                                .overlay(alignment: .topTrailing){
-                                    Button{
-                                        showInfo.toggle()
-                                    }label:{
-                                        Image(systemName: "info.circle")
-                                            .resizable()
-                                            .frame(width: 20, height: 20)
-                                            .background {
-                                                Circle().fill(
-                                                    Color.white
-                                                )
+                    Spacer()
+                        .frame(height: 20)
+                    GeometryReader{ geometry in
+                        ZStack{
+                            VStack(alignment: .center, spacing: 10){
+                                Section{
+                                    //TODO: REIMPLEMENT IMAGE STRUCTURE TO USE WEBIMAGE
+//                                    WebImage(url: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"))
+//                                        .resizable()
+//                                        .font(.system(size: 40))
+//                                        .foregroundColor(.white)
+//                                        .scaledToFill()
+//                                        .clipShape(Circle())
+//                                        .frame(width: 100, height: 100)
+//                                        .overlay(Circle()
+//                                            .strokeBorder(Color.white,lineWidth: 5)
+//                                        ).modifier(CenterModifier())
+//                                        .frame(maxHeight: 1/10 * deviceHeight)
+//                                        .minimumScaleFactor(0.01)
                                     ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
                                         .overlay(Circle()
                                             .strokeBorder(Color.white,lineWidth: 5)
                                         ).modifier(CenterModifier())
+                                        .frame(maxHeight: 1/10 * deviceHeight)
+                                        .minimumScaleFactor(0.01)
+
+
+                                    Spacer()
+                                        .frame(height: 10)
                                     HStack{
                                         Text(" " + status + " ")
                                             .lineLimit(1)
@@ -97,7 +87,7 @@ struct TeacherListView: View {
                                             }
 
 
-                                    }.modifier(CenterModifier())
+                                    }//.modifier(CenterModifier())
                                 }
                             }
                         }
@@ -112,13 +102,13 @@ struct TeacherListView: View {
                             .edgesIgnoringSafeArea(.all)
                             .aspectRatio(contentMode: .fill)
                     }
+
+                
                 Spacer()
-                    .frame(height: 1/15 * deviceHeight)
-                VStack(spacing: 0){
-                    HStack{
-                        Rectangle()
-                            .fill(Color.white)
-                            .frame(maxWidth: 1)
+                    .frame(height: 1/30 * deviceHeight)
+                ZStack{
+                    VStack(spacing: 0){
+//                        Section{
                             HStack {
                                 Image(systemName: "magnifyingglass")
                                     .foregroundColor(.black)
@@ -128,67 +118,103 @@ struct TeacherListView: View {
                                     .keyboardType(.asciiCapable)
                                     .autocorrectionDisabled()
                                     .listRowSeparator(.hidden)
-
-
-                            }.modifier(customViewModifier(roundedCornes: 30, startColor: .blue, endColor: .purple, textColor: .black))
-
-                        Rectangle()
-                            .fill(Color.white)
-                            .frame(maxWidth: 1)
-                    }.fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity)
-                    Spacer(minLength: 10)
-                    Divider()
-                    List{
-                        Section{
-                            ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
-                                NavigationLink{
-                                    TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
-                                } label:{
-                                    HStack{
-                                        ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
-                                        VStack(alignment: .leading) {
-                                            Spacer()
-                                            Text(teacher.name).font(.system(size: 25))
-                                            Text(teacher.instrument).font(.subheadline)
-                                        }.foregroundColor(.black)
+                                
+                                
+                            }.modifier(customViewModifier(roundedCornes: 30, startColor: .orange, endColor: .green, textColor: .black, ratio: 0.925))
+                                .padding(.top, 10)
+                                .offset(y: 20)
+                            
+                            //TODO: TRY EMBEDDING THE LIST IN A ZSTACK THAT WAY YOU CAN USE THE FRAME THING AND ITLL ONLY AFFECT THE LIST
+                            //make the offset however big divider offset is and frame big enough to cover between divider and search
+                            Rectangle()
+                            .offset(y:20)
+                                .frame(maxHeight: 30)
+                                .foregroundColor(Color.white)
+                                .zIndex(4)
+                            Divider()
+                            .offset(y:20)
+                                .zIndex(6)
+//                        }
+                        ScrollViewReader{ proxy in
+                            List{
+                                Section{
+                                    ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
+                                        NavigationLink{
+                                            TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
+                                        } label:{
+                                            HStack{
+                                                //                                            WebImage(url: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"))
+                                                //                                                .resizable()
+                                                //                                                .font(.system(size: 40))
+                                                //                                                .scaledToFill()
+                                                //                                                .clipShape(Circle())
+                                                //                                                .frame(width: 50, height: 50)
+                                                ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                VStack(alignment: .leading) {
+                                                    Spacer()
+                                                    Text(teacher.name).font(.system(size: 25))
+                                                    Text(teacher.instrument).font(.subheadline)
+                                                }.foregroundColor(.black)
+                                            }
+                                            .buttonStyle(BigButtonStyle())
+                                            .swipeActions {
+                                                Button("Decline") {
+                                                    print("Awesome!")
+                                                }
+                                                .tint(.red)
+                                            }
+                                        }.id(index)
+                                    } .onMove { from, to in
+                                        
+                                        displayArray.move(fromOffsets: from, toOffset: to)
                                     }
-                                   .padding(.top, index == 0 ? -30 : 0)
-
-
+                                    
+                                } //header: {
+                                //                                Text(displayText)
+                                //                                    .font(.system(size: 20))
+                                //                                    .textCase(.none)
+                                //                            }
+                                .listSectionSeparator(.hidden, edges: .top)
+                                HStack{
+                                    Button("Log Out"){
+                                        proxy.scrollTo(0)
+                                        
+                                        //                                    modelData.logOut()
+                                        //                                    loggedOut = true
+                                    }
+                                    .modifier(CenterModifier())
+                                    .buttonStyle(BigButtonStyle())
                                 }
+                                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                .listRowSeparator(.hidden)
                             }
+                            .edgesIgnoringSafeArea(.all)
+                            .listStyle(GroupedListStyle())
+                            .scrollContentBackground(.hidden)
+                            Spacer()
+                                .ignoresSafeArea(.all)
+                                .frame(height: 30)
+                                .listRowSeparator(.hidden)
+                            
+                                .navigationDestination(isPresented: $loggedOut, destination: {
+                                    HomePage()
+                                })
+                                .onAppear{
+                                    proxy.scrollTo(4)
+                                }
                         }
-                        .listSectionSeparator(.hidden, edges: .top)
-                        HStack{
-                            Button("Log Out"){
-                                modelData.logOut()
-                                loggedOut = true
-                            }
-                            .modifier(CenterModifier())
-                            .buttonStyle(BigButtonStyle())
-                        }
-                        .listRowInsets(EdgeInsets(top: -20, leading: 0, bottom: 0, trailing: 0))
-                        .listRowSeparator(.hidden)
+                        .zIndex(2)
                     }
-                    .frame( maxWidth: .infinity)
-                    .edgesIgnoringSafeArea(.all)
-                    .listStyle(GroupedListStyle())
-                    .scrollContentBackground(.hidden)
-                    Spacer()
-                        .ignoresSafeArea(.all)
-                        .frame(height: 1/10 * deviceHeight)
-                        .listRowSeparator(.hidden)
-                        .background(Color.orange)
-
-                        .navigationDestination(isPresented: $loggedOut, destination: {
-                            HomePage()
-                        })
+                    
+                    .background{
+                        Color.white
+                    }.cornerRadius(20)
+                        .frame(width: deviceWidth, height: 2/3 * deviceHeight)
+                        .contentShape(Rectangle())
+                        .zIndex(3)
+                    
                 }
-                .background{
-                    Color.white
-                }.cornerRadius(20)
-                .frame(maxWidth: .infinity)
+
             }
         }
     }

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-
 struct StudentAppPage: View {
     @Environment(\.dismiss) private var dismiss
     @State private var moveOn: Bool = false 
@@ -22,9 +21,9 @@ struct StudentAppPage: View {
     @State private var loggedOut = false
     private let categories = ["Available", "Declined", "Matched", "Requested"]
     @State private var profilePhoto:UIImage?
-    private let availableTeacherDesc = "These are teachers in the area that you can request if you think they are a good fit or respectfully decline. Teachers will not see that you have declined them."
-    private let requestedTeacherDesc = "These are teachers that you have requested but have not matched yet."
-    private let matchedTeacherDesc = "These are teachers that you have requested and have matched your request. Feel Free to reach out to them by their email which you can find by clicking on their profile!"
+    private let availableTeacherDesc = "Teachers to request or decline."
+    private let requestedTeacherDesc = "Teachers that can match with you."
+    private let matchedTeacherDesc = "Send these teachers a message!"
     private let declinedTeacherDesc = "These are teachers that you have declined since they did not fit your needs."
     @State var numNotifications = 4
     @State private var tabSelection: TabBarItem = .requested
@@ -55,15 +54,15 @@ struct StudentAppPage: View {
                     UITabBarItem.appearance().badgeColor = .systemOrange
 
                     if(modelData.uiImage == nil && !(modelData.uid == "")){
-                        modelData.fetchImage { downloaded in
-                            if downloaded{
-                                print("DOWNLOADED for: " + modelData.uid)
-                                profilePhoto = modelData.uiImage
-                            }
-                            else{
-                                profilePhoto = UIImage(systemName: "person.fill")
-                            }
-                        }
+//                        modelData.fetchImage { downloaded in
+//                            if downloaded{
+//                                print("DOWNLOADED for: " + modelData.uid)
+//                                profilePhoto = modelData.uiImage
+//                            }
+//                            else{
+//                                profilePhoto = UIImage(systemName: "person.fill")
+//                            }
+//                        }
                     }
                 }
             }
