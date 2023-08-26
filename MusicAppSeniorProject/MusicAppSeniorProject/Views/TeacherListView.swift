@@ -34,7 +34,7 @@ struct TeacherListView: View {
         NavigationStack{
             VStack(spacing: 0){
                     Spacer()
-                        .frame(height: 20)
+                        .frame(height: 1/10 * deviceHeight)
                     GeometryReader{ geometry in
                         ZStack{
                             VStack(alignment: .center, spacing: 10){
