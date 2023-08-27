@@ -19,6 +19,17 @@ import FirebaseStorage
 import FirebaseFirestore
 import SwiftUI
 import CoreLocation
+import SDWebImageSwiftUI
+import SDWebImage
+import UIKit
+extension UIImageView{
+    func downloadImage(url:String){
+      //remove space if a url contains.
+        let stringWithoutWhitespace = url.replacingOccurrences(of: " ", with: "%20", options: .regularExpression)
+        self.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        self.sd_setImage(with: URL(string: stringWithoutWhitespace), placeholderImage: UIImage())
+    }
+}
 final class ModelData: ObservableObject{
     @Published var students =  [Student]()
     @Published var teachers = [Teacher]()
@@ -265,25 +276,17 @@ final class ModelData: ObservableObject{
 //        return data
     }
     //TODO tesT THIS
-    func fetchImage(completion:@escaping(Bool) -> Void ){
-        print("FETCHING THE IMAGE from USer: " + uid)
-        let storage = Storage.storage()
-        let storageRef = storage.reference(withPath: uid)
-        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
-          if let error = error {
-            // Uh-oh, an error occurred!
-              print("ERROR FETCHING IMAGE" + error.localizedDescription)
-            completion(false)
-          } else {
-              print("Successfully fetched image")
-            // Data for "images/island.jpg" is returned
-              self.uiImage = UIImage(data: data!)
-            completion(true)
-          }
-        }
-    }
-    func fetchImageWithURL(completion: @escaping(Bool) -> Void){
-        
+
+    func fetchUserImage(url: String){
+        print("FETCHING USER IMAGE")
+
+        SDWebImageManager.shared.loadImage(
+                with: URL(string: url),
+                options: .highPriority,
+                progress: .none) { (image, data, error, cacheType, isFinished, imageUrl) in
+                    print(isFinished)
+                    self.uiImage = image
+                }
     }
     func fetchTeacherImage(teacher: Teacher, completion:@escaping(UIImage?) -> Void){
         print("Fetching Teacher Image" + uid)
@@ -301,7 +304,7 @@ final class ModelData: ObservableObject{
           }
         }
     }
-
+    
     //TODO: Test this
     func fetchImageAfterUploaded(completion:@escaping(Bool) -> Void ){
         print("FETCHING THE IMAGE from USer: " + uid)
@@ -450,12 +453,13 @@ final class ModelData: ObservableObject{
                     "Location": (data!["Location"] ?? "Generic User") as! String
 
                 ]
-                
+                let imageUrl = data!["Image URL"] ?? "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"
                 var name = (data!["name"] ?? "Generic User") as! String
                 self.studentUser = Student(name: name)
                 self.studentUser.uid = uid
                 self.uid = uid
                 self.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
+
                 completion(true)
                 
             } else {

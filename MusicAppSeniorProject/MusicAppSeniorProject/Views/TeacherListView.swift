@@ -40,7 +40,7 @@ struct TeacherListView: View {
                             VStack(alignment: .center, spacing: 10){
                                 Section{
                                     //TODO: REIMPLEMENT IMAGE STRUCTURE TO USE WEBIMAGE
-                                    ProfileImageFromURL(url: "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c")
+                                    ProfileImageFromURL(url: "https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg?w=2000")
                                         .frame(maxHeight: 1/10 * deviceHeight)
 
                                     Spacer()

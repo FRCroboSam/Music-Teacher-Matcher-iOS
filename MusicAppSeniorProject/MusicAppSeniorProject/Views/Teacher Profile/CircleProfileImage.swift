@@ -72,7 +72,6 @@ struct ProfileImage: View{
 }
 //TODO: IMPLEMENT THIS
 struct ProfileImageFromURL: View{
-    @EnvironmentObject var modelData: ModelData
     let url: String
     
     var body: some View {
@@ -89,10 +88,7 @@ struct ProfileImageFromURL: View{
             .frame(maxHeight: 30)
             .minimumScaleFactor(0.01)
             .onAppear{
-                if let image = SDImageCache.shared.imageFromDiskCache(forKey: URL(string: url)?.absoluteString) {
-                    modelData.uiImage = image
-                    print("IMAGE SAVED")
-                }
+
             }
     }
 }
