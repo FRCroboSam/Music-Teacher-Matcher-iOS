@@ -9,6 +9,8 @@ import SwiftUI
 import Firebase
 import Combine
 import FirebaseAuth
+import SDWebImageSwiftUI
+
 enum Instrument: String, CaseIterable, Identifiable {
     case cello, piano, violin
     var id: Self { self }

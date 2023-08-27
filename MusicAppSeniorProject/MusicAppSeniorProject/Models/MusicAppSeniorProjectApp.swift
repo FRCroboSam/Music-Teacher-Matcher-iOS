@@ -83,8 +83,8 @@ struct MusicAppSeniorProjectApp: App {
                                                 if isCreated {
                                                     teacherModelData.fetchStudentData() {
                                                     }
-                                                    modelData.fetchImage{_ in
-                                                    }
+//                                                    modelData.fetchImage{_ in
+//                                                    }
                                                 } else {
                                                     modelData.loggedIn = false
                                                 }

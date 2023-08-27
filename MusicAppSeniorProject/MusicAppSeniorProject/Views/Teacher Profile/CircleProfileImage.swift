@@ -7,7 +7,7 @@ The profile image that reflects the selected item state.
 
 import SwiftUI
 import PhotosUI
-
+import SDWebImageSwiftUI
 struct CircleProfileImage: View {
     let imageState: ProfileModel.ImageState
     @State var finalImage = Image("blankperson")
@@ -70,7 +70,32 @@ struct ProfileImage: View{
             }
     }
 }
-
+//TODO: IMPLEMENT THIS
+struct ProfileImageFromURL: View{
+    @EnvironmentObject var modelData: ModelData
+    let url: String
+    
+    var body: some View {
+        WebImage(url: URL(string: url))
+            .placeholder(Image(systemName: "person.fill"))
+            .resizable()
+            .foregroundColor(.white)
+            .scaledToFill()
+            .clipShape(Circle())
+            .frame(width: 100, height: 100)
+            .overlay(Circle()
+                .strokeBorder(Color.white,lineWidth: 5)
+            ).modifier(CenterModifier())
+            .frame(maxHeight: 30)
+            .minimumScaleFactor(0.01)
+            .onAppear{
+                if let image = SDImageCache.shared.imageFromDiskCache(forKey: URL(string: url)?.absoluteString) {
+                    modelData.uiImage = image
+                    print("IMAGE SAVED")
+                }
+            }
+    }
+}
 struct EditableCircularProfileImage: View {
     @EnvironmentObject var viewModel: ProfileModel
     var finalImage = Image("blankperson")

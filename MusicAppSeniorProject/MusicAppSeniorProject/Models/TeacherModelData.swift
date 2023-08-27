@@ -223,6 +223,7 @@ final class TeacherModelData: ObservableObject{
     }
     //TODO: FIX THIS TO USE ID FETCHING SYSTEM FROM STUDENT USERS
     func fetchImage(completion:@escaping(Bool) -> Void ){
+        print("FETCHING IMAGE")
         let storage = Storage.storage()
         let storageRef = storage.reference(withPath: uid)
         storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
