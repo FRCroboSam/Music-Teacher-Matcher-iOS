@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3603941E29F5B353004D5094 /* StudentProfilePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3603941D29F5B353004D5094 /* StudentProfilePage.swift */; };
 		360664882A99A12E00F79296 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 360664872A99A12E00F79296 /* SDWebImageSwiftUI */; };
+		3606648A2A9BF34000F79296 /* ProfilePageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 360664892A9BF34000F79296 /* ProfilePageUI.swift */; };
 		36094374299F1A38000CE05C /* FileStoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36094373299F1A38000CE05C /* FileStoreManager.swift */; };
 		36094378299F1F6D000CE05C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36094377299F1F6D000CE05C /* User.swift */; };
 		3609437A299F1FA6000CE05C /* userViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36094379299F1FA6000CE05C /* userViewModel.swift */; };
@@ -107,6 +108,7 @@
 
 /* Begin PBXFileReference section */
 		3603941D29F5B353004D5094 /* StudentProfilePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentProfilePage.swift; sourceTree = "<group>"; };
+		360664892A9BF34000F79296 /* ProfilePageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageUI.swift; sourceTree = "<group>"; };
 		36094371299F0FDE000CE05C /* MusicAppSeniorProject.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicAppSeniorProject.entitlements; sourceTree = "<group>"; };
 		36094372299F1716000CE05C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		36094373299F1A38000CE05C /* FileStoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStoreManager.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 			children = (
 				364DEBF129A8130500FFA18B /* CircleProfileImage.swift */,
 				36CADD672A0E9508006F246F /* ProfileModel.swift */,
+				360664892A9BF34000F79296 /* ProfilePageUI.swift */,
 				364DEBEC29A80CD600FFA18B /* TeacherProfilePage.swift */,
 				3603941D29F5B353004D5094 /* StudentProfilePage.swift */,
 			);
@@ -540,6 +543,7 @@
 				3697540429E766940035AD9B /* TestView.swift in Sources */,
 				3603941E29F5B353004D5094 /* StudentProfilePage.swift in Sources */,
 				368CC6262A8C74FA00F36140 /* TabBarItemsPreferenceKey.swift in Sources */,
+				3606648A2A9BF34000F79296 /* ProfilePageUI.swift in Sources */,
 				36CADD622A08B778006F246F /* Camera.swift in Sources */,
 				36CADD5C2A08B778006F246F /* PhotoCollection.swift in Sources */,
 				36CADD5A2A08B778006F246F /* PhotoItemView.swift in Sources */,

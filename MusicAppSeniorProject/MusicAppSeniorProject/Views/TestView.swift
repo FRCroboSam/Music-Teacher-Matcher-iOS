@@ -18,20 +18,17 @@ struct TestView: View {
 
     @ObservedObject var imageManager = ImageManager()
     var body: some View {
-        // Your custom complicated view graph
-        Group {
-            if imageManager.image != nil {
-                Image(uiImage: imageManager.image!)
-            } else {
-                Rectangle().fill(Color.gray)
+        GeometryReader { geo in
+            ScrollView {
+                Rectangle()
+                .frame(width: geo.size.width, height: 1800)
+                .foregroundColor(.orange)
+                .background(ScrollViewConfigurator {
+                    $0?.bounces = false               // << here !!
+                })
+                Spacer()
             }
         }
-        // Trigger image loading when appear
-        .onAppear { self.imageManager.load(url: URL(string:"https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"))
-            
-        }
-        // Cancel image loading when disappear
-        .onDisappear { self.imageManager.cancel() }
     }
 }
 
