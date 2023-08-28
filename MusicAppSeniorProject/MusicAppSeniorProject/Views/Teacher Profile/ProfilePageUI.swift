@@ -75,13 +75,48 @@ struct ProfilePageUI: View {
                         .frame(height: 30)
                     VStack{
                         Spacer()
-                            .frame(height: 10)
-                        Text("About")
+                            .frame(height: 15)
+                        Text("Preferred Students")
                             .font(.system(size: 35))
                             .bold()
-                        Text("5 years teaching experience")
+                        Spacer()
+                            .frame(height: 5)
+                        HStack{
+
+                                
+                            Text(" Intermediate ")
+                                .foregroundColor(.green)
+                                .background{
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .strokeBorder(Color.green, lineWidth: 1)
+                                        .background(Color.green)
+                                        .opacity(0.5)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        .brightness(0.2)
+                                        
+                                }
+                            Text(" Advanced ")
+                                .foregroundColor(.red)
+
+                                .background{
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .strokeBorder(Color.red, lineWidth: 1)
+                                        .background(Color.red)
+                                        .opacity(0.5)
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                                        .brightness(0.2)
+                                        
+                                }
+                        }
+                        Divider()
+                        Text("Looking for students who already have a solid grasp on the basics and can play pieces like Hadyn Cello Concerto and Suzuki book 2")
+                            .multilineTextAlignment(.leading)
+                            .frame(width: 3/4 * deviceWidth)
+                            .font(.system(size: 22, weight: .light, design: .rounded))
+                            .foregroundColor(.gray)
                         Spacer()
                             .frame(height: 10)
+                        
                     }.frame(width: 7/8 * deviceWidth)
                         .background(
                             RoundedRectangle(cornerRadius: 40)
