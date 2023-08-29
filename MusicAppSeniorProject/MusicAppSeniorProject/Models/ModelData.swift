@@ -387,9 +387,9 @@ final class ModelData: ObservableObject{
 
     }
     func logOut(){
-        reset()
-        try! Auth.auth().signOut()
 
+        do { try Auth.auth().signOut() }
+        catch { print("already logged out") }
     }
     func reset(){
         uid = ""

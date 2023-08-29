@@ -160,10 +160,12 @@ struct TeacherListView: View {
                                 .listSectionSeparator(.hidden, edges: .top)
                                 HStack{
                                     Button("Log Out"){
-                                        proxy.scrollTo(0)
-                                        
-                                        //                                    modelData.logOut()
-                                        //                                    loggedOut = true
+    
+                                        modelData.logOut()
+                                        loggedOut = true
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                            modelData.reset()
+                                       }
                                     }
                                     .modifier(CenterModifier())
                                     .buttonStyle(BigButtonStyle())

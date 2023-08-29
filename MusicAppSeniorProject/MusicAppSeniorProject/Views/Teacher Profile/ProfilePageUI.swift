@@ -8,6 +8,20 @@
 import SwiftUI
 
 struct ProfilePageUI: View {
+    @Environment(\.dismiss) var dismiss
+    let teacher: Teacher?
+    @State var name: String = ""
+    @State var instrument: String = ""
+    @State var yearsExperience: Int = 0
+    @State var musicDegree: String = ""
+    @State var location: String = ""
+    @State var preferredLevel: Int = 0
+    @State var studentDesc: String = ""
+    @State var about: String = ""
+    @State var lessonFormat: Int = 0
+    @State var lessonLength: Int = 60
+    @State var pricing: String = ""
+    @State var schedule: String = ""
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -15,6 +29,7 @@ struct ProfilePageUI: View {
         UIScreen.main.bounds.width
     }
     var body: some View {
+
         ScrollView(showsIndicators: false){
             ZStack{
                 VStack{
@@ -27,6 +42,9 @@ struct ProfilePageUI: View {
                         
                         
                     }.frame(maxHeight: 1/4 * deviceHeight)
+                        .onAppear{
+                            populateInfo(teacher: teacher ?? Teacher(name: "bob"))
+                        }
                     VStack(alignment: .center){
                         HStack{
                             Spacer()
@@ -74,11 +92,11 @@ struct ProfilePageUI: View {
                         }
                         Spacer()
                             .frame(height: 30)
-                        Text("Victoria Dawson")
+                        Text(name)
                             .font(.system(size: 35))
                             .bold()
                         HStack{
-                            Text("Cello Teacher")
+                            Text(instrument + " teacher")
                                 .font(.system(size: 20))
                                 .italic()
                                 .foregroundColor(.gray)
@@ -93,7 +111,7 @@ struct ProfilePageUI: View {
                                     .renderingMode(.template)
                                     .foregroundColor(Color.blue)
                                     .frame(width: 30, height: 30)
-                                Text("5 years of experience")
+                                Text(String(yearsExperience) + " years of experience")
                                     .font(.system(size: 20))
                                 
                             }
@@ -195,7 +213,7 @@ struct ProfilePageUI: View {
                                 .frame(width: 300)
                                 .overlay(Color.orange)
 
-                            Text("Specializing in classical pedagogy with a focus on relaxed, effortless technique.")
+                            Text(about)
                                 .multilineTextAlignment(.leading)
                                 .frame(width: 3/4 * deviceWidth)
                                 .font(.system(size: 22, weight: .light, design: .rounded))
@@ -262,14 +280,14 @@ struct ProfilePageUI: View {
                                     .resizable()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color.green)
-                                Text("$60 per hour")
+                                Text(String(pricing) + " per " + String(lessonLength) + " lesson")
                             }
                             HStack{
                                 Image(systemName: "calendar.circle")
                                     .resizable()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color.teal)
-                                Text("3 weekly lessons per month")
+                                Text("Weekly lessons")
                             }
                         }
 
@@ -286,6 +304,10 @@ struct ProfilePageUI: View {
                         $0?.bounces = false               // << here !!
                     })
             }
+//            .navigationBarBackButtonHidden(true) // Hide default button
+//            .navigationBarItems(leading: CustomBackButton(dismiss: dismiss))
+//            .navigationBarItems(CustomBackButton(dismiss: dismiss).padding(10))
+
 //            Image("music_background")
 //                .resizable()
 //                .scaledToFill()
@@ -294,11 +316,25 @@ struct ProfilePageUI: View {
             
         }
     }
+    func populateInfo(teacher: Teacher){
+        name = teacher.name
+        location = teacher.getStringProperty(key:"Location", pairs: teacher.teacherInfo)
+
+        yearsExperience = Int(teacher.getDoubleProperty(key: "Years Teaching", pairs: teacher.musicalBackground))
+        pricing = teacher.getStringProperty(key: "Pricing", pairs: teacher.lessonInfo)
+        
+        instrument = teacher.getStringProperty(key: "Instrument", pairs: teacher.musicalBackground)
+        lessonLength = Int(teacher.getDoubleProperty(key: "Lesson Length", pairs: teacher.lessonInfo)) ?? 60
+        preferredLevel = Int(teacher.getStringProperty(key: "Minimum Student Level", pairs: teacher.lessonInfo)) ?? 0
+        about = teacher.getStringProperty(key: "Teaching Style", pairs: teacher.musicalBackground) ?? "Specializing in classical pedagogy with a focus on relaxed, effortless technique."
+        studentDesc = teacher.getStringProperty(key: "Student Description", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
+        musicDegree = teacher.getStringProperty(key: "Musical Degree", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
+    }
 }
 
 struct ProfilePageUI_Previews: PreviewProvider {
     static var previews: some View {
-        ProfilePageUI()
+        ProfilePageUI(teacher: Teacher(name: "BOB"))
     }
 }
 struct ScrollViewConfigurator: UIViewRepresentable {

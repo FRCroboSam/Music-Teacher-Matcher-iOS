@@ -15,6 +15,13 @@ struct StudentProfilePageUI: View {
         UIScreen.main.bounds.width
     }
     var body: some View {
+        var yearsExperience: Int = 0
+        var location: String = ""
+        var email: String = ""
+        var skillLevel: Int = 0
+        var priorPiecesPlayed: String = ""
+        var format: Int = 2
+        var schedule: String = ""
         ScrollView(showsIndicators: false){
             ZStack{
                 VStack{
@@ -49,15 +56,7 @@ struct StudentProfilePageUI: View {
                                 .clipShape(Circle())
                             Spacer()
                                 .frame(width: 30)
-                            Image(systemName: "star.circle")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .background(Color.white)
-                                .clipShape(Circle())
-                                .foregroundColor(Color.yellow)
-                                .zIndex(6)
-                            Spacer()
-                                .frame(width: 30)
+                            
                             Image(systemName:"checkmark.circle")
                                 .resizable()
                                 .frame(width: 50, height: 50)
@@ -70,13 +69,15 @@ struct StudentProfilePageUI: View {
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(-10)
-                            
+
                         }
                         Spacer()
-                            .frame(height: 30)
+                            .frame(height: 20)
                         Text("Jeremy Donald")
                             .font(.system(size: 35))
                             .bold()
+                        Spacer()
+                            .frame(height: 10)
                         HStack{
                             Text(" Beginner ")
                                 .font(.system(size: 20))
@@ -116,8 +117,10 @@ struct StudentProfilePageUI: View {
                                     
                                 }
                         }
+                        Spacer()
+                            .frame(height: 20)
+                    
                         Divider()
-                            .padding(.top, -10)
 
                         VStack(alignment: .leading){
                             Spacer()
@@ -211,7 +214,7 @@ struct StudentProfilePageUI: View {
                                 .frame(width: 300)
                                 .overlay(Color.orange)
 
-                            Text("Specializing in classical pedagogy with a focus on relaxed, effortless technique.")
+                            Text("Looking for a flexible teacher who can instill good practice habits.")
                                 .multilineTextAlignment(.leading)
                                 .frame(width: 3/4 * deviceWidth)
                                 .font(.system(size: 22, weight: .light, design: .rounded))
@@ -303,6 +306,9 @@ struct StudentProfilePageUI: View {
 //                .mask(Rectangle().edgesIgnoringSafeArea(.top))
             
         }
+    }
+    func populateInfo(){
+        
     }
 }
 

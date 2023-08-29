@@ -533,12 +533,12 @@ struct CreateTeacherProfilePage: View {
 }
 
 
-struct CreateTeacherProfilePage_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateTeacherProfilePage()
-            .environmentObject(TeacherModelData())
-    }
-}
+//struct CreateTeacherProfilePage_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CreateTeacherProfilePage()
+//            .environmentObject(TeacherModelData())
+//    }
+//}
 struct iOSCheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         // 1
