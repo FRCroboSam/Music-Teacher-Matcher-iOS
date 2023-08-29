@@ -16,7 +16,6 @@ struct ContentView: View {
         case HOME_PAGE
         case PROFILE_PAGE
     }
-
     var body: some View {
         Group{
             if modelData.loggedIn == true{

@@ -52,6 +52,7 @@
 		364DEBF229A8130500FFA18B /* CircleProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364DEBF129A8130500FFA18B /* CircleProfileImage.swift */; };
 		364DEBF729A8634500FFA18B /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364DEBF629A8634500FFA18B /* Student.swift */; };
 		364DEBF929A87B2900FFA18B /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364DEBF829A87B2900FFA18B /* ModelData.swift */; };
+		366E78132A9E789E00764916 /* StudentProfilePageUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 366E78122A9E789E00764916 /* StudentProfilePageUI.swift */; };
 		3679178E29FA2DF400788878 /* iosCheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */; };
 		368CC60F2A54E39D00F36140 /* StudentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC60E2A54E39D00F36140 /* StudentListView.swift */; };
 		368CC6112A70659600F36140 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368CC6102A70659600F36140 /* PopupView.swift */; };
@@ -135,6 +136,7 @@
 		364DEBF129A8130500FFA18B /* CircleProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProfileImage.swift; sourceTree = "<group>"; };
 		364DEBF629A8634500FFA18B /* Student.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		364DEBF829A87B2900FFA18B /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		366E78122A9E789E00764916 /* StudentProfilePageUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentProfilePageUI.swift; sourceTree = "<group>"; };
 		3679178D29FA2DF400788878 /* iosCheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosCheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		368CC60E2A54E39D00F36140 /* StudentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentListView.swift; sourceTree = "<group>"; };
 		368CC6102A70659600F36140 /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 				364DEBF129A8130500FFA18B /* CircleProfileImage.swift */,
 				36CADD672A0E9508006F246F /* ProfileModel.swift */,
 				360664892A9BF34000F79296 /* ProfilePageUI.swift */,
+				366E78122A9E789E00764916 /* StudentProfilePageUI.swift */,
 				364DEBEC29A80CD600FFA18B /* TeacherProfilePage.swift */,
 				3603941D29F5B353004D5094 /* StudentProfilePage.swift */,
 			);
@@ -575,6 +578,7 @@
 				36CADD602A08B778006F246F /* PhotoCollectionView.swift in Sources */,
 				368CC6132A726EE900F36140 /* NotificationNumLabel.swift in Sources */,
 				36CADD592A08B778006F246F /* ThumbnailView.swift in Sources */,
+				366E78132A9E789E00764916 /* StudentProfilePageUI.swift in Sources */,
 				3609437A299F1FA6000CE05C /* userViewModel.swift in Sources */,
 				36C403E329D261400015935A /* LoginPage.swift in Sources */,
 			);
