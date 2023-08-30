@@ -97,3 +97,47 @@ struct BigButtonStyle: ButtonStyle {
             }
     }
 }
+
+
+struct FillButtonStyle: ButtonStyle {
+    @State public var isClicked = false // Track if the button has been clicked
+
+    @State var percentWidth = 0.75
+    @State var color: Color = .indigo
+    @Environment(\.isEnabled) private var isEnabled: Bool
+    var deviceWidth: CGFloat {
+        UIScreen.main.bounds.width
+    }
+
+    var deviceHeight: CGFloat {
+        UIScreen.main.bounds.height
+    }
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 22))
+        .padding()
+//        .frame(maxWidth: percentWidth * deviceWidth)
+        .foregroundColor(isClicked ? color : Color(UIColor.systemGray3))
+        .background(Color.white)
+//        .cornerRadius(12)
+        .overlay {
+            if isClicked {
+                RoundedRectangle(cornerRadius: 40)
+                    .strokeBorder(color, lineWidth: 3)
+                    .padding(10)
+            }
+            else{
+                RoundedRectangle(cornerRadius: 40)
+                    .strokeBorder(Color(UIColor.systemGray3), lineWidth: 3)
+                    .padding(10)
+
+            }
+        }
+        .onTapGesture {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                isClicked.toggle()
+            }
+            
+        }
+    }
+}

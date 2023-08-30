@@ -164,14 +164,14 @@ struct TeacherListView: View {
                                 HStack{
                                     Button("Log Out"){
     
-                                        modelData.logOut()
-                                        loggedOut = true
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                            modelData.reset()
-                                       }
+//                                        modelData.logOut()
+//                                        loggedOut = true
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                                            modelData.reset()
+                                       //}
                                     }
                                     .modifier(CenterModifier())
-                                    .buttonStyle(BigButtonStyle())
+                                    .buttonStyle(FillButtonStyle(color: .red))
                                 }
                                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSeparator(.hidden)

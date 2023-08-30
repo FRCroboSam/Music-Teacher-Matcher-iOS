@@ -40,6 +40,7 @@ struct ProfilePageUI: View {
                             .frame(height: 2/5 * deviceHeight)
                             .mask(Rectangle().edgesIgnoringSafeArea(.top))
                             .edgesIgnoringSafeArea(.all)
+                            .offset(y: -50)
                         
                         
                     }.frame(maxHeight: 1/4 * deviceHeight)
