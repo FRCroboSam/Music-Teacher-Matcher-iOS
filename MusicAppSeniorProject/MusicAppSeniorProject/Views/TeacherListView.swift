@@ -122,31 +122,33 @@ struct TeacherListView: View {
                             List{
                                 Section{
                                     ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
-                                        NavigationLink{
-                                            TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
-                                        } label:{
-                                            HStack{
-                                                //                                            WebImage(url: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"))
-                                                //                                                .resizable()
-                                                //                                                .font(.system(size: 40))
-                                                //                                                .scaledToFill()
-                                                //                                                .clipShape(Circle())
-                                                //                                                .frame(width: 50, height: 50)
-                                                ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
-                                                VStack(alignment: .leading) {
-                                                    Spacer()
-                                                    Text(teacher.name).font(.system(size: 25))
-                                                    Text(teacher.instrument).font(.subheadline)
-                                                }.foregroundColor(.black)
-                                            }
-                                            .buttonStyle(BigButtonStyle())
-                                            .swipeActions {
-                                                Button("Decline") {
-                                                    print("Awesome!")
+                                        if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
+                                            NavigationLink{
+                                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
+                                            } label:{
+                                                HStack{
+                                                    //                                            WebImage(url: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"))
+                                                    //                                                .resizable()
+                                                    //                                                .font(.system(size: 40))
+                                                    //                                                .scaledToFill()
+                                                    //                                                .clipShape(Circle())
+                                                    //                                                .frame(width: 50, height: 50)
+                                                    ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                    VStack(alignment: .leading) {
+                                                        Spacer()
+                                                        Text(teacher.name).font(.system(size: 25))
+                                                        Text(teacher.instrument).font(.subheadline)
+                                                    }.foregroundColor(.black)
                                                 }
-                                                .tint(.red)
-                                            }
-                                        }.id(index)
+                                                .buttonStyle(BigButtonStyle())
+                                                .swipeActions {
+                                                    Button("Decline") {
+                                                        print("Awesome!")
+                                                    }
+                                                    .tint(.red)
+                                                }
+                                            }.id(index)
+                                        }
                                     } .onMove { from, to in
                                         
                                         displayArray.move(fromOffsets: from, toOffset: to)
