@@ -124,7 +124,8 @@ struct TeacherListView: View {
                                     ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
                                         if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
                                             NavigationLink{
-                                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
+                                                ProfilePageUI(teacher: teacher)
+//                                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
                                             } label:{
                                                 HStack{
                                                     //                                            WebImage(url: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"))

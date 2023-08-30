@@ -39,6 +39,7 @@ struct ProfilePageUI: View {
                             .scaledToFill()
                             .frame(height: 2/5 * deviceHeight)
                             .mask(Rectangle().edgesIgnoringSafeArea(.top))
+                            .edgesIgnoringSafeArea(.all)
                         
                         
                     }.frame(maxHeight: 1/4 * deviceHeight)
@@ -297,16 +298,15 @@ struct ProfilePageUI: View {
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(.bottom, -10))
-
-                    Spacer(minLength: 500)
                 }
                     .background(ScrollViewConfigurator {
                         $0?.bounces = false               // << here !!
                     })
             }
-//            .navigationBarBackButtonHidden(true) // Hide default button
-//            .navigationBarItems(leading: CustomBackButton(dismiss: dismiss))
-//            .navigationBarItems(CustomBackButton(dismiss: dismiss).padding(10))
+
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .navigationBarBackButtonHidden(true) // Hide default button
+            .navigationBarItems(leading: CustomBackButton(dismiss: dismiss))
 
 //            Image("music_background")
 //                .resizable()
