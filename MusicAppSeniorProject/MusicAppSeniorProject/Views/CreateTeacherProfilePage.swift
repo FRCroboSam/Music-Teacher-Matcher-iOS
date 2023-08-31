@@ -17,7 +17,7 @@ struct CreateTeacherProfilePage: View {
     @State private var name: String = ""
     @State private var firstName: String = ""
     @State private var lastName: String = ""
-    @State private var yearsTeaching : Double = 0
+    @State private var yearsTeaching : CGFloat = 0
     @State private var lessonLength: Int = 60
     @State private var description: String = ""
     @State private var instrument: String = "Cello"
@@ -165,38 +165,52 @@ struct CreateTeacherProfilePage: View {
                 }.listRowSeparator(.hidden)
                 .padding(10)
             }
-            
-            VStack(alignment: .leading, spacing: 5){
-                Text("Musical background (Optional)")
-                    .font(.system(size: 25))
-                HStack(spacing: 10){
-                    Text("Years Teaching:  ")
-                    Text("\(Int(yearsTeaching))")
-                    Slider(
+            Section{
+                VStack{
+                    Text("Musical Background")
+                        .font(.system(size: 30))
+                        .bold()
+                        .padding(.top, 10)
+                        .modifier(CenterModifier())
+                    Divider()
+                }.listRowSeparator(.hidden)
+                VStack(spacing: 10){
+                    CustomSlider(
                         value: $yearsTeaching,
-                        in: 6...25,
-                        step: 1
-                    )
+                        name: "Years Playing: ", maxValue: 25, minValue: 0
+                    ).padding(5)
                 }
                 HStack{
                     Text("Do you have a music degree?")
+                        .font(.system(size: 20))
+
                     Toggle(isOn: $hasMusicDegree) {
                         Image(systemName: hasMusicDegree ? "checkmark.square.fill" : "square")                        .font(.system(size: 20))
                     }
                     .toggleStyle(.button)
                 }
+                .listRowSeparator(.hidden, edges: .top)
+                .listRowSeparator(hasMusicDegree ? .hidden : .visible)
+
                 if(hasMusicDegree){
                     TextField("Enter the school or institution name", text: $musicDegree, axis:.vertical)
                         .textFieldStyle(.roundedBorder)
+                        .padding(.bottom, 10)
+                        .listRowSeparator(.visible, edges: .bottom)
                 }
-                Text("Teaching Style/Background")
+
+                Text("Teaching Style")
+                    .font(.system(size: 25))
+                    .minimumScaleFactor(0.01)
+                    .lineLimit(1)
+                    .listRowSeparator(.hidden)
+                    .padding(.top, 10)
                 TextField("Tell students about your teaching style!", text: $teachingStyle, axis:.vertical)
                     .textFieldStyle(.roundedBorder)
-                
-                
+                    .listRowSeparator(.hidden)
+                Spacer()
+                    .frame(height: 5)
             }
-            .padding(10)
-            
             VStack(alignment: .center, spacing: 10){
                 Text("Lesson Info")
                     .font(.system(size: 30))
@@ -379,7 +393,7 @@ struct CreateTeacherProfilePage: View {
             let degree = hasMusicDegree ? musicalBackground : "No"
             let musicalBackground:KeyValuePairs = [
                 "Instrument": instrument,
-                "Years Teaching": String(yearsTeaching),
+                "Years Teaching": String(Double(yearsTeaching)),
                 "Musical Degree": degree,
                 "Teaching Style": teachingStyle,
             ]
