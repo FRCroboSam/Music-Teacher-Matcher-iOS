@@ -352,6 +352,7 @@ struct CreateStudentProfilePage: View{
 
 
                 Spacer(minLength: 100)
+                    .listRowBackground(Color.clear)
 //                    .listRowSeparator(.hidden)
 
             .navigationDestination(isPresented: $loginSuccessful) {

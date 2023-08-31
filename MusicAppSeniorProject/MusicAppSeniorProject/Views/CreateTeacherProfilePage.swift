@@ -200,7 +200,7 @@ struct CreateTeacherProfilePage: View {
                 }
 
                 Text("Teaching Style")
-                    .font(.system(size: 25))
+                    .font(.system(size: 30))
                     .minimumScaleFactor(0.01)
                     .lineLimit(1)
                     .listRowSeparator(.hidden)
@@ -211,94 +211,87 @@ struct CreateTeacherProfilePage: View {
                 Spacer()
                     .frame(height: 5)
             }
-            VStack(alignment: .center, spacing: 10){
-                Text("Lesson Info")
-                    .font(.system(size: 30))
+            Section{
+                VStack{
+                    Text("Lesson Info")
+                        .font(.system(size: 30))
+                        .bold()
+                        .padding(.top, 10)
+                        .modifier(CenterModifier())
+                    Divider()
+                }.listRowSeparator(.hidden)
                 Text("Select the levels of students you teach.")
-                HStack{
-                    Button("Beginner"){
-                        
-                    }.buttonStyle(FillButtonStyle(color: .green))
-                    Button("Intermediate"){
-                        
-                    }.buttonStyle(FillButtonStyle(color: .teal))
+                    .font(.system(size: 20))
+                    .listRowSeparator(.hidden)
+                VStack(alignment: .center){
+                    HStack{
+                        Button("Beginner"){
+
+                        }.buttonStyle(FillButtonStyle(color: .green))
+                        Button("Intermediate"){
+
+                        }.buttonStyle(FillButtonStyle(color: .teal))
+
+                    }.listRowSeparator(.hidden)
+                    Button("Advanced"){
+
+                    }.buttonStyle(FillButtonStyle(color: .red))
                 }
-                Button("Advanced"){
-                    
-                }.buttonStyle(FillButtonStyle(color: .red))
-                VStack(alignment: .center, spacing: 10){
-                    Section{
-                        Text("Lesson Info")
-                            .font(.system(size: 30, weight: .bold))
-                        Text("Lesson Length: ")
-                        
-                        HStack{
-                            TextField("ie. 60", text: Binding(
-                                get: {cost},
-                                set: {cost = $0.filter{"0123456789".contains($0)}}))
-                            .textFieldStyle(.roundedBorder)
-                            .frame(maxWidth: 80)
-                            
-                            Text(" minutes per lesson")
-                        }
-                        HStack{
-                            
-                            //                            Picker("Lesson Type", selection: $lessonType, content:{
-                            //                                Text("In Person").tag("In person")
-                            //                                Text("Online").tag("Online")
-                            //                                Text("Hybrid").tag("Hybrid")
-                            //                            })
-                        }
-                    }
-                    Section{
-                        Text("Enter your location: city, state")
-                        TextField("Location, ie 'Seattle, Washington'", text: $location)
-                            .modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
-                            .padding(20)
-                        Text("Payment Info (Optional)")
-                            .font(.system(size: 20))
-                        HStack{
-                            Text("Custom pricing?")
-                            iosCheckboxToggleStyle(checked:$customPricing)
-                        }
-                    }.contentShape(Rectangle())
-                    
+                Text("Lesson Length: ")
+                    .listRowSeparator(.hidden)
+                HStack{
+                    TextField("ie. 60", text: Binding(
+                        get: {cost},
+                        set: {cost = $0.filter{"0123456789".contains($0)}}))
+                    .textFieldStyle(.roundedBorder)
+                    .frame(maxWidth: 80)
+
+                    Text(" minutes per lesson")
+                }.padding(.bottom, 10)
+            
+                VStack(alignment: .leading){
+                    Text("Payment Info (Optional)")
+                        .font(.system(size: 20))
+                    HStack{
+                        Text("Custom pricing?")
+                        iosCheckboxToggleStyle(checked:$customPricing)
+                    }.listRowSeparator(customPricing ? .hidden : .visible)
+                        .padding(10)
                     if(customPricing){
                         TextField("Describe pricing/tuition rates", text: $pricingInfo, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
                             .frame(height:50)
                     }
                     else{
+                        Text("Enter your price per lesson")
+                            .listRowSeparator(.hidden)
                         HStack{
-                            Text("Price: $")
-                            
                             TextField("Enter a number", text: Binding(
-                                get: {cost},
-                                set: {cost = $0.filter{"0123456789".contains($0)}}))
-                            .textFieldStyle(.roundedBorder)
+                                    get: {cost},
+                                    set: {cost = $0.filter{"0123456789".contains($0)}}))
+                                .textFieldStyle(.roundedBorder)
                             Text("per lesson")
                         }
                     }
-                    
-                    VStack(alignment: .leading, spacing: 5){
-                        Text("Login Information: ")
-                            .font(.system(size: 20))
-                        TextField("Email for students to contact you", text: $email)
-                            .textFieldStyle(.roundedBorder)
-                        TextField("Password: ", text: $password)
-                            .textFieldStyle(.roundedBorder)
-                        //                            TextField("Enter the location of your teaching area in the following form: (City, State), or type an exact address", text: $location)
-                        //                                .textFieldStyle(.roundedBorder)
-                        //                                .listRowSeparator(.hidden)
-                    }
                 }
-                .padding(10)
-                
+                Text("Enter your location: city, state")
+                    .listRowSeparator(.hidden)
+                TextField("Location, ie 'Seattle, Washington'", text: $location)
+                    .padding(20)
+                VStack(alignment: .leading, spacing: 5){
+                    Text("Login Information: ")
+                        .font(.system(size: 20))
+                        .padding(.bottom, 10)
+                    TextField("Email for students to contact you", text: $email)
+                        .textFieldStyle(.roundedBorder)
+                    TextField("Password: ", text: $password)
+                        .textFieldStyle(.roundedBorder)
+                }
                 if(editMode){
                     if(changePassword || changeEmail){
                         Text("Enter current password to save changes to profile")
                             .listRowSeparator(.hidden)
-                        
+
                         TextField("Enter current password", text: $password)
                             .textFieldStyle(.roundedBorder)
                     }
@@ -325,7 +318,7 @@ struct CreateTeacherProfilePage: View {
                             else{
                                 print("FAILED UPDATE")
                                 failedUpdate = true
-                                
+
                             }
                         }
                         //                            createStudentObject()
@@ -352,12 +345,9 @@ struct CreateTeacherProfilePage: View {
                         createTeacherObject()
                         modelData.submitProfile(teacher: modelData.teacherUser){ isFound in
                             if isFound {
-                                print("SUBMITTED PROFILE")
                                 noUserFound = false
                                 loginSuccessful = true
                                 editMode = true
-                                //                                    modelData.uploadImage(teacher: modelData.teacherUser) { _ in
-                                //                                    }
                             } else {
                                 noUserFound = true
                                 loginSuccessful = false
@@ -367,20 +357,20 @@ struct CreateTeacherProfilePage: View {
                         .buttonStyle(.bordered)
                         .padding(10)
                 }
-                
-                Spacer(minLength: 100)
-                    .navigationBarBackButtonHidden(true)
-                    .navigationDestination(isPresented: $loginSuccessful) {
-                        TeacherAppPage()
-                    }
-                    .navigationDestination(isPresented: $loggedOut, destination: {
-                        HomePage()
-                    })
-                //                .navigationTitle("Edit Profile")
-                    .toolbar(.hidden, for: .navigationBar)
+
                 }
+                Spacer()
+                    .frame(height: 100)
+                    .listRowBackground(Color.clear)
+                .navigationDestination(isPresented: $loginSuccessful) {
+                    TeacherAppPage()
+                }
+                .navigationDestination(isPresented: $loggedOut, destination: {
+                    HomePage()
+                })
             }.modifier(FormHiddenBackground())
             
+
             .background{
                 Image("music_background")
             }

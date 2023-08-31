@@ -30,8 +30,8 @@ struct ContentView: View {
 //                LoginPage()
             }
             else{
-                CreateTeacherProfilePage()
-                //HomePage()
+//                CreateTeacherProfilePage()
+                HomePage()
 //
             }
         }
