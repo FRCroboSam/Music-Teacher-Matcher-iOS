@@ -213,7 +213,7 @@ struct CreateTeacherProfilePage: View {
             }
             Section{
                 VStack{
-                    Text("Lesson Info")
+                    Text("Student Preferences")
                         .font(.system(size: 30))
                         .bold()
                         .padding(.top, 10)
@@ -226,29 +226,52 @@ struct CreateTeacherProfilePage: View {
                 VStack(alignment: .center){
                     HStack{
                         Button("Beginner"){
-
+                            
                         }.buttonStyle(FillButtonStyle(color: .green))
                         Button("Intermediate"){
-
+                            
                         }.buttonStyle(FillButtonStyle(color: .teal))
-
-                    }.listRowSeparator(.hidden)
+                        
+                    }
                     Button("Advanced"){
-
+                        
                     }.buttonStyle(FillButtonStyle(color: .red))
                 }
+                
+                Text("Describe the level interested students should be at. ")
+                    .font(.system(size: 20))
+                    .listRowSeparator(.visible, edges: .top)
+                    .padding(.top, 10)
+                TextField("ie. pre-requisite pieces, skills, etc.", text: $teachingStyle, axis:.vertical)
+                    .textFieldStyle(.roundedBorder)
+                    .listRowSeparator(.hidden)
+                    .padding(.bottom, 10)
+                
+            }
+            Section{
+                VStack{
+                    Text("Lesson Info")
+                        .font(.system(size: 30))
+                        .bold()
+                        .padding(.top, 10)
+                        .modifier(CenterModifier())
+                    Divider()
+                }.listRowSeparator(.hidden)
                 Text("Lesson Length: ")
                     .listRowSeparator(.hidden)
-                HStack{
-                    TextField("ie. 60", text: Binding(
-                        get: {cost},
-                        set: {cost = $0.filter{"0123456789".contains($0)}}))
-                    .textFieldStyle(.roundedBorder)
-                    .frame(maxWidth: 80)
-
-                    Text(" minutes per lesson")
-                }.padding(.bottom, 10)
-            
+                VStack(alignment: .leading){
+                    HStack{
+                        TextField("60", text: Binding(
+                            get: {cost},
+                            set: {cost = $0.filter{"0123456789".contains($0)}}))
+                        .textFieldStyle(.roundedBorder)
+                        .frame(maxWidth: 80)
+                        
+                        Text(" minutes per lesson")
+                    }.padding(.bottom, 10)
+                    Divider()
+                }.listRowSeparator(.hidden)
+                
                 VStack(alignment: .leading){
                     Text("Payment Info (Optional)")
                         .font(.system(size: 20))
@@ -256,7 +279,7 @@ struct CreateTeacherProfilePage: View {
                         Text("Custom pricing?")
                         iosCheckboxToggleStyle(checked:$customPricing)
                     }.listRowSeparator(customPricing ? .hidden : .visible)
-                        .padding(10)
+                        .padding(.bottom, 10)
                     if(customPricing){
                         TextField("Describe pricing/tuition rates", text: $pricingInfo, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
@@ -265,13 +288,20 @@ struct CreateTeacherProfilePage: View {
                     else{
                         Text("Enter your price per lesson")
                             .listRowSeparator(.hidden)
-                        HStack{
-                            TextField("Enter a number", text: Binding(
+                        VStack{
+                            HStack{
+                                Image(systemName: "dollarsign")
+                                TextField(" ", text: Binding(
                                     get: {cost},
                                     set: {cost = $0.filter{"0123456789".contains($0)}}))
                                 .textFieldStyle(.roundedBorder)
-                            Text("per lesson")
-                        }
+                                .frame(width: 50)
+                                Text("per lesson")
+                            }
+                            Divider()
+                        }.listRowSeparator(.hidden)
+                        
+                        
                     }
                 }
                 Text("Enter your location: city, state")
@@ -291,7 +321,7 @@ struct CreateTeacherProfilePage: View {
                     if(changePassword || changeEmail){
                         Text("Enter current password to save changes to profile")
                             .listRowSeparator(.hidden)
-
+                        
                         TextField("Enter current password", text: $password)
                             .textFieldStyle(.roundedBorder)
                     }
@@ -318,7 +348,7 @@ struct CreateTeacherProfilePage: View {
                             else{
                                 print("FAILED UPDATE")
                                 failedUpdate = true
-
+                                
                             }
                         }
                         //                            createStudentObject()
@@ -357,8 +387,7 @@ struct CreateTeacherProfilePage: View {
                         .buttonStyle(.bordered)
                         .padding(10)
                 }
-
-                }
+            }
                 Spacer()
                     .frame(height: 100)
                     .listRowBackground(Color.clear)
