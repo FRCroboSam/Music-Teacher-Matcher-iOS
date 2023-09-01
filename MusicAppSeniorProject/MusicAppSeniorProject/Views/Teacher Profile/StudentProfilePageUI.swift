@@ -6,8 +6,39 @@
 //
 
 import SwiftUI
-
+enum Level: Hashable{
+    case beginner, intermediate, advanced
+    var title: String {
+        switch self {
+        case .beginner: return "Beginner"
+        case .intermediate: return "Intermediate"
+        case .advanced: return "Advanced"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+            case .beginner: return Color.red
+            case .intermediate: return Color.teal
+            case .advanced: return Color.red
+        }
+    }
+}
 struct StudentProfilePageUI: View {
+    let student: Student?
+    @State var name: String = ""
+    @State var yearsExperience: Int = 0
+    @State var pricing: String = ""
+    @State var location: String = ""
+    @State var email: String = ""
+    @State var skillLevel: Level = .beginner
+    @State var priorPiecesPlayed: String = ""
+    @State var format: Int = 2
+    @State var schedule: String = ""
+    @State var instrument: String = "Cello"
+    @State var lessonLength: String = ""
+    
+
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -15,13 +46,7 @@ struct StudentProfilePageUI: View {
         UIScreen.main.bounds.width
     }
     var body: some View {
-        var yearsExperience: Int = 0
-        var location: String = ""
-        var email: String = ""
-        var skillLevel: Int = 0
-        var priorPiecesPlayed: String = ""
-        var format: Int = 2
-        var schedule: String = ""
+
         ScrollView(showsIndicators: false){
             ZStack{
                 VStack{
@@ -34,11 +59,12 @@ struct StudentProfilePageUI: View {
                         
                         
                     }.frame(maxHeight: 1/4 * deviceHeight)
+                        .onAppear{
+                            populateInfo(student: student ?? Student(name: "Bob"))
+                        }
                     VStack(alignment: .center){
                         HStack{
                             Spacer()
-
-
                             ProfileImageFromURL(url: "https://previews.123rf.com/images/gosphotodesign/gosphotodesign1308/gosphotodesign130801942/22722703-little-kid-peeling-a-banana-against-white-background.jpg")
                                 .scaleEffect(x: 1.75, y: 1.75)
                                 .offset(y: -50)
@@ -73,20 +99,20 @@ struct StudentProfilePageUI: View {
                         }
                         Spacer()
                             .frame(height: 20)
-                        Text("Jeremy Donald")
+                        Text(name)
                             .font(.system(size: 35))
                             .bold()
                         Spacer()
                             .frame(height: 10)
                         HStack{
-                            Text(" Beginner ")
+                            Text(" " + String(skillLevel.title) + " ")
                                 .font(.system(size: 20))
 
-                                .foregroundColor(.green)
+                                .foregroundColor(skillLevel.color)
                                 .background{
                                     RoundedRectangle(cornerRadius: 10)
-                                        .strokeBorder(Color.green, lineWidth: 1)
-                                        .background(Color.green)
+                                        .strokeBorder(skillLevel.color, lineWidth: 1)
+                                        .background(skillLevel.color)
                                         .opacity(0.5)
                                         .clipShape(RoundedRectangle(cornerRadius: 10))
                                         .brightness(0.2)
@@ -131,7 +157,7 @@ struct StudentProfilePageUI: View {
                                     .renderingMode(.template)
                                     .foregroundColor(Color.blue)
                                     .frame(width: 30, height: 30)
-                                Text("1 years of experience")
+                                Text(String(yearsExperience) + "  years of experience")
                                     .font(.system(size: 20))
                                 
                             }
@@ -142,7 +168,7 @@ struct StudentProfilePageUI: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 30, height: 30)
-                                Text("Seattle, Washington")
+                                Text(location)
                                     .font(.system(size: 20))
                                 
                                 
@@ -152,7 +178,7 @@ struct StudentProfilePageUI: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 30, height: 30)
-                                Text("jdonald@gmail.com")
+                                Text(student?.email ?? "genericemail@gmail.com")
                                     .font(.system(size: 20))
                                 
                                 
@@ -185,7 +211,7 @@ struct StudentProfilePageUI: View {
 
                         }
                         Divider()
-                        Text("Hadyn Cello Concerto, Suzuki Book 1, Twinkle Twinkle Little Star")
+                        Text("They have played: " + priorPiecesPlayed)
                             .multilineTextAlignment(.leading)
                             .frame(width: 3/4 * deviceWidth)
                             .font(.system(size: 22, weight: .light, design: .rounded))
@@ -307,13 +333,35 @@ struct StudentProfilePageUI: View {
             
         }
     }
-    func populateInfo(){
-        
+    func determineSkillLevel(level : Int) -> Level{
+        switch(level){
+            case 0:
+                return .beginner
+            case 1:
+                return .intermediate
+            case 2:
+                return .advanced
+            default:
+                return .beginner
+        }
+    }
+    func populateInfo(student: Student){
+        print("POPULATING INFO FOR: " + student.name)
+        name = student.getStringProperty(key:"name", pairs: student.personalInfo)
+        location = student.getStringProperty(key:"Location", pairs: student.personalInfo)
+
+        yearsExperience = Int(student.getDoubleProperty(key: "Years Playing", pairs: student.musicalBackground))
+        print("YEARS EXPERIENCE IS: " + String(yearsExperience))
+        pricing = student.getStringProperty(key: "Pricing", pairs: student.musicalBackground)
+        instrument = student.getStringProperty(key: "Instrument", pairs: student.musicalBackground)
+        lessonLength = student.getStringProperty(key: "Lesson Length", pairs: student.musicalBackground) ?? "60"
+        skillLevel = determineSkillLevel(level: Int(student.getStringProperty(key: "Skill Level", pairs: student.musicalBackground)) ?? 0)
+        priorPiecesPlayed = student.getStringProperty(key: "Prior Pieces Played", pairs: student.musicalBackground) ?? "Twinkle Twinkle Little Star"
     }
 }
 
-struct StudentProfilePageUI_Previews: PreviewProvider {
-    static var previews: some View {
-        StudentProfilePageUI()
-    }
-}
+//struct StudentProfilePageUI_Previews: PreviewProvider {
+//    static var previews: some View {
+//        StudentProfilePageUI()
+//    }
+//}

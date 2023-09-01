@@ -18,7 +18,7 @@ struct CreateTeacherProfilePage: View {
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var yearsTeaching : CGFloat = 0
-    @State private var lessonLength: Int = 60
+    @State private var lessonLength: String = ""
     @State private var description: String = ""
     @State private var instrument: String = "Cello"
     @State private var lessonType: String = ""
@@ -77,14 +77,31 @@ struct CreateTeacherProfilePage: View {
         
         Form{
             
-            Text("Your Teacher Profile")
-                .font(.system(size: 40))
-                .minimumScaleFactor(0.01)
-                .fontWeight(.bold)
-                .lineLimit(1)
-                .padding(10)
-                .modifier(CenterModifier())
-                .listRowSeparator(.hidden)
+            if(editMode){
+                Text("Edit Your Profile Settings")
+                    .font(.system(size: 35))
+                    .fontWeight(.bold)
+                    .padding(10)
+            }
+            else{
+                VStack{
+                    Text("Your Teacher Profile")
+                        .font(.system(size: 40))
+                        .fontWeight(.bold)
+                        .padding(10)
+                        .modifier(CenterModifier())
+
+                    Divider()
+
+                }.listRowSeparator(.hidden)
+            }
+            VStack{
+                Text("Answer these questions to help students determine if you are compatible!")
+                    .font(.system(size: 20))
+                    .padding(.bottom, 10)
+                Divider()
+            }.listRowSeparator(.hidden)
+
             
             VStack(alignment: .center){
                 EditableCircularProfileImage()
@@ -177,7 +194,7 @@ struct CreateTeacherProfilePage: View {
                 VStack(spacing: 10){
                     CustomSlider(
                         value: $yearsTeaching,
-                        name: "Years Playing: ", maxValue: 25, minValue: 0
+                        name: "Years Teaching/Playing: ", maxValue: 25, minValue: 0
                     ).padding(5)
                 }
                 HStack{
@@ -262,8 +279,8 @@ struct CreateTeacherProfilePage: View {
                 VStack(alignment: .leading){
                     HStack{
                         TextField("60", text: Binding(
-                            get: {cost},
-                            set: {cost = $0.filter{"0123456789".contains($0)}}))
+                            get: {lessonLength},
+                            set: {lessonLength = $0.filter{"0123456789".contains($0)}}))
                         .textFieldStyle(.roundedBorder)
                         .frame(maxWidth: 80)
                         
@@ -306,8 +323,8 @@ struct CreateTeacherProfilePage: View {
                 }
                 Text("Enter your location: city, state")
                     .listRowSeparator(.hidden)
-                TextField("Location, ie 'Seattle, Washington'", text: $location)
-                    .padding(20)
+                TextField("ie 'Seattle, Washington'", text: $location)
+                    .modifier(customViewModifier(roundedCornes: 10, startColor: Color(UIColor.systemGray5), endColor: Color(UIColor.systemGray5), textColor: Color.black))
                 VStack(alignment: .leading, spacing: 5){
                     Text("Login Information: ")
                         .font(.system(size: 20))
@@ -544,7 +561,7 @@ struct CreateTeacherProfilePage: View {
             cost = value(key: "Pricing", pairs: teacher.lessonInfo)
             
             instrument = value(key: "Instrument", pairs: teacher.musicalBackground)
-            lessonLength = Int(value(key: "Lesson Length", pairs: teacher.lessonInfo)) ?? 60
+            lessonLength = value(key: "Lesson Length", pairs: teacher.lessonInfo) ?? "60"
             studentLevel = Int(value(key: "Minimum Student Level", pairs: teacher.lessonInfo)) ?? 60
             teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
             musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)

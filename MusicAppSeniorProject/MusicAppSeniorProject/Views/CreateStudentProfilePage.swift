@@ -24,6 +24,8 @@ struct CreateStudentProfilePage: View{
     @State private var loginSuccessful = false
     @State private var noUserFound = true
     @State private var firstName: String = ""
+    @State private var lessonLength: String = ""
+
     @State private var lastName: String = ""
     @State private var age : CGFloat = 0
     @State private var yearsPlaying: CGFloat = 0
@@ -73,12 +75,20 @@ struct CreateStudentProfilePage: View{
                             .padding(10)
                     }
                     else{
-                        Text("Your Student Profile")
-                            .font(.system(size: 40))
-                            .fontWeight(.bold)
-                            .padding(10)
-                    }
+                        VStack{
+                            Text("Your Student Profile")
+                                .font(.system(size: 40))
+                                .fontWeight(.bold)
+                                .padding(10)
+                                .modifier(CenterModifier())
 
+                            Divider()
+                        }.listRowSeparator(.hidden)
+                    }
+                    Text("Answer these questions to help us find your next teacher!")
+                        .font(.system(size: 20))
+                        .padding(.top, -10)
+                        .padding(.bottom, 10)
                     VStack{
                         EditableCircularProfileImage()
                             .onReceive(viewModel.$imageSelection){ (value) in
@@ -92,14 +102,17 @@ struct CreateStudentProfilePage: View{
 //                        NavigationLink(destination:CameraView()){
 //                            Text("Use camera to take a photo")
 //                        }.buttonStyle(BorderlessButtonStyle())
-                        Button("Use Camera to take a photo") {
-                            useCamera = true
+                        VStack{
+                            Button("Use Camera to take a photo") {
+                                useCamera = true
+                            }
+                            .buttonStyle(.bordered)
+                            .padding(10)
+                            .navigationDestination(isPresented: $useCamera) {
+                                CameraView()
+                            }
+                            Divider()
                         }.listRowSeparator(.hidden)
-                        .buttonStyle(.bordered)
-                        .padding(10)
-                        .navigationDestination(isPresented: $useCamera) {
-                            CameraView()
-                        }
                     }
                     .onAppear{
                         UITableView.appearance().backgroundView = UIImageView(image: UIImage(named: "music_background"))
@@ -124,21 +137,20 @@ struct CreateStudentProfilePage: View{
                     //                    }
                     //                    Spacer()
                     //                        .frame(height: 0)
-                    
-                    Text("Answer these questions to help us find your next teacher!")
-                        .font(.system(size: 30))
-                        .padding(10)
-                    HStack(spacing: 10){
-                        Text("Name: ")
+                    VStack(alignment: .leading){
+                        Text("Enter your name")
                             .font(.system(size: 20))
+                        
+                    }.listRowSeparator(.hidden)
+                        .padding(.top, -10)
+                        .padding(.bottom, -10)
+
+                    HStack(spacing: 10){
                         TextField("First Name ", text: $firstName)
                             .textFieldStyle(.roundedBorder)
                         TextField("Last Name ", text: $lastName)
                             .textFieldStyle(.roundedBorder)
-                        
                     }
-                    .padding(10)
-                    
                     VStack(spacing: 5){
 
 //                        Text("\(Int(age))")
@@ -184,8 +196,12 @@ struct CreateStudentProfilePage: View{
                 }
                     .padding(10)
                     VStack(alignment: .leading, spacing: 5){
-                        Text("Musical background")
-                            .font(.system(size: 25))
+                        VStack(alignment: .center){
+                            Text("Musical background")
+                                .font(.system(size: 30))
+                                .bold()
+                            Divider()
+                        }.listRowSeparator(.hidden)
                         Spacer(minLength: 5)
                         VStack(spacing: 10){
                             CustomSlider(
@@ -228,17 +244,31 @@ struct CreateStudentProfilePage: View{
 
                         }
                         .padding(10)
+                        Text("Lesson Length: ")
+                            .listRowSeparator(.hidden)
+                        VStack(alignment: .leading){
+                            HStack{
+                                TextField("60", text: Binding(
+                                    get: {lessonLength},
+                                    set: {lessonLength = $0.filter{"0123456789".contains($0)}}))
+                                .textFieldStyle(.roundedBorder)
+                                .frame(maxWidth: 80)
+                                
+                                Text(" minutes per lesson")
+                            }.padding(.bottom, 10)
+                            Divider()
+                        }.listRowSeparator(.hidden)
                         VStack(alignment: .leading, spacing: 5){
                             Text("Login Info")
                                 .font(.system(size: 20))
-                            Text("Email: " + email)
-                                .font(.system(size: 20))
-                            Text("Location (City, State)")
+
+                            Text("Enter your location")
                             TextField("ie. Seattle, WA", text: $location)
                                 .textFieldStyle(.roundedBorder)
                                 .listRowSeparator(.hidden)
                             if(editMode){
-                                //https://www.hackingwithswift.com/quick-start/swiftui/how-to-add-a-textfield-to-an-alert
+                                Text("Email: " + email)
+                                    .font(.system(size: 20))
                             }
                             else{
                                 TextField("Enter email (your's or parent's)", text: $email)

@@ -188,12 +188,15 @@ final class TeacherModelData: ObservableObject{
         ]
         let studentInfo:KeyValuePairs = [
             "name": (data!["name"] ?? "Generic User") as! String,
-            "age": String(format: "%@", (data!["age"] ?? "0") as! CVarArg)
+            "age": String(format: "%@", (data!["age"] ?? "0") as! CVarArg),
+            "Location": (data!["Location"] ?? "No Location found") as! String,
+            "email": (data!["email"] ?? "No email found") as! String
 
         ]
         var name = (data!["name"] ?? "Generic User") as! String
         var student = Student(name: name)
         student.uid = data!["uid"] as? String ?? ""
+        student.email = (data!["email"] ?? "No email found") as! String
         student.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
         fetchStudentImage(student: student) { fetchedImage in
             print("FETCHING TEACHER IMAGE")
@@ -356,7 +359,9 @@ final class TeacherModelData: ObservableObject{
                             let data = snapshot.data()
                             if let data = data{
                                 let requestedStudent = self.createStudentFromData(documentSnapshot: snapshot)
-                                self.requestedStudents.append(requestedStudent)
+                                if(requestedStudent.name > "A"){
+                                    self.requestedStudents.append(requestedStudent)
+                                }
                             }
                         }
                     }
