@@ -23,6 +23,7 @@ import SDWebImageSwiftUI
 import SDWebImage
 import UIKit
 extension UIImageView{
+    //TODO: REMOVE
     func downloadImage(url:String){
       //remove space if a url contains.
         let stringWithoutWhitespace = url.replacingOccurrences(of: " ", with: "%20", options: .regularExpression)
@@ -49,6 +50,8 @@ final class ModelData: ObservableObject{
     @Published var uid: String = ""
     
     @Published var profileImage: ProfileModel?
+    @Published var imageURL: String?
+
     
     @Published var uiImage: UIImage?
 
@@ -288,6 +291,15 @@ final class ModelData: ObservableObject{
                     self.uiImage = image
                 }
     }
+    func fetchImageWithURL(url: String, completion: @escaping (UIImage?) -> Void) {
+        SDWebImageManager.shared.loadImage(
+                with: URL(string: url),
+                options: .highPriority,
+                progress: .none) { (image, data, error, cacheType, isFinished, imageUrl) in
+                    print(isFinished)
+                    completion(image)
+                }
+    }
     func fetchTeacherImage(teacher: Teacher, completion:@escaping(UIImage?) -> Void){
         print("Fetching Teacher Image" + uid)
         let storage = Storage.storage()
@@ -331,6 +343,9 @@ final class ModelData: ObservableObject{
     }
     func uploadImage(student: Student, completion:@escaping(Bool) -> Void){
         print("UPLOADING THE IMAGE")
+        let db = Firestore.firestore()
+
+        let docRef = db.collection("StudentUser").document(uid)
         let storage = Storage.storage()
         let storageRef = storage.reference(withPath: uid)
         let image = self.studentUser.getUIImage()
@@ -352,6 +367,16 @@ final class ModelData: ObservableObject{
 
                 print("Successfully stored image with url: \(url?.absoluteString ?? "")")
                 print(url?.absoluteString)
+                //store the url in firestore
+                if(url?.absoluteString.count ?? 0 > 7){
+                    docRef.setData(["ImageURL": url?.absoluteString], merge: true){ error in
+                        if let error = error {
+                            print("Error writing document: \(error)")
+                        } else {
+                            print("Document successfully merged!")
+                        }
+                    }
+                }
                 completion(true)
             }
         }
@@ -411,6 +436,23 @@ final class ModelData: ObservableObject{
     }
     
     //TODO: FIX MODIFIED TEACCHERS LOGIC - if a teacher's data changes you should update the teacher here by first checking if rthre modified teeacher is contained in any of the arrays
+    func fetchImageFromStorage(completion:@escaping(Bool) -> Void ){
+        print("FETCHING THE IMAGE from USer: " + uid)
+        let storage = Storage.storage()
+        let storageRef = storage.reference(withPath: uid)
+        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+          if let error = error {
+            // Uh-oh, an error occurred!
+              print("ERROR FETCHING IMAGE" + error.localizedDescription)
+            completion(false)
+          } else {
+              print("Successfully fetched image")
+            // Data for "images/island.jpg" is returned
+              self.uiImage = UIImage(data: data!)
+            completion(true)
+          }
+        }
+    }
     func userIsStudent(completion:@escaping (Bool) -> Void){
         let db = Firestore.firestore()
         let docRef = db.collection("StudentUser").document(uid)
@@ -453,7 +495,17 @@ final class ModelData: ObservableObject{
                     "Location": (data!["Location"] ?? "Generic User") as! String
 
                 ]
-                let imageUrl = data!["Image URL"] ?? "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"
+                let imageUrl = (data!["ImageURL"] ?? "NONE") as! String
+                if(imageUrl == "NONE"){
+                    print("DID NOT FIND IMAGE URL IN FIRESTORE")
+                    self.fetchImageFromStorage{_ in
+                    }
+                }
+                else{
+                    print("FOUND THE IMAGE URL")
+                    self.imageURL = imageUrl
+                    self.fetchUserImage(url: imageUrl)
+                }
                 var name = (data!["name"] ?? "Generic User") as! String
                 self.studentUser = Student(name: name)
                 self.studentUser.uid = uid
@@ -534,19 +586,19 @@ final class ModelData: ObservableObject{
         //
         let db = Firestore.firestore()
         print("UID IS: " + uid)
-        let allAvailableTeachersRef = db.collection("StudentUser").document(uid).collection("All Available Teachers")
         //populate all available teachers with teachers with the same instrument
         let teacherRef = db.collection("Teachers")//.document("Teacher Instruments").collection("Cello") //TODO: FIX LOGIC
         let query = teacherRef
             .whereField("Instrument", isEqualTo: "Cello")
             .whereField("name", isGreaterThan: "A")
         teacherListener = query.addSnapshotListener { querySnapshot, error in
+            var numAdded = 0
+            var numRemoved = 0
             querySnapshot?.documentChanges.forEach{ diff in
                 if (diff.type == .added) {
-                    print("***New All AVAILABLE TEACHER: \(diff.document.data())")
+                    numAdded += 1
                 }
                 if (diff.type == .modified) {
-                    print("***Modified ALL AVAILABLE TEACHER: \(diff.document.data())")
                     let modifiedTeacherID = diff.document.documentID
                     if let index = self.matchedTeachers.firstIndex(where: { $0.uid == modifiedTeacherID }) {
                         // You've found the index of the matched teacher with the specified ID
@@ -563,7 +615,7 @@ final class ModelData: ObservableObject{
                         // Update the teacher object at the found index with new data
                         let updatedTeacher = self.createTeacherFromData(documentSnapshot: diff.document)
                         self.requestedTeachers[index] = updatedTeacher
-                        print("Updated matched teacher at index \(index)")
+                        print("Updated requested teacher at index \(index)")
                     } else {
                         // Teacher with the specified ID not found in the 'matchedTeachers' array
                         print("Teacher with ID \(modifiedTeacherID) not found in matchedTeachers")
@@ -573,32 +625,34 @@ final class ModelData: ObservableObject{
                         // Update the teacher object at the found index with new data
                         let updatedTeacher = self.createTeacherFromData(documentSnapshot: diff.document)
                         self.availableTeachers[index] = updatedTeacher
-                        print("Updated matched teacher at index \(index)")
+                        print("Updated AVAILABLE teacher at index \(index)")
                     } else {
                         // Teacher with the specified ID not found in the 'matchedTeachers' array
-                        print("Teacher with ID \(modifiedTeacherID) not found in matchedTeachers")
+                        print("Teacher with ID \(modifiedTeacherID) not found in available")
                     }
 
 
                     // if teacher is in available teachers set it to the stufdnt using the new data
                 }
                 if (diff.type == .removed) {
+                    numRemoved += 1
                     print("***REMOVED AVAILABLE TEACHER: \(diff.document.data())")
                     let removedDocID = diff.document.documentID
                     self.availableTeachers.removeAll { $0.uid == removedDocID }
 
                 }
             }
-            var unavailableTeachers = [Teacher]()
-            unavailableTeachers.append(contentsOf: (self.availableTeachers + self.declinedTeachers + self.matchedTeachers + self.requestedTeachers))
+            if(numAdded > 0 || numRemoved > 0){
+                var unavailableTeachers = [Teacher]()
+                unavailableTeachers.append(contentsOf: (self.availableTeachers + self.declinedTeachers + self.matchedTeachers + self.requestedTeachers))
                 guard let documents = querySnapshot?.documents else {
                     print("Error fetching document: \(error!)")
                     return
-                  }
-            
-            documents.forEach { documentSnapshot in
-                let teacherId = documentSnapshot.documentID
-                let teacherRef = db.collection("Teachers").document(teacherId)
+                }
+                
+                documents.forEach { documentSnapshot in
+                    let teacherId = documentSnapshot.documentID
+                    let teacherRef = db.collection("Teachers").document(teacherId)
                     teacherRef.getDocument { (snapshot, err) in
                         print("UNAVAILALBE TEACHERS COUNT:" + String(unavailableTeachers.count))
                         let canAdd = !(unavailableTeachers).contains { $0.uid == teacherId }
@@ -619,8 +673,8 @@ final class ModelData: ObservableObject{
                             }
                         }
                     }
+                }
             }
-
         }
     }
     //fetchTeacherData
@@ -809,10 +863,16 @@ final class ModelData: ObservableObject{
                                                 if let data = data {
                                                     print("ADDING AVAILABLE TEACHER: " + teacherId)
                                                     if(self.availableTeachers.count < 5){
-                                                        var availableTeacher = self.createTeacherFromData(documentSnapshot: document)
-                                                        availableTeacher.score = score as! Double ?? 0.0
-                                                        print("ADDING AVAILABLE TEACHER WITH SCORE: " + String(availableTeacher.score))
-                                                        self.availableTeachers.append(availableTeacher)
+                                                        if let foundIndex = self.allAvailableTeachers.firstIndex(where: { $0.uid == document.documentID }) {
+                                                            self.availableTeachers.append(self.allAvailableTeachers[foundIndex])
+                                                        } else {
+                                                            var availableTeacher = self.createTeacherFromData(documentSnapshot: document)
+                                                            availableTeacher.score = score as! Double ?? 0.0
+                                                            self.availableTeachers.append(availableTeacher)
+                                                        }
+
+
+  
                                                     }
                                                     
                                                 }
@@ -882,43 +942,75 @@ final class ModelData: ObservableObject{
             "firstName": (data!["firstName"] ?? "Generic User") as! String,
             "lastName": (data!["lastName"] ?? "Generic User") as! String
         ]
-        
+        let teacherImgURL = (data!["ImageURL"] ?? "None") as! String
         let name = (data!["name"] ?? "Generic User") as! String
         var teacher = Teacher(name: name)
         teacher.email = (data!["email"] ?? "Generic User") as! String
         teacher.uid = uid
-
+        
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
-//        fetchTeacherImage(teacher: teacher) { fetchedImage in
-////            print("FETCHING TEACHER IMAGE")
-//            print(fetchedImage == nil)
-//            if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
-//                if index < self.availableTeachers.count {
-//                    self.availableTeachers[index].uiImage = fetchedImage
-//                } else {
-//                    print("Index out of range")
-//                }
-//            }
-//            else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-//                if index < self.requestedTeachers.count {
-//                    self.requestedTeachers[index].uiImage = fetchedImage
-//                } else {
-//                    print("Index out of range")
-//                }
-//            }
-//            else if let index = self.matchedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-//                if index < self.matchedTeachers.count {
-//                    self.matchedTeachers[index].uiImage = fetchedImage
-//                } else {
-//                    print("Index out of range")
-//                }
-//            }
-//            
-//        }
+        if(teacherImgURL == "None"){
+            fetchTeacherImage(teacher: teacher){ fetchedImage in
+                print("FETCHING TEACHER IMAGE NO URL: " + teacher.name)
+                print(fetchedImage == nil)
+                if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
+                    if index < self.availableTeachers.count {
+                        self.availableTeachers[index].uiImage = fetchedImage
+                    } else {
+                        print("Index out of range")
+                    }
+                }
+                else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+                    if index < self.requestedTeachers.count {
+                        self.requestedTeachers[index].uiImage = fetchedImage
+                    } else {
+                        print("Index out of range")
+                    }
+                }
+                else if let index = self.matchedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+                    if index < self.matchedTeachers.count {
+                        self.matchedTeachers[index].uiImage = fetchedImage
+                    } else {
+                        print("Index out of range")
+                    }
+                }
+            }
+
+        }else{
+            print("FETCHING TEACHER IMAGE WITH URL for: " + teacher.name)
+            print("FETCHING IMAGE URL IS: " + teacherImgURL)
+            teacher.imageURL = teacherImgURL
+            fetchImageWithURL(url: teacherImgURL){ fetchedImage in
+                if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
+                    if index < self.availableTeachers.count {
+                        self.availableTeachers[index].uiImage = fetchedImage
+                    } else {
+                        print("Index out of range")
+                    }
+                }
+                else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+                    if index < self.requestedTeachers.count {
+                        self.requestedTeachers[index].uiImage = fetchedImage
+                    } else {
+                        print("Index out of range")
+                    }
+                }
+                else if let index = self.matchedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+                    if index < self.matchedTeachers.count {
+                        self.matchedTeachers[index].uiImage = fetchedImage
+                    } else {
+                        print("Index out of range")
+                    }
+                }
+            }
+        }
+        print("*****RETURNING THE TEACHER FOR: " + teacher.name)
         return teacher
     }
     
-
+//TODO: IMPLEMENT
+    func findTeacherIndex(){
+    }
     //meant to be called when student presses "decline teacher button"
     //TODO: FIX THIS
     func declineTeacher(teacherId: String){

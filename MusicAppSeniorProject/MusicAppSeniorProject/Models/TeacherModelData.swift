@@ -27,6 +27,8 @@ final class TeacherModelData: ObservableObject{
     @Published var profileImage: ProfileModel?
     @Published var uiImage: UIImage?
     
+    @Published var imageURL: String?
+    
     func logOut(){
         try! Auth.auth().signOut()
     }
@@ -262,7 +264,9 @@ final class TeacherModelData: ObservableObject{
         
     }
     func uploadImage(teacher: Teacher, completion:@escaping(Bool) -> Void){
+        let db = Firestore.firestore()
         let storage = Storage.storage()
+        let docRef = db.collection("StudentUser").document(uid)
         let storageRef = storage.reference(withPath: uid)
         let image = self.teacherUser.getUIImage()
         guard let imageData = image.jpegData(compressionQuality: 0.5) else { return }
@@ -281,6 +285,16 @@ final class TeacherModelData: ObservableObject{
                     return
                 }
                 print(url?.absoluteString)
+                if(url?.absoluteString.count ?? 0 > 7){
+                    self.imageURL = url?.absoluteString
+                    docRef.setData(["ImageURL": url?.absoluteString], merge: true){ error in
+                        if let error = error {
+                            print("Error writing document: \(error)")
+                        } else {
+                            print("Image URL successfully added!")
+                        }
+                    }
+                }
                 completion(true)
             }
         }

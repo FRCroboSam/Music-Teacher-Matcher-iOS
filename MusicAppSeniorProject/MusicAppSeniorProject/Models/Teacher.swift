@@ -27,6 +27,7 @@ struct Teacher:Identifiable, Hashable{
     var password: String = ""
     var aboutDescription: String = ""
     var uiImage: UIImage?
+    var imageURL: String = ""
 
     var uid: String = "NULL"
 

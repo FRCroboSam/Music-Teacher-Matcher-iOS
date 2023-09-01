@@ -40,8 +40,10 @@ struct TeacherListView: View {
                             VStack(alignment: .center, spacing: 10){
                                 Section{
                                     //TODO: REIMPLEMENT IMAGE STRUCTURE TO USE WEBIMAGE
-                                    ProfileImageFromURL(url: "https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg?w=2000")
-                                        .frame(maxHeight: 1/10 * deviceHeight)
+                                    ProfileImage(image: Image(uiImage:(uiImage ?? UIImage(systemName: "person.fill"))!), size: 100)
+                                        .overlay(Circle()
+                                            .strokeBorder(Color.white,lineWidth: 5)
+                                        ).modifier(CenterModifier())
 
                                     Spacer()
                                         .frame(height: 10)
@@ -125,7 +127,6 @@ struct TeacherListView: View {
                                         if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
                                             NavigationLink{
                                                 ProfilePageUI(teacher: teacher)
-//                                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
                                             } label:{
                                                 HStack{
                                                     //                                            WebImage(url: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"))
@@ -134,7 +135,12 @@ struct TeacherListView: View {
                                                     //                                                .scaledToFill()
                                                     //                                                .clipShape(Circle())
                                                     //                                                .frame(width: 50, height: 50)
-                                                    ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                    if(teacher.imageURL.count > 2){
+                                                        ProfileImageFromURL(url: teacher.imageURL)
+                                                    }
+                                                    else{
+                                                        ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                    }
                                                     VStack(alignment: .leading) {
                                                         Spacer()
                                                         Text(teacher.name).font(.system(size: 25))

@@ -81,7 +81,7 @@ struct ProfileImageFromURL: View{
             .foregroundColor(.white)
             .scaledToFill()
             .clipShape(Circle())
-            .frame(width: 100, height: 100)
+            .frame(width: 50, height: 50)
             .overlay(Circle()
                 .strokeBorder(Color.white,lineWidth: 5)
             ).modifier(CenterModifier())
