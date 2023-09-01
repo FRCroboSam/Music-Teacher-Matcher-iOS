@@ -65,7 +65,7 @@ struct StudentProfilePageUI: View {
                     VStack(alignment: .center){
                         HStack{
                             Spacer()
-                            ProfileImageFromURL(url: "https://previews.123rf.com/images/gosphotodesign/gosphotodesign1308/gosphotodesign130801942/22722703-little-kid-peeling-a-banana-against-white-background.jpg")
+                            ProfileImageFromURL(url: student?.imageURL ?? "", size: 50)
                                 .scaleEffect(x: 1.75, y: 1.75)
                                 .offset(y: -50)
                                 .zIndex(4)

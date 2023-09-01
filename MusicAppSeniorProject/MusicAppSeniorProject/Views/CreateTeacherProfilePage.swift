@@ -382,10 +382,6 @@ struct CreateTeacherProfilePage: View {
                     .buttonStyle(.bordered)
                     .padding(10)
                     .listRowSeparator(.hidden)
-                    Button("Sign out"){
-                        modelData.logOut()
-                        loggedOut = true
-                    }.buttonStyle(.bordered)
                 }
                 else{
                     Button("Submit Profile") {
@@ -401,7 +397,7 @@ struct CreateTeacherProfilePage: View {
                             }
                         }
                     }.listRowSeparator(.hidden)
-                        .buttonStyle(.bordered)
+                        .buttonStyle(BigButtonStyle(color: .orange))
                         .padding(10)
                 }
             }

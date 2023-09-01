@@ -24,7 +24,7 @@ struct Student: Identifiable{
     var loginInfo:KeyValuePairs = KeyValuePairs(dictionaryLiteral: ("", ""))
     var personalInfo:KeyValuePairs = KeyValuePairs(dictionaryLiteral: ("", ""))
     var musicalBackground:KeyValuePairs = KeyValuePairs(dictionaryLiteral: ("", ""))
-
+    var imageURL: String = ""
     
     mutating func populateInfo(personalInfo:KeyValuePairs<String, String>, loginInfo:KeyValuePairs<String, String>, musicalBackground:KeyValuePairs<String, String>){
         self.personalInfo = personalInfo

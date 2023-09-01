@@ -38,7 +38,7 @@ struct StudentListView: View {
                             VStack(alignment: .center, spacing: 10){
                                 Section{
                                     //TODO: REIMPLEMENT IMAGE STRUCTURE TO USE WEBIMAGE
-                                    ProfileImageFromURL(url: "https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg?w=2000")
+                                    ProfileImageFromURL(url: "https://img.freepik.com/free-psd/google-icon-isolated-3d-render-illustration_47987-9777.jpg?w=2000", size: 50)
                                         .frame(maxHeight: 1/10 * deviceHeight)
 
                                     Spacer()

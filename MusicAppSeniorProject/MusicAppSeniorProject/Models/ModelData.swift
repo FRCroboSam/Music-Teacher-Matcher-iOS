@@ -950,59 +950,36 @@ final class ModelData: ObservableObject{
         
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
         if(teacherImgURL == "None"){
-            fetchTeacherImage(teacher: teacher){ fetchedImage in
-                print("FETCHING TEACHER IMAGE NO URL: " + teacher.name)
-                print(fetchedImage == nil)
-                if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                    if index < self.availableTeachers.count {
-                        self.availableTeachers[index].uiImage = fetchedImage
-                    } else {
-                        print("Index out of range")
-                    }
-                }
-                else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                    if index < self.requestedTeachers.count {
-                        self.requestedTeachers[index].uiImage = fetchedImage
-                    } else {
-                        print("Index out of range")
-                    }
-                }
-                else if let index = self.matchedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                    if index < self.matchedTeachers.count {
-                        self.matchedTeachers[index].uiImage = fetchedImage
-                    } else {
-                        print("Index out of range")
-                    }
-                }
-            }
+//            fetchTeacherImage(teacher: teacher){ fetchedImage in
+//                print("FETCHING TEACHER IMAGE NO URL: " + teacher.name)
+//                print(fetchedImage == nil)
+//                if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                    if index < self.availableTeachers.count {
+//                        self.availableTeachers[index].uiImage = fetchedImage
+//                    } else {
+//                        print("Index out of range")
+//                    }
+//                }
+//                else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                    if index < self.requestedTeachers.count {
+//                        self.requestedTeachers[index].uiImage = fetchedImage
+//                    } else {
+//                        print("Index out of range")
+//                    }
+//                }
+//                else if let index = self.matchedTeachers.firstIndex(where: { $0.id == teacher.id }) {
+//                    if index < self.matchedTeachers.count {
+//                        self.matchedTeachers[index].uiImage = fetchedImage
+//                    } else {
+//                        print("Index out of range")
+//                    }
+//                }
+//            }
 
         }else{
             print("FETCHING TEACHER IMAGE WITH URL for: " + teacher.name)
             print("FETCHING IMAGE URL IS: " + teacherImgURL)
             teacher.imageURL = teacherImgURL
-            fetchImageWithURL(url: teacherImgURL){ fetchedImage in
-                if let index = self.availableTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                    if index < self.availableTeachers.count {
-                        self.availableTeachers[index].uiImage = fetchedImage
-                    } else {
-                        print("Index out of range")
-                    }
-                }
-                else if let index = self.requestedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                    if index < self.requestedTeachers.count {
-                        self.requestedTeachers[index].uiImage = fetchedImage
-                    } else {
-                        print("Index out of range")
-                    }
-                }
-                else if let index = self.matchedTeachers.firstIndex(where: { $0.id == teacher.id }) {
-                    if index < self.matchedTeachers.count {
-                        self.matchedTeachers[index].uiImage = fetchedImage
-                    } else {
-                        print("Index out of range")
-                    }
-                }
-            }
         }
         print("*****RETURNING THE TEACHER FOR: " + teacher.name)
         return teacher

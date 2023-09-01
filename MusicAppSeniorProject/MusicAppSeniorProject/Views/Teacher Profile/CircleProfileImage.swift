@@ -73,23 +73,25 @@ struct ProfileImage: View{
 //TODO: IMPLEMENT THIS
 struct ProfileImageFromURL: View{
     let url: String
-    
+    let size: CGFloat
     var body: some View {
-        WebImage(url: URL(string: url))
-            .placeholder(Image(systemName: "person.fill"))
-            .resizable()
-            .foregroundColor(.white)
-            .scaledToFill()
-            .clipShape(Circle())
-            .frame(width: 50, height: 50)
-            .overlay(Circle()
-                .strokeBorder(Color.white,lineWidth: 5)
-            ).modifier(CenterModifier())
-            .frame(maxHeight: 30)
-            .minimumScaleFactor(0.01)
-            .onAppear{
+        if(url.count > 2){
+            WebImage(url: URL(string: url))
+                .placeholder(Image(systemName: "person.fill"))
+                .resizable()
+                .foregroundColor(.white)
+                .scaledToFill()
+                .clipShape(Circle())
+                .overlay{
+                    Circle().strokeBorder(Color(UIColor.systemGray5), lineWidth: 3).opacity(1)
+                }
+                .frame(width: size, height: size)
+                .minimumScaleFactor(0.01)
+        }
+        else{
+            ProfileImage(image: Image(systemName: "person.fill"), size: size)
+        }
 
-            }
     }
 }
 struct EditableCircularProfileImage: View {

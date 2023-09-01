@@ -50,11 +50,9 @@ struct ProfilePageUI: View {
                     VStack(alignment: .center){
                         HStack{
                             Spacer()
-
-
-                            ProfileImageFromURL(url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_S75NOcV00QDQhv2pGbbaNHx6CyvuVTIkhw&usqp=CAU")
+                            ProfileImageFromURL(url: teacher?.imageURL ?? "", size: 90)
                                 .scaleEffect(x: 1.75, y: 1.75)
-                                .offset(y: -50)
+                                .offset(y: -80)
                                 .zIndex(4)
 
                             Spacer()
@@ -90,10 +88,8 @@ struct ProfilePageUI: View {
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(-10)
-                            
-                        }
-                        Spacer()
-                            .frame(height: 30)
+                        }.offset(y: -55)
+                        .padding(.bottom, -30)
                         Text(name)
                             .font(.system(size: 35))
                             .bold()
@@ -144,16 +140,16 @@ struct ProfilePageUI: View {
                                 .frame(height: 10)
                         }
                     }
+                    
                     .zIndex(0)
                     .frame(width: 7/8 * deviceWidth)
                     .background(
                         RoundedRectangle(cornerRadius: 40)
                             .fill(Color.white)
                             .shadow(radius: 5)
-                        
                     )
-                    Spacer()
-                        .frame(height: 30)
+                    .offset(y: -50)
+                    .padding(.bottom, -40)
                     VStack{
                         Spacer()
                             .frame(height: 15)

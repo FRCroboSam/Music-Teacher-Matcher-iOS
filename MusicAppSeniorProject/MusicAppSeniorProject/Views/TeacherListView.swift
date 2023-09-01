@@ -136,7 +136,7 @@ struct TeacherListView: View {
                                                     //                                                .clipShape(Circle())
                                                     //                                                .frame(width: 50, height: 50)
                                                     if(teacher.imageURL.count > 2){
-                                                        ProfileImageFromURL(url: teacher.imageURL)
+                                                        ProfileImageFromURL(url: teacher.imageURL, size: 50)
                                                     }
                                                     else{
                                                         ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
@@ -169,15 +169,14 @@ struct TeacherListView: View {
                                 .listSectionSeparator(.hidden, edges: .top)
                                 HStack{
                                     Button("Log Out"){
-    
-//                                        modelData.logOut()
-//                                        loggedOut = true
-//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                                            modelData.reset()
-                                       //}
+                                        modelData.logOut()
+                                        loggedOut = true
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                            modelData.reset()
+                                       }
                                     }
                                     .modifier(CenterModifier())
-                                    .buttonStyle(FillButtonStyle(color: .red))
+                                    .buttonStyle(BigButtonStyle(color: .purple))
                                 }
                                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSeparator(.hidden)
@@ -187,7 +186,7 @@ struct TeacherListView: View {
                             .scrollContentBackground(.hidden)
                             Spacer()
                                 .ignoresSafeArea(.all)
-                                .frame(height: 30)
+                                .frame(height: 1/8 * deviceHeight)
                                 .listRowSeparator(.hidden)
                             
                                 .navigationDestination(isPresented: $loggedOut, destination: {
