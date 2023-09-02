@@ -492,7 +492,8 @@ final class ModelData: ObservableObject{
                     "lastName": (data!["lastName"] ?? "Generic User") as! String,
                     "firstName": (data!["firstName"] ?? "Generic User") as! String,
                     "age": (data!["age"] ?? "Generic User") as! String,
-                    "Location": (data!["Location"] ?? "Generic User") as! String
+                    "Location": (data!["Location"] ?? "Generic User") as! String,
+                    "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String
 
                 ]
                 let imageUrl = (data!["ImageURL"] ?? "NONE") as! String

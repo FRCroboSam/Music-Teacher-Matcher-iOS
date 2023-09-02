@@ -43,7 +43,7 @@ struct CreateStudentProfilePage: View{
     @State private var changeEmail: Bool = false
     //TODO: Add feature where user can type a city name and locations will begin popping up
     @State private var location: String = ""
-
+    @State private var schedule: String = "Weekly lessons per month."
     var editMode = false
     @State var newEmail = ""
     @State var newPassword = ""
@@ -258,14 +258,21 @@ struct CreateStudentProfilePage: View{
                             }.padding(.bottom, 10)
                             Divider()
                         }.listRowSeparator(.hidden)
+                        Text("Enter your location")
+                            .listRowSeparator(.hidden)
+                        TextField("ie. Seattle, WA", text: $location)
+                            .textFieldStyle(.roundedBorder)
+                            .listRowSeparator(.visible, edges: .bottom)
+                        Text("Describe your ideal lesson schedule, provided below is default schedule.")
+                            .listRowSeparator(.hidden)
+                        TextField("ie. Weekly Lessons each month", text: $schedule)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.bottom, 10)
                         VStack(alignment: .leading, spacing: 5){
                             Text("Login Info")
                                 .font(.system(size: 20))
 
-                            Text("Enter your location")
-                            TextField("ie. Seattle, WA", text: $location)
-                                .textFieldStyle(.roundedBorder)
-                                .listRowSeparator(.hidden)
+
                             if(editMode){
                                 Text("Email: " + email)
                                     .font(.system(size: 20))
@@ -429,7 +436,8 @@ struct CreateStudentProfilePage: View{
                 "firstName": firstName,
                 "lastName": lastName,
                 "age": String(Double(age)),
-                "Location": location
+                "Location": location,
+                "Schedule": schedule
             ]
             newEmail = ""
             newPassword = ""
@@ -559,6 +567,7 @@ struct CreateStudentProfilePage: View{
         age = convertToDouble(s:value(key: "age", pairs: student.personalInfo))
         //loginInfo
         location = value(key: "Location", pairs: student.personalInfo)
+        schedule = value(key: "Schedule", pairs: student.personalInfo)
         email = modelData.email ?? "template@gmail.com"
         //musical background
         selectedInstrument = value(key: "Instrument", pairs: student.musicalBackground)

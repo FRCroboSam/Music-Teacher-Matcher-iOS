@@ -160,19 +160,21 @@ final class TeacherModelData: ObservableObject{
     }
     func fetchStudentImage(student: Student, completion:@escaping(UIImage?) -> Void){
         print("Fetching Student Image" + uid)
-        let storage = Storage.storage()
-        let storageRef = storage.reference(withPath: student.uid)
-        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
-          if let error = error {
-            // Uh-oh, an error occurred!
-            completion(nil)
-          } else {
-              print("Successfully fetched teacher image from " + student.uid)
-            // Data for "images/island.jpg" is returned
-            let uiImage = UIImage(data: data!) ?? UIImage(systemName: "person.fill")
-            completion(uiImage)
-          }
-        }
+//        let storage = Storage.storage()
+//        let storageRef = storage.reference(withPath: student.uid)
+//        storageRef.getData(maxSize: 5 * 1024 * 1024) { data, error in
+//          if let error = error {
+//            // Uh-oh, an error occurred!
+//            completion(nil)
+//          } else {
+//              print("Successfully fetched teacher image from " + student.uid)
+//            // Data for "images/island.jpg" is returned
+//            let uiImage = UIImage(data: data!) ?? UIImage(systemName: "person.fill")
+//            completion(uiImage)
+//          }
+//        }
+        
+
     }
     func createStudentFromData(documentSnapshot: DocumentSnapshot) -> Student{
         print("CREATING THE STUDENT")
@@ -192,11 +194,14 @@ final class TeacherModelData: ObservableObject{
             "name": (data!["name"] ?? "Generic User") as! String,
             "age": String(format: "%@", (data!["age"] ?? "0") as! CVarArg),
             "Location": (data!["Location"] ?? "No Location found") as! String,
-            "email": (data!["email"] ?? "No email found") as! String
+            "email": (data!["email"] ?? "No email found") as! String,
+            "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String
 
         ]
+        let studentImageURL = (data!["ImageURL"] ?? "None") as! String
         var name = (data!["name"] ?? "Generic User") as! String
         var student = Student(name: name)
+        student.imageURL = studentImageURL
         student.uid = data!["uid"] as? String ?? ""
         student.email = (data!["email"] ?? "No email found") as! String
         student.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)

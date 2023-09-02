@@ -129,12 +129,6 @@ struct TeacherListView: View {
                                                 ProfilePageUI(teacher: teacher)
                                             } label:{
                                                 HStack{
-                                                    //                                            WebImage(url: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/musicapp-52b7f.appspot.com/o/jOH4EANrxIfRiN1e4XCYLeg1HY03?alt=media&token=3560fe33-6c4c-4941-a4b6-721b4789f15c"))
-                                                    //                                                .resizable()
-                                                    //                                                .font(.system(size: 40))
-                                                    //                                                .scaledToFill()
-                                                    //                                                .clipShape(Circle())
-                                                    //                                                .frame(width: 50, height: 50)
                                                     if(teacher.imageURL.count > 2){
                                                         ProfileImageFromURL(url: teacher.imageURL, size: 50)
                                                     }
