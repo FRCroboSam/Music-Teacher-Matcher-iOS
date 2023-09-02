@@ -864,10 +864,13 @@ final class ModelData: ObservableObject{
                                                     print("ADDING AVAILABLE TEACHER: " + teacherId)
                                                     if(self.availableTeachers.count < 5){
                                                         if let foundIndex = self.allAvailableTeachers.firstIndex(where: { $0.uid == document.documentID }) {
-                                                            self.availableTeachers.append(self.allAvailableTeachers[foundIndex])
+                                                            var availableTeacher = self.allAvailableTeachers[foundIndex]
+                                                            availableTeacher.score = score as! Double ?? 0.0
+                                                            self.availableTeachers.append(availableTeacher)
                                                         } else {
                                                             var availableTeacher = self.createTeacherFromData(documentSnapshot: document)
                                                             availableTeacher.score = score as! Double ?? 0.0
+
                                                             self.availableTeachers.append(availableTeacher)
                                                         }
 

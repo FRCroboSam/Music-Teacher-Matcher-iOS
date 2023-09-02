@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfilePageUI: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var modelData: ModelData
     let teacher: Teacher?
     @State var name: String = ""
     @State var instrument: String = ""
@@ -22,6 +23,7 @@ struct ProfilePageUI: View {
     @State var lessonLength: Int = 60
     @State var pricing: String = ""
     @State var schedule: String = ""
+    @State var isFavorite: Bool = false
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -58,46 +60,72 @@ struct ProfilePageUI: View {
                             Spacer()
                         }
                         HStack{
-                            Image(systemName:"x.circle")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .foregroundColor(Color.red)
-                                .zIndex(6)
-                                .background(Color.white)
-                                .clipShape(Circle())
+                            Button {
+                                modelData.declineTeacher(teacherId: teacher?.uid ?? "")
+                                dismiss()
+
+                            } label: {
+                                VStack{
+                                    Image(systemName:"x.circle")
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
+                                        .foregroundColor(Color.red)
+                                        .zIndex(6)
+                                        .background(Color.white)
+                                        .clipShape(Circle())
+                                        
+                                }
+                            }
                             Spacer()
                                 .frame(width: 30)
-                            Image(systemName: "star.circle")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .background(Color.white)
-                                .clipShape(Circle())
-                                .foregroundColor(Color.yellow)
-                                .zIndex(6)
+                            Button {
+                            } label: {
+                                VStack{
+                                    Image(systemName:"star")
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
+                                        .foregroundColor(Color.yellow)
+                                        .zIndex(6)
+                                        .background(Color.white)
+                                        
+                                }
+                            }
                             Spacer()
                                 .frame(width: 30)
-                            Image(systemName:"checkmark.circle")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .background(Color.white)
-                                .clipShape(Circle())
-                                .foregroundColor(Color.green)
-                                .zIndex(6)
+                            Button {
+                                modelData.requestTeacher(teacherId: teacher?.uid ?? "", score: teacher?.score ?? -1000.0)
+                                dismiss()
+                            } label: {
+                                VStack{
+                                    Image(systemName:"checkmark.circle")
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
+                                        .foregroundColor(Color.green)
+                                        .zIndex(6)
+                                        .background(Color.white)
+                                        .clipShape(Circle())
+
+                                        
+                                }
+                            }
                         }.background{
                             RoundedRectangle(cornerRadius: 30)
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(-10)
-                        }.offset(y: -55)
-                        .padding(.bottom, -30)
+                        }.offset(y: -60)
+                        .padding(.bottom, -40)
+
                         Text(name)
                             .font(.system(size: 35))
                             .bold()
+                            .offset(y: -10)
                         HStack{
                             Text(instrument + " teacher")
                                 .font(.system(size: 20))
                                 .italic()
                                 .foregroundColor(.gray)
+                                .offset(y: -7)
                         }
                         Divider()
                             .padding(.top, -10)
@@ -150,6 +178,8 @@ struct ProfilePageUI: View {
                     )
                     .offset(y: -50)
                     .padding(.bottom, -40)
+                    Spacer()
+                        .frame(height: 30)
                     VStack{
                         Spacer()
                             .frame(height: 15)
@@ -198,7 +228,7 @@ struct ProfilePageUI: View {
                             
                         )
                     Spacer()
-                        .frame(height: 20)
+                        .frame(height: 30)
                     VStack(){
                         Spacer()
                             .frame(height: 15)
@@ -227,7 +257,7 @@ struct ProfilePageUI: View {
                                 .shadow(radius: 5)
                                 .padding(.bottom, -10))
                     Spacer()
-                        .frame(height: 30)
+                        .frame(height: 40)
                     VStack{
                         Spacer()
                             .frame(height: 10)

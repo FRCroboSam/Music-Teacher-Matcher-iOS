@@ -83,7 +83,7 @@ struct ProfileImageFromURL: View{
                 .scaledToFill()
                 .clipShape(Circle())
                 .overlay{
-                    Circle().strokeBorder(Color(UIColor.systemGray5), lineWidth: 3).opacity(1)
+                    Circle().strokeBorder(Color(UIColor.systemGray6), lineWidth: 1).opacity(0.5)
                 }
                 .frame(width: size, height: size)
                 .minimumScaleFactor(0.01)

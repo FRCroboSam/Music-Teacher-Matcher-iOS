@@ -105,7 +105,7 @@ struct TeacherListView: View {
                                     .listRowSeparator(.hidden)
                                 
                                 
-                            }.modifier(customViewModifier(roundedCornes: 30, startColor: .orange, endColor: .green, textColor: .black, ratio: 0.925))
+                            }.modifier(customViewModifier(roundedCornes: 30, startColor: Color(UIColor.systemGray5), endColor: Color(UIColor.systemGray5), textColor: .black, ratio: 0.925))
                                 .padding(.top, 10)
                                 .offset(y: 20)
                             
