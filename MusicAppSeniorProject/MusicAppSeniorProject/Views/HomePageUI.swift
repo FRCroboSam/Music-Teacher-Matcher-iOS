@@ -81,6 +81,7 @@ struct BigButtonStyle: ButtonStyle {
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
+    
     func makeBody(configuration: Configuration) -> some View {
             configuration.label
             .font(.title.bold())
@@ -100,11 +101,12 @@ struct BigButtonStyle: ButtonStyle {
 
 
 struct FillButtonStyle: ButtonStyle {
-    @State public var isClicked = false // Track if the button has been clicked
-
-    @State var percentWidth = 0.75
+    @Binding public var isClicked: Bool // Track if the button has been clicked
+        
+    public init(isClicked: Binding<Bool> = .constant(false)) {
+        self._isClicked = isClicked
+    }
     @State var color: Color = .indigo
-    @Environment(\.isEnabled) private var isEnabled: Bool
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }

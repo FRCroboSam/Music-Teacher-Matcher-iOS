@@ -168,7 +168,7 @@ struct StudentListView: View {
                                        //}
                                     }
                                     .modifier(CenterModifier())
-                                    .buttonStyle(FillButtonStyle(color: .red))
+                                    .buttonStyle(BigButtonStyle(color: .red))
                                 }
                                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSeparator(.hidden)

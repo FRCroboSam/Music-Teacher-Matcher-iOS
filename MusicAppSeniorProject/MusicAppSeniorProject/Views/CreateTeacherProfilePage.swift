@@ -63,6 +63,7 @@ struct CreateTeacherProfilePage: View {
     @State private var failedUpdate = false
     @State private var updatedSuccessfully = false
     
+    @State private var playsCello = false
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }
@@ -171,14 +172,16 @@ struct CreateTeacherProfilePage: View {
                     .padding(.bottom, -5)
                 HStack(spacing: 10){
                     Button("Cello"){
-                        
-                    }.buttonStyle(FillButtonStyle(color: .red))
+                    }.buttonStyle(FillButtonStyle(isClicked: $playsCello))
                     Button("Piano"){
                         
-                    }.buttonStyle(FillButtonStyle(color: .red))
+                    }//.buttonStyle(FillButtonStyle(color: .red))
                     Button("Violin"){
                         
-                    }.buttonStyle(FillButtonStyle(color: .red))
+                    }//.buttonStyle(FillButtonStyle(color: .red))
+                    Button("SHOW PLAYS CELLO"){
+                        print(playsCello)
+                    }
                 }.listRowSeparator(.hidden)
                 .padding(10)
             }
@@ -244,15 +247,15 @@ struct CreateTeacherProfilePage: View {
                     HStack{
                         Button("Beginner"){
                             
-                        }.buttonStyle(FillButtonStyle(color: .green))
+                        }.buttonStyle(FillButtonStyle(isClicked: $playsCello))
                         Button("Intermediate"){
                             
-                        }.buttonStyle(FillButtonStyle(color: .teal))
+                        }//.buttonStyle(FillButtonStyle(color: .teal))
                         
                     }
                     Button("Advanced"){
                         
-                    }.buttonStyle(FillButtonStyle(color: .red))
+                    }//.buttonStyle(FillButtonStyle(color: .red))
                 }
                 
                 Text("Describe the level interested students should be at. ")
