@@ -42,7 +42,7 @@ struct StudentAppPage: View {
                         .tabBarItem(tab: .matched, selection: $tabSelection)
                     CreateStudentProfilePage(editMode: true, student:modelData.studentUser)
                                .tabBarItem(tab: .editProfile, selection: $tabSelection)
-                       }
+                }.ignoresSafeArea(.keyboard, edges: .bottom)
                 .navigationDestination(isPresented: $loggedOut) {
                     HomePage()
                 }

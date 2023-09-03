@@ -398,6 +398,10 @@ struct CreateStudentProfilePage: View{
 //            .toolbar(.hidden, for: .navigationBar)
                 
             }
+            .gesture(
+                TapGesture().onEnded { value in
+                    UIApplication.shared.dismissKeyboard()
+                })
             .listRowSeparator(.hidden)
             .modifier(FormHiddenBackground())
             .background{
