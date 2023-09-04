@@ -34,7 +34,7 @@ struct TeacherAppPage: View {
                     StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
 
                         .tabBarItem(tab: .matched, selection: $tabSelection)
-                    CreateTeacherProfilePage(editMode: true)
+                    CreateTeacherProfilePage(teacher: modelData.teacherUser, editMode: true)
                                .tabBarItem(tab: .editProfile, selection: $tabSelection)
                        }
                        .ignoresSafeArea(.keyboard, edges: .bottom)

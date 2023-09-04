@@ -87,6 +87,7 @@ final class ModelData: ObservableObject{
     //
     func determineCompatibility(teacher: Teacher, student: Student, completion:@escaping (Double?) -> Void){
         var score = 100.0
+        //TODO: FIX THIS
         let teacherPreferredLevel = teacher.getDoubleProperty(key: "Minimum Student Level", pairs: teacher.musicalBackground)
         let studentLevel = student.getDoubleProperty(key: "Student Level", pairs: student.musicalBackground)
         //add more to score if student and teacher Level are the same with studentLevel >= teacherLevel
@@ -939,7 +940,7 @@ final class ModelData: ObservableObject{
         let lessonInfo:KeyValuePairs = [
             "Lesson Length": (data!["Lesson Length"] ?? "Generic User") as! String,
             "Pricing": (data!["Pricing"] ?? "Generic User") as! String,
-            "Minimum Student Level": (data!["Minimum Student Level"] ?? "Generic User") as! String,
+            "Levels": (data!["Levels"] ?? "Generic User") as! String,
         ]
         let teacherInfo:KeyValuePairs = [
             "name": (data!["name"] ?? "Generic User") as! String,

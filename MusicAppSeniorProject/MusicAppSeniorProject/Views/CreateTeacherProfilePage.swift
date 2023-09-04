@@ -64,6 +64,13 @@ struct CreateTeacherProfilePage: View {
     @State private var updatedSuccessfully = false
     
     @State private var playsCello = false
+    @State private var playsViolin = false
+    @State private var playsPiano = false
+    
+    @State private var teachBeginners = false
+    @State private var teachIntermediates = false
+    @State private var teachAdvanced = false
+    
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }
@@ -134,6 +141,7 @@ struct CreateTeacherProfilePage: View {
                 print("APPEARING")
                 if(editMode && !hasPopulated){
                     if(teacher != nil){
+                        print("POPULATING PROFILE EDITOR")
                         populateProfileEditor(teacher: teacher ?? Teacher(name: "DKFJDJ"))
                         hasPopulated = true
                     }
@@ -172,16 +180,12 @@ struct CreateTeacherProfilePage: View {
                     .padding(.bottom, -5)
                 HStack(spacing: 10){
                     Button("Cello"){
-                    }.buttonStyle(FillButtonStyle(isClicked: $playsCello))
+                    }.buttonStyle(FillButtonStyle(isClicked: $playsCello, color: .brown))
                     Button("Piano"){
-                        
-                    }//.buttonStyle(FillButtonStyle(color: .red))
+                    }.buttonStyle(FillButtonStyle(isClicked: $playsPiano, color: .blue))
                     Button("Violin"){
-                        
-                    }//.buttonStyle(FillButtonStyle(color: .red))
-                    Button("SHOW PLAYS CELLO"){
-                        print(playsCello)
-                    }
+                    }.buttonStyle(FillButtonStyle(isClicked: $playsViolin, color: .red))
+
                 }.listRowSeparator(.hidden)
                 .padding(10)
             }
@@ -247,15 +251,15 @@ struct CreateTeacherProfilePage: View {
                     HStack{
                         Button("Beginner"){
                             
-                        }.buttonStyle(FillButtonStyle(isClicked: $playsCello))
+                        }.buttonStyle(FillButtonStyle(isClicked: $teachBeginners, color: .green))
                         Button("Intermediate"){
                             
-                        }//.buttonStyle(FillButtonStyle(color: .teal))
+                        }.buttonStyle(FillButtonStyle(isClicked: $teachIntermediates, color: .teal))
                         
                     }
                     Button("Advanced"){
                         
-                    }//.buttonStyle(FillButtonStyle(color: .red))
+                    }.buttonStyle(FillButtonStyle(isClicked: $teachAdvanced, color: .red))
                 }
                 
                 Text("Describe the level interested students should be at. ")
@@ -328,14 +332,34 @@ struct CreateTeacherProfilePage: View {
                     .listRowSeparator(.hidden)
                 TextField("ie 'Seattle, Washington'", text: $location)
                     .modifier(customViewModifier(roundedCornes: 10, startColor: Color(UIColor.systemGray5), endColor: Color(UIColor.systemGray5), textColor: Color.black))
-                VStack(alignment: .leading, spacing: 5){
-                    Text("Login Information: ")
+                if(!editMode){
+                    VStack(alignment: .leading, spacing: 5){
+                        Text("Login Information: ")
+                            .font(.system(size: 20))
+                            .padding(.bottom, 10)
+                        TextField("Email for students to contact you", text: $email)
+                            .textFieldStyle(.roundedBorder)
+                        TextField("Password: ", text: $password)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                }
+                else{
+                    Text("Email: " + (modelData.email ?? "No email found"))
                         .font(.system(size: 20))
-                        .padding(.bottom, 10)
-                    TextField("Email for students to contact you", text: $email)
-                        .textFieldStyle(.roundedBorder)
-                    TextField("Password: ", text: $password)
-                        .textFieldStyle(.roundedBorder)
+                    Toggle(isOn: $changeEmail) {
+                        Text("Update Email?")
+                            .foregroundColor(.black)
+                    }
+                    .toggleStyle(iOSCheckboxToggleStyle())
+                    if(changeEmail){
+                        TextField("Enter new email", text: $newEmail)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                    Toggle(isOn: $changePassword) {
+                        Text("Change Password?")
+                            .foregroundColor(.black)
+//                            .listRowSeparator(.hidden)
+                    }.toggleStyle(iOSCheckboxToggleStyle())
                 }
                 if(editMode){
                     if(changePassword || changeEmail){
@@ -421,6 +445,28 @@ struct CreateTeacherProfilePage: View {
             }
         }
         func createTeacherObject(){
+            var instrument: String = ""
+            var levels: String = ""
+            if(playsCello){
+                instrument += "Cello"
+            }
+            if(playsViolin){
+                instrument += " Violin"
+            }
+            else if(playsPiano){
+                instrument += " Piano"
+            }
+            
+            if(teachBeginners){
+                levels += "Beginner"
+            }
+            if(playsViolin){
+                levels += " Intermediate"
+            }
+            else if(playsPiano){
+                levels += " Advanced"
+            }
+            
             let loginInfo:KeyValuePairs = [
                 "email": email,
                 "password": password
@@ -436,7 +482,7 @@ struct CreateTeacherProfilePage: View {
             let lessonInfo:KeyValuePairs = [
                 "Lesson Length": String(lessonLength),
                 "Pricing": cost,
-                "Minimum Student Level": String(studentLevel),
+                "Levels": levels,
             ]
             let name = firstName + " " +  lastName
             let teacherInfo:KeyValuePairs = [
@@ -559,9 +605,18 @@ struct CreateTeacherProfilePage: View {
             email = modelData.email ?? "template@gmail.com"
             cost = value(key: "Pricing", pairs: teacher.lessonInfo)
             
-            instrument = value(key: "Instrument", pairs: teacher.musicalBackground)
+            let instruments = value(key: "Instrument", pairs: teacher.musicalBackground)
+            if(instruments.localizedCaseInsensitiveContains("Cello")){
+                playsCello = true
+            }
+            if(instruments.localizedCaseInsensitiveContains("Violin")){
+                playsViolin = true
+            }
+            if(instruments.localizedCaseInsensitiveContains("Piano")){
+                playsPiano = true
+            }
             lessonLength = value(key: "Lesson Length", pairs: teacher.lessonInfo) ?? "60"
-            studentLevel = Int(value(key: "Minimum Student Level", pairs: teacher.lessonInfo)) ?? 60
+            studentLevel = Int(value(key: "Levels", pairs: teacher.lessonInfo)) ?? 60
             teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
             musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)
             let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)

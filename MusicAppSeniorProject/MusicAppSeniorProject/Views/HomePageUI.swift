@@ -102,11 +102,12 @@ struct BigButtonStyle: ButtonStyle {
 
 struct FillButtonStyle: ButtonStyle {
     @Binding public var isClicked: Bool // Track if the button has been clicked
-        
-    public init(isClicked: Binding<Bool> = .constant(false)) {
+    @State var color: Color
+
+    public init(isClicked: Binding<Bool> = .constant(false), color: Color) {
         self._isClicked = isClicked
+        self.color = color 
     }
-    @State var color: Color = .indigo
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }

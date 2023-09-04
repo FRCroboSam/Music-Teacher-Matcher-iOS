@@ -137,7 +137,7 @@ final class TeacherModelData: ObservableObject{
                 let lessonInfo:KeyValuePairs = [
                     "Lesson Length": (data!["Lesson Length"] ?? "Generic User") as! String,
                     "Pricing": (data!["Pricing"] ?? "Generic User") as! String,
-                    "Minimum Student Level": (data!["Minimum Student Level"] ?? "Generic User") as! String,
+                    "Levels": (data!["Levels"] ?? "Generic User") as! String,
                 ]
                 let teacherInfo:KeyValuePairs = [
                     "name": (data!["name"] ?? "Generic User") as! String,
