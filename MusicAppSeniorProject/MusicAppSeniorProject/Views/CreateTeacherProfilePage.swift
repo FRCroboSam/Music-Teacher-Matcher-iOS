@@ -29,6 +29,8 @@ struct CreateTeacherProfilePage: View {
     @State private var registrationSuccessful = false
     @State private var hasMusicDegree = false
     @State private var teachingStyle = ""
+    @State private var schedule = ""
+
     @State private var musicDegree = ""
     @State private var musicalBackground = ""
     
@@ -328,6 +330,11 @@ struct CreateTeacherProfilePage: View {
                         
                     }
                 }
+                Text("Describe your ideal lesson schedule, provided below is default schedule.")
+                    .listRowSeparator(.hidden)
+                TextField("ie. Weekly Lessons each month", text: $schedule)
+                    .textFieldStyle(.roundedBorder)
+                    .padding(.bottom, 10)
                 Text("Enter your location: city, state")
                     .listRowSeparator(.hidden)
                 TextField("ie 'Seattle, Washington'", text: $location)
@@ -483,6 +490,7 @@ struct CreateTeacherProfilePage: View {
                 "Lesson Length": String(lessonLength),
                 "Pricing": cost,
                 "Levels": levels,
+                "Schedule": schedule
             ]
             let name = firstName + " " +  lastName
             let teacherInfo:KeyValuePairs = [
@@ -604,6 +612,8 @@ struct CreateTeacherProfilePage: View {
             yearsTeaching = convertToDouble(s:value(key: "Years Teaching", pairs: teacher.musicalBackground))
             email = modelData.email ?? "template@gmail.com"
             cost = value(key: "Pricing", pairs: teacher.lessonInfo)
+            schedule = value(key:"Schedule", pairs: teacher.lessonInfo)
+            
             
             let instruments = value(key: "Instrument", pairs: teacher.musicalBackground)
             if(instruments.localizedCaseInsensitiveContains("Cello")){

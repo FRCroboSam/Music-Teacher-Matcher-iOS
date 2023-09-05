@@ -500,8 +500,8 @@ final class ModelData: ObservableObject{
                 let imageUrl = (data!["ImageURL"] ?? "NONE") as! String
                 if(imageUrl == "NONE"){
                     print("DID NOT FIND IMAGE URL IN FIRESTORE")
-                    self.fetchImageFromStorage{_ in
-                    }
+//                    self.fetchImageFromStorage{_ in
+//                    }
                 }
                 else{
                     print("FOUND THE IMAGE URL")

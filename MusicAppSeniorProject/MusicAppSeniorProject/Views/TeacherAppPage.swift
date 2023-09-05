@@ -63,7 +63,7 @@ struct TeacherAppPage: View {
                 }
                 
                 
-            }
+            }.navigationBarBackButtonHidden(true) // Hide default button
         
     }
     

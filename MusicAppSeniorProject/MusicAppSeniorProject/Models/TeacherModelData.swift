@@ -91,6 +91,7 @@ final class TeacherModelData: ObservableObject{
             data[key] = value
         }
         data["uid"] = self.uid
+        data["ImageURL"] = self.imageURL
         docRef.setData(data)
         //sets userData to be the newly created document data
         docRef.getDocument { (document, error) in
@@ -139,6 +140,7 @@ final class TeacherModelData: ObservableObject{
                     "Lesson Length": (data!["Lesson Length"] ?? "Generic User") as! String,
                     "Pricing": (data!["Pricing"] ?? "Generic User") as! String,
                     "Levels": (data!["Levels"] ?? "Generic User") as! String,
+                    "Schedule":(data!["Schedule"] ?? "Weekly Lessons") as! String,
                 ]
                 let teacherInfo:KeyValuePairs = [
                     "name": (data!["name"] ?? "Generic User") as! String,
@@ -152,9 +154,9 @@ final class TeacherModelData: ObservableObject{
                 self.teacherUser.email = self.email ?? "No email found"
                 let imageUrl = (data!["ImageURL"] ?? "NONE") as! String
                 if(imageUrl == "NONE"){
-                    print("DID NOT FIND IMAGE URL IN FIRESTORE, fETCHING FROM STORAGE")
-                    self.fetchImage{_ in
-                    }
+//                    print("DID NOT FIND IMAGE URL IN FIRESTORE, fETCHING FROM STORAGE")
+//                    self.fetchImage{_ in
+//                    }
                 }
                 else{
                     print("FOUND THE IMAGE URL")
@@ -171,14 +173,16 @@ final class TeacherModelData: ObservableObject{
         }
     }
     func fetchUserImage(url: String){
-        print("FETCHING USER IMAGE")
+        print("FETCHING USER IMAGE for url: " + url)
 
         SDWebImageManager.shared.loadImage(
                 with: URL(string: url),
                 options: .highPriority,
                 progress: .none) { (image, data, error, cacheType, isFinished, imageUrl) in
                     print(isFinished)
+                    print("FINISHED FETCHING UI IMAGE")
                     self.uiImage = image
+                    print((image?.size ?? 0))
                 }
     }
     func fetchStudentImage(student: Student, completion:@escaping(UIImage?) -> Void){

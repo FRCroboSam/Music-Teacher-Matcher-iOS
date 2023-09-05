@@ -96,16 +96,16 @@ struct StudentListView: View {
                                 Image(systemName: "magnifyingglass")
                                     .foregroundColor(.black)
                                 TextField("Enter a student name", text: $searchStudent)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
                                     .textContentType(.newPassword)
                                     .keyboardType(.asciiCapable)
                                     .autocorrectionDisabled()
                                     .listRowSeparator(.hidden)
                                 
                                 
-                            }.modifier(customViewModifier(roundedCornes: 30, startColor: .orange, endColor: .green, textColor: .black, ratio: 0.925))
-                                .padding(.top, 10)
-                                .offset(y: 20)
+                            }.modifier(customViewModifier(roundedCornes: 30, startColor: Color(UIColor.systemGray5), endColor: Color(UIColor.systemGray5), textColor: .black, ratio: 0.925))
+                            .padding(.top, 10)
+                            .offset(y: 20)
                             
                             //TODO: TRY EMBEDDING THE LIST IN A ZSTACK THAT WAY YOU CAN USE THE FRAME THING AND ITLL ONLY AFFECT THE LIST
                             //make the offset however big divider offset is and frame big enough to cover between divider and search
