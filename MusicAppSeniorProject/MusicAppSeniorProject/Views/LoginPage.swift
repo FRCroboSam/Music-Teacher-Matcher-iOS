@@ -133,6 +133,7 @@ struct LoginPage: View {
                 TeacherAppPage()
             }
         }
+
         .navigationBarBackButtonHidden(true) // Hide default button
         .navigationBarItems(leading: moveOn ? CustomBackButton(dismiss: dismiss).padding(10) : nil)
         
@@ -170,3 +171,26 @@ extension UIApplication {
 //            .environmentObject(ModelData())
 //    }
 //}
+
+public struct RemoveFocusOnTapModifier: ViewModifier {
+    public func body(content: Content) -> some View {
+        content
+#if os (iOS)
+            .onTapGesture {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+            }
+#elseif os(macOS)
+            .onTapGesture {
+                DispatchQueue.main.async {
+                    NSApp.keyWindow?.makeFirstResponder(nil)
+                }
+            }
+#endif
+    }
+}
+
+extension View {
+    public func removeFocusOnTap() -> some View {
+        modifier(RemoveFocusOnTapModifier())
+    }
+}

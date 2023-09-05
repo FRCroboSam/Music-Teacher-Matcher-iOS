@@ -135,6 +135,7 @@ final class TeacherModelData: ObservableObject{
                     "Years Teaching": (data!["Years Teaching"] ?? "Generic User") as! String,
                     "Musical Degree": (data!["Musical Degree"] ?? "Generic User") as! String,
                     "Teaching Style": (data!["Teaching Style"] ?? "Generic User") as! String,
+                    "Student Description": (data!["Student Description"] ?? "Generic User") as! String,
                 ]
                 let lessonInfo:KeyValuePairs = [
                     "Lesson Length": (data!["Lesson Length"] ?? "Generic User") as! String,
@@ -145,7 +146,8 @@ final class TeacherModelData: ObservableObject{
                 let teacherInfo:KeyValuePairs = [
                     "name": (data!["name"] ?? "Generic User") as! String,
                     "firstName": (data!["firstName"] ?? "Generic User") as! String,
-                    "lastName": (data!["lastName"] ?? "Generic User") as! String
+                    "lastName": (data!["lastName"] ?? "Generic User") as! String,
+                    "Location": (data!["Location"] ?? "Generic User") as! String
                 ]
                 var name = (data!["name"] ?? "Generic User") as! String
                 self.userData = data

@@ -9,6 +9,11 @@ import SwiftUI
 import FirebaseAuth
 import Combine
 //TODO: make sure studentLevel new number logic works
+extension String {
+   var isNumeric: Bool {
+     return !(self.isEmpty) && self.allSatisfy { $0.isNumber }
+   }
+}
 struct CreateTeacherProfilePage: View {
     @EnvironmentObject var modelData: TeacherModelData
     @EnvironmentObject var viewModel: ProfileModel
@@ -29,6 +34,8 @@ struct CreateTeacherProfilePage: View {
     @State private var registrationSuccessful = false
     @State private var hasMusicDegree = false
     @State private var teachingStyle = ""
+    @State private var studentDesc = ""
+
     @State private var schedule = ""
 
     @State private var musicDegree = ""
@@ -268,7 +275,7 @@ struct CreateTeacherProfilePage: View {
                     .font(.system(size: 20))
                     .listRowSeparator(.visible, edges: .top)
                     .padding(.top, 10)
-                TextField("ie. pre-requisite pieces, skills, etc.", text: $teachingStyle, axis:.vertical)
+                TextField("ie. pre-requisite pieces, skills, etc.", text: $studentDesc, axis:.vertical)
                     .textFieldStyle(.roundedBorder)
                     .listRowSeparator(.hidden)
                     .padding(.bottom, 10)
@@ -444,14 +451,23 @@ struct CreateTeacherProfilePage: View {
                 .navigationDestination(isPresented: $loggedOut, destination: {
                     HomePage()
                 })
+                .alert("Failed to update info: Check password and email", isPresented: $failedUpdate) {
+                    Button("Try Again", role: .destructive) { }
+                }
+                .alert("Info updated successfully", isPresented: $updatedSuccessfully) {
+                    Button("Ok", role: .destructive) { }
+                }
             }.modifier(FormHiddenBackground())
-            
+            .onTapGesture {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+            }
 
             .background{
                 Image("music_background")
             }
         }
         func createTeacherObject(){
+            print("YEARS TEACHING: " + String(Double(yearsTeaching)))
             var instrument: String = ""
             var levels: String = ""
             if(playsCello){
@@ -478,12 +494,13 @@ struct CreateTeacherProfilePage: View {
                 "email": email,
                 "password": password
             ]
-            let degree = hasMusicDegree ? musicalBackground : "No"
+            let degree = hasMusicDegree ? musicDegree : "No"
             let musicalBackground:KeyValuePairs = [
                 "Instrument": instrument,
                 "Years Teaching": String(Double(yearsTeaching)),
                 "Musical Degree": degree,
                 "Teaching Style": teachingStyle,
+                "Student Description": studentDesc
             ]
             let cost = customPricing ? pricingInfo : String(cost)
             let lessonInfo:KeyValuePairs = [
@@ -602,6 +619,7 @@ struct CreateTeacherProfilePage: View {
                 completion(true)
             }
         }
+
         func populateProfileEditor(teacher: Teacher){
             //personal info
             name = teacher.name
@@ -612,9 +630,12 @@ struct CreateTeacherProfilePage: View {
             yearsTeaching = convertToDouble(s:value(key: "Years Teaching", pairs: teacher.musicalBackground))
             email = modelData.email ?? "template@gmail.com"
             cost = value(key: "Pricing", pairs: teacher.lessonInfo)
-            schedule = value(key:"Schedule", pairs: teacher.lessonInfo)
-            
-            
+            schedule = value(key: "Schedule", pairs: teacher.lessonInfo)
+            studentDesc = value(key: "Student Description", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
+            musicDegree = value(key: "Musical Degree", pairs: teacher.musicalBackground)
+            if(musicDegree != "No"){
+                hasMusicDegree = true
+            }
             let instruments = value(key: "Instrument", pairs: teacher.musicalBackground)
             if(instruments.localizedCaseInsensitiveContains("Cello")){
                 playsCello = true
@@ -747,4 +768,7 @@ struct CreateTeacherProfilePage: View {
             }
         }
     }
+
+
+
 

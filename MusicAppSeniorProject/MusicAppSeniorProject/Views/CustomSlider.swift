@@ -29,7 +29,7 @@ struct CustomSlider: View {
                 HStack{
                     Text(name)
                     Spacer(minLength: 10)
-                    Text(getValue(offset:offset))
+                    Text(String(Double(value)))
                         .font(.system(size: 20))
                         .background(
                             shape
@@ -53,15 +53,17 @@ struct CustomSlider: View {
                     .frame(width: 35, height: 35)
                     .background (Circle().stroke (Color.white, lineWidth: 5))
                     .offset(x: offset)
-                    .simultaneousGesture (DragGesture().onChanged({ (value) in
+                    .simultaneousGesture (DragGesture().onChanged({ (value2) in
                         // Padding Horizontal....
                         // Padding Horizontal = 30
                         // Circle radius = 20
                         // Total
-                        if value.location.x >= 17.5 && value.location.x <=
+                        if value2.location.x >= 17.5 && value2.location.x <=
                             3/4 * UIScreen.main.bounds.width - 13 {
-                            offset = value.location.x - 17.5
+                            offset = value2.location.x - 17.5
                         }
+                        value = getValue(offset:offset)
+                        
                     }))
             })
         }.onAppear {
@@ -80,7 +82,7 @@ struct CustomSlider: View {
         let offset = percent * (3/4 * UIScreen.main.bounds.width - 13 - 17.5)
         return offset
     }
-    func getValue(offset: CGFloat) -> String{
+    func getValue(offset: CGFloat) -> Double{
         let totalAmount = maxValue - minValue
         print("OFFSET: " + String(Double(offset)))
         print("SCREEN SIZE IS: " + String(Double(UIScreen.current?.bounds.size.width ?? 0.0)))
@@ -91,7 +93,7 @@ struct CustomSlider: View {
         print("PERCENT: " + String(Double(percent)))
         let amount = Double(Double((percent * totalAmount)).rounded() + minValue)
         
-        return String(amount)
+        return amount
     }
     
 }
