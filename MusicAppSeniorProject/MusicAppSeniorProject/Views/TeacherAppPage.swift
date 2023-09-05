@@ -55,9 +55,10 @@ struct TeacherAppPage: View {
                         self.modelData.fetchStudentData {
                             
                         }
-                        modelData.fetchImage{_ in
-                            
-                        }
+                        //TODO: USE THE NEW LOGIC
+//                        modelData.fetchImage{_ in
+//
+//                        }
                     }
                 }
                 

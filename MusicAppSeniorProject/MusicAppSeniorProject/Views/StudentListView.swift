@@ -161,11 +161,11 @@ struct StudentListView: View {
                                 HStack{
                                     Button("Log Out"){
     
-//                                        modelData.logOut()
-//                                        loggedOut = true
-//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//                                            modelData.reset()
-                                       //}
+                                        modelData.logOut()
+                                        loggedOut = true
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                            modelData.reset()
+                                       }
                                     }
                                     .modifier(CenterModifier())
                                     .buttonStyle(BigButtonStyle(color: .red))

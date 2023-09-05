@@ -10,6 +10,7 @@ import Firebase
 import FirebaseAppCheck
 import FirebaseAuth
 import FirebaseStorage
+import SDWebImageSwiftUI
 final class TeacherModelData: ObservableObject{
     @Published var teachers = [Teacher]()
     
@@ -149,6 +150,17 @@ final class TeacherModelData: ObservableObject{
                 self.teacherUser = Teacher(name: name)
                 self.teacherUser.uid = uid
                 self.teacherUser.email = self.email ?? "No email found"
+                let imageUrl = (data!["ImageURL"] ?? "NONE") as! String
+                if(imageUrl == "NONE"){
+                    print("DID NOT FIND IMAGE URL IN FIRESTORE, fETCHING FROM STORAGE")
+                    self.fetchImage{_ in
+                    }
+                }
+                else{
+                    print("FOUND THE IMAGE URL")
+                    self.imageURL = imageUrl
+                    self.fetchUserImage(url: imageUrl)
+                }
                 self.teacherUser.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
                 completion(true)
                 
@@ -157,6 +169,17 @@ final class TeacherModelData: ObservableObject{
                 completion(false)
             }
         }
+    }
+    func fetchUserImage(url: String){
+        print("FETCHING USER IMAGE")
+
+        SDWebImageManager.shared.loadImage(
+                with: URL(string: url),
+                options: .highPriority,
+                progress: .none) { (image, data, error, cacheType, isFinished, imageUrl) in
+                    print(isFinished)
+                    self.uiImage = image
+                }
     }
     func fetchStudentImage(student: Student, completion:@escaping(UIImage?) -> Void){
         print("Fetching Student Image" + uid)
@@ -271,7 +294,7 @@ final class TeacherModelData: ObservableObject{
     func uploadImage(teacher: Teacher, completion:@escaping(Bool) -> Void){
         let db = Firestore.firestore()
         let storage = Storage.storage()
-        let docRef = db.collection("StudentUser").document(uid)
+        let docRef = db.collection("Teachers").document(uid)
         let storageRef = storage.reference(withPath: uid)
         let image = self.teacherUser.getUIImage()
         guard let imageData = image.jpegData(compressionQuality: 0.5) else { return }

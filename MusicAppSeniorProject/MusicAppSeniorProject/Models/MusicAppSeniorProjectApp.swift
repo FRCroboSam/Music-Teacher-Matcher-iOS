@@ -78,8 +78,8 @@ struct MusicAppSeniorProjectApp: App {
                                             modelData.isStudent = false;
                                             teacherModelData.createTeacherFromId(uid: uid) { isCreated in
                                                 if isCreated {
-                                                    teacherModelData.fetchStudentData() {
-                                                    }
+//                                                    teacherModelData.fetchStudentData() {
+//                                                    }
 
                                                 } else {
                                                     modelData.loggedIn = false

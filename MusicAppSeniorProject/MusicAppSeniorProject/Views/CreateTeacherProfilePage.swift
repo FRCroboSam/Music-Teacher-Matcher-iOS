@@ -453,20 +453,20 @@ struct CreateTeacherProfilePage: View {
             if(playsViolin){
                 instrument += " Violin"
             }
-            else if(playsPiano){
+            if(playsPiano){
                 instrument += " Piano"
             }
             
             if(teachBeginners){
                 levels += "Beginner"
             }
-            if(playsViolin){
+            if(teachIntermediates){
                 levels += " Intermediate"
             }
-            else if(playsPiano){
+            if(teachAdvanced){
                 levels += " Advanced"
             }
-            
+            print("LEVELS IS: " + levels)
             let loginInfo:KeyValuePairs = [
                 "email": email,
                 "password": password
@@ -615,8 +615,34 @@ struct CreateTeacherProfilePage: View {
             if(instruments.localizedCaseInsensitiveContains("Piano")){
                 playsPiano = true
             }
+            
+            
+            let taughtLevels = value(key: "Levels", pairs: teacher.lessonInfo) ?? value(key: "Minimum Student Level", pairs: teacher.lessonInfo) ?? "Beginner"
+            print("LEVELS TAUGHT: " + taughtLevels)
+            if(taughtLevels.localizedCaseInsensitiveContains("Beginner")){
+                teachBeginners = true
+            }
+            if(taughtLevels.localizedCaseInsensitiveContains("Intermediate")){
+                teachIntermediates = true
+            }
+            if(taughtLevels.localizedCaseInsensitiveContains("Advanced")){
+                teachAdvanced = true
+            }
+            
+            
+            
+
+            
+            if(instruments.localizedCaseInsensitiveContains("Cello")){
+                playsCello = true
+            }
+            if(instruments.localizedCaseInsensitiveContains("Violin")){
+                playsViolin = true
+            }
+            if(instruments.localizedCaseInsensitiveContains("Piano")){
+                playsPiano = true
+            }
             lessonLength = value(key: "Lesson Length", pairs: teacher.lessonInfo) ?? "60"
-            studentLevel = Int(value(key: "Levels", pairs: teacher.lessonInfo)) ?? 60
             teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
             musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)
             let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
