@@ -51,7 +51,6 @@ struct TeacherAppPage: View {
                     UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
                     tabBarAppearance.backgroundColor = .systemPurple
                     if(modelData.uid != ""){
-                        print("FETCHING IN APP PAGE FOR: " + modelData.uid)
 //                        self.modelData.fetchStudentData {
 //                            
 //                        }

@@ -44,6 +44,7 @@ struct CreateStudentProfilePage: View{
     //TODO: Add feature where user can type a city name and locations will begin popping up
     @State private var location: String = ""
     @State private var schedule: String = "Weekly lessons per month."
+    @State private var lessonFormat: Int = 0
     var editMode = false
     @State var newEmail = ""
     @State var newPassword = ""
@@ -234,6 +235,14 @@ struct CreateStudentProfilePage: View{
                         TextField("ie. A teacher that will instill good habits. ", text: $teacherDesc, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
                             .padding(10)
+                        HStack(spacing: 10){
+                            Picker("Describe your ideal lesson format", selection: $lessonFormat, content:{
+                                Text("Online").tag(0)
+                                Text("Virtual").tag(1)
+                                Text("Hybrid").tag(2)
+                            })
+                            
+                        }
                     }
                     .padding(10)
                     Group{

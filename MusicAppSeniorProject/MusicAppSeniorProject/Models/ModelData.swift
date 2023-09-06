@@ -499,6 +499,8 @@ final class ModelData: ObservableObject{
                     "Teacher Description": (data!["Teacher Description"] ?? "Weekly lessons per month.") as! String
 
                 ]
+                print("TEACHER DESCRIPTIOn")
+                print(data!["Teacher Description"] ?? "Weekly lessons per month." as! String)
                 let imageUrl = (data!["ImageURL"] ?? "NONE") as! String
                 if(imageUrl == "NONE"){
                     print("DID NOT FIND IMAGE URL IN FIRESTORE")

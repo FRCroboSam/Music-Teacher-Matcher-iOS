@@ -58,7 +58,8 @@ struct CreateTeacherProfilePage: View {
     @State var newPassword = ""
     @State private var changePassword: Bool = false
     @State private var changeEmail: Bool = false
-    
+    @State private var lessonFormat: Int = 0
+
     @State var invalidEmail = false
     @State var invalidNewPassword = false
     @State var invalidPassword = false
@@ -79,6 +80,10 @@ struct CreateTeacherProfilePage: View {
     @State private var teachBeginners = false
     @State private var teachIntermediates = false
     @State private var teachAdvanced = false
+    
+    //toodo: Finish implementing this
+    @State private var teachOnline = false
+    @State private var teachInperson = false
     
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
@@ -290,6 +295,9 @@ struct CreateTeacherProfilePage: View {
                         .modifier(CenterModifier())
                     Divider()
                 }.listRowSeparator(.hidden)
+
+                    
+                
                 Text("Lesson Length: ")
                     .listRowSeparator(.hidden)
                 VStack(alignment: .leading){
@@ -306,6 +314,18 @@ struct CreateTeacherProfilePage: View {
                 }.listRowSeparator(.hidden)
                 
                 VStack(alignment: .leading){
+                    Text("Select the lesson formats you support")
+                    HStack{
+                        Button("In person"){
+                            
+                        }.buttonStyle(FillButtonStyle(isClicked: $teachInperson, color: .teal))
+                        Button("Online"){
+                            
+                        }.buttonStyle(FillButtonStyle(isClicked: $teachOnline, color: .green))
+
+                        
+                    }
+
                     Text("Payment Info (Optional)")
                         .font(.system(size: 20))
                     HStack{
@@ -470,6 +490,13 @@ struct CreateTeacherProfilePage: View {
             print("YEARS TEACHING: " + String(Double(yearsTeaching)))
             var instrument: String = ""
             var levels: String = ""
+            var format: String = ""
+            if(teachOnline){
+                format += "Online"
+            }
+            if(teachInperson){
+                format += " In person"
+            }
             if(playsCello){
                 instrument += "Cello"
             }
@@ -507,7 +534,8 @@ struct CreateTeacherProfilePage: View {
                 "Lesson Length": String(lessonLength),
                 "Pricing": cost,
                 "Levels": levels,
-                "Schedule": schedule
+                "Schedule": schedule,
+                "Format": format
             ]
             let name = firstName + " " +  lastName
             let teacherInfo:KeyValuePairs = [
@@ -637,6 +665,7 @@ struct CreateTeacherProfilePage: View {
                 hasMusicDegree = true
             }
             let instruments = value(key: "Instrument", pairs: teacher.musicalBackground)
+            let format = value(key: "Format", pairs: teacher.lessonInfo)
             if(instruments.localizedCaseInsensitiveContains("Cello")){
                 playsCello = true
             }
@@ -647,6 +676,12 @@ struct CreateTeacherProfilePage: View {
                 playsPiano = true
             }
             
+            if(format.localizedCaseInsensitiveContains("person")){
+                teachInperson = true
+            }
+            if(format.localizedCaseInsensitiveContains("Online")){
+                teachOnline = true
+            }
             
             let taughtLevels = value(key: "Levels", pairs: teacher.lessonInfo) ?? value(key: "Minimum Student Level", pairs: teacher.lessonInfo) ?? "Beginner"
             print("LEVELS TAUGHT: " + taughtLevels)

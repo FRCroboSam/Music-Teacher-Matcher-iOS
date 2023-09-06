@@ -263,7 +263,7 @@ struct StudentProfilePageUI: View {
                                 .frame(width: 300)
                                 .overlay(Color.orange)
 
-                            Text("Looking for a flexible teacher who can instill good practice habits.")
+                            Text(teacherDesc)
                                 .multilineTextAlignment(.leading)
                                 .frame(width: 3/4 * deviceWidth)
                                 .font(.system(size: 22, weight: .light, design: .rounded))
@@ -298,6 +298,7 @@ struct StudentProfilePageUI: View {
                                     .resizable()
                                     .foregroundColor(.orange)
                                     .frame(width: 30, height: 30)
+                                if(format == 0  || format == 1){
                                     Text(" In Person ")
                                         .foregroundColor(.green)
                                         .background{
@@ -309,8 +310,12 @@ struct StudentProfilePageUI: View {
                                                 .brightness(0.2)
                                                 
                                         }
+                                }
+                                if(format == 2){
                                     Text(" OR ")
                                         .foregroundColor(.red)
+                                }
+                                if(format == 1 || format == 2){
                                     Text(" Online ")
                                         .foregroundColor(.blue)
                                         .background{
@@ -321,8 +326,7 @@ struct StudentProfilePageUI: View {
                                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                                                 .brightness(0.2)
                                         }
-//                                    Spacer()
-
+                                }
                             }
                             
 
@@ -331,7 +335,7 @@ struct StudentProfilePageUI: View {
                                     .resizable()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color.teal)
-                                Text("Flexible weekly lessons per month")
+                                Text(schedule)
                             }
                         }
 

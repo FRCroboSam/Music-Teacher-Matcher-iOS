@@ -147,7 +147,8 @@ final class TeacherModelData: ObservableObject{
                     "name": (data!["name"] ?? "Generic User") as! String,
                     "firstName": (data!["firstName"] ?? "Generic User") as! String,
                     "lastName": (data!["lastName"] ?? "Generic User") as! String,
-                    "Location": (data!["Location"] ?? "Generic User") as! String
+                    "Location": (data!["Location"] ?? "Generic User") as! String,
+                    "Format": (data!["Format"] ?? "In person") as! String
                 ]
                 var name = (data!["name"] ?? "Generic User") as! String
                 self.userData = data
@@ -224,7 +225,9 @@ final class TeacherModelData: ObservableObject{
             "age": String(format: "%@", (data!["age"] ?? "0") as! CVarArg),
             "Location": (data!["Location"] ?? "No Location found") as! String,
             "email": (data!["email"] ?? "No email found") as! String,
-            "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String
+            "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String,
+            "Teacher Description": (data!["Teacher Description"] ?? "Weekly lessons per month.") as! String,
+            "Format": (data!["Format"] ?? "Weekly lessons per month.") as! String
 
         ]
         let studentImageURL = (data!["ImageURL"] ?? "None") as! String
@@ -371,19 +374,41 @@ final class TeacherModelData: ObservableObject{
                 let studentId = documentSnapshot.documentID
                 unavailableStudentIds.append(studentId)
                 let studentRef = db.collection("StudentUser").document(studentId)
-                    studentRef.getDocument { (snapshot, err) in
-                        let canAdd = !self.matchedStudents.contains { $0.uid == studentId }
-                        if let err = err {
-                            print("Error getting document: \(err)")
+                let listener = studentRef.addSnapshotListener { documentSnapshot, error in
+                    guard let documentSnapshot = documentSnapshot else {
+                        if let error = error {
+                            print("Error getting document: \(error)")
                         }
-                        else if let snapshot = snapshot, canAdd, snapshot.exists {
-                            let data = snapshot.data()
-                            if let data = data{
-                                let matchedStudent = self.createStudentFromData(documentSnapshot: snapshot)
+                        return
+                    }
+                    //create a new student if its not already in matched student
+                    if (documentSnapshot.exists && !self.matchedStudents.contains { $0.uid == studentId } ) {
+                        // Document data is available
+                        let data = documentSnapshot.data()
+                        if let data = data {
+                            let matchedStudent = self.createStudentFromData(documentSnapshot: documentSnapshot)
+                            
+                            // Check if the student is not already in the list before adding
+                            let canAdd = !self.matchedStudents.contains { $0.uid == studentId }
+                            
+                            if canAdd {
                                 self.matchedStudents.append(matchedStudent)
+                                // Handle the updated data as needed
+                                // You can put your logic here for handling the updated student data
                             }
                         }
+                        //case where the student was already in matched Students
+                    } else if(documentSnapshot.exists) {
+                        if let index = self.matchedStudents.firstIndex(where: { $0.uid == studentId }) {
+                            // You've found the index of the matched teacher with the specified ID
+                            // Update the teacher object at the found index with new data
+                            let updatedStudent = self.createStudentFromData(documentSnapshot: documentSnapshot)
+                            self.matchedStudents[index] = updatedStudent
+                            print("Updated matched teacher at index \(index)")
+                        }
                     }
+                }
+                
             }
         }
         

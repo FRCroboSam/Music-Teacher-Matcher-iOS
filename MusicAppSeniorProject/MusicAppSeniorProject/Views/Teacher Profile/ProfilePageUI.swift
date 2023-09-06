@@ -16,14 +16,15 @@ struct ProfilePageUI: View {
     @State var yearsExperience: Int = 0
     @State var musicDegree: String = ""
     @State var location: String = ""
-    @State var preferredLevel: Int = 0
+    @State var levels: String = ""
     @State var studentDesc: String = ""
     @State var about: String = ""
-    @State var lessonFormat: Int = 0
+    @State var lessonFormat: String = ""
     @State var lessonLength: Int = 60
     @State var pricing: String = ""
     @State var schedule: String = ""
     @State var isFavorite: Bool = false
+    @State var format: Int = 0
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -189,30 +190,47 @@ struct ProfilePageUI: View {
                         Spacer()
                             .frame(height: 5)
                         HStack{
-                            Text(" Intermediate ")
-                                .foregroundColor(.green)
-                                .background{
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .strokeBorder(Color.green, lineWidth: 1)
-                                        .background(Color.green)
-                                        .opacity(0.5)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                        .brightness(0.2)
-                                        
-                                }
-                            Text(" Advanced ")
-                                .foregroundColor(.red)
-                                .background{
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .strokeBorder(Color.red, lineWidth: 1)
-                                        .background(Color.red)
-                                        .opacity(0.5)
-                                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                                        .brightness(0.2)
-                                }
+                            if(levels.contains("Beginner")){
+                                Text(" Beginner ")
+                                    .foregroundColor(.green)
+                                    .background{
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .strokeBorder(Color.green, lineWidth: 1)
+                                            .background(Color.green)
+                                            .opacity(0.5)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .brightness(0.2)
+                                            
+                                    }
+                            }
+                            if(levels.contains("Intermediate")){
+                                Text(" Intermediate ")
+                                    .foregroundColor(.teal)
+                                    .background{
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .strokeBorder(Color.green, lineWidth: 1)
+                                            .background(Color.green)
+                                            .opacity(0.5)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .brightness(0.2)
+                                            
+                                    }
+                            }
+                            if(levels.contains("Advanced")){
+                                Text(" Advanced ")
+                                    .foregroundColor(.red)
+                                    .background{
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .strokeBorder(Color.red, lineWidth: 1)
+                                            .background(Color.red)
+                                            .opacity(0.5)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .brightness(0.2)
+                                    }
+                            }
                         }
                         Divider()
-                        Text("Looking for students who already have a solid grasp on the basics and can play pieces like Hadyn Cello Concerto and Suzuki book 2")
+                        Text(studentDesc)
                             .multilineTextAlignment(.leading)
                             .frame(width: 3/4 * deviceWidth)
                             .font(.system(size: 22, weight: .light, design: .rounded))
@@ -276,29 +294,36 @@ struct ProfilePageUI: View {
                                     .resizable()
                                     .foregroundColor(.orange)
                                     .frame(width: 30, height: 30)
-                                    Text(" In Person ")
-                                        .foregroundColor(.green)
-                                        .background{
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .strokeBorder(Color.green, lineWidth: 1)
-                                                .background(Color.green)
-                                                .opacity(0.5)
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                .brightness(0.2)
-                                                
-                                        }
-                                    Text(" OR ")
-                                        .foregroundColor(.red)
-                                    Text(" Online ")
-                                        .foregroundColor(.blue)
-                                        .background{
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .strokeBorder(Color.blue, lineWidth: 1)
-                                                .background(Color.blue)
-                                                .opacity(0.5)
-                                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                .brightness(0.2)
-                                        }
+                                    if(format == 0  || format == 1){
+                                        Text(" In Person ")
+                                            .foregroundColor(.green)
+                                            .background{
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .strokeBorder(Color.green, lineWidth: 1)
+                                                    .background(Color.green)
+                                                    .opacity(0.5)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                    .brightness(0.2)
+                                                    
+                                            }
+                                    }
+                                    if(format == 2){
+                                        Text(" OR ")
+                                            .foregroundColor(.red)
+                                    }
+                                    if(format == 1 || format == 2){
+                                        Text(" Online ")
+                                            .foregroundColor(.blue)
+                                            .background{
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .strokeBorder(Color.blue, lineWidth: 1)
+                                                    .background(Color.blue)
+                                                    .opacity(0.5)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                    .brightness(0.2)
+                                            }
+                                    }
+
 //                                    Spacer()
 
                             }
@@ -315,7 +340,7 @@ struct ProfilePageUI: View {
                                     .resizable()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color.teal)
-                                Text("Weekly lessons")
+                                Text(schedule)
                             }
                         }
 
@@ -352,10 +377,21 @@ struct ProfilePageUI: View {
         
         instrument = teacher.getStringProperty(key: "Instrument", pairs: teacher.musicalBackground)
         lessonLength = Int(teacher.getDoubleProperty(key: "Lesson Length", pairs: teacher.lessonInfo)) ?? 60
-        preferredLevel = Int(teacher.getStringProperty(key: "Minimum Student Level", pairs: teacher.lessonInfo)) ?? 0
+        levels = (teacher.getStringProperty(key: "Levels", pairs: teacher.lessonInfo))
         about = teacher.getStringProperty(key: "Teaching Style", pairs: teacher.musicalBackground) ?? "Specializing in classical pedagogy with a focus on relaxed, effortless technique."
         studentDesc = teacher.getStringProperty(key: "Student Description", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
         musicDegree = teacher.getStringProperty(key: "Musical Degree", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
+        lessonFormat = teacher.getStringProperty(key: "Format", pairs: teacher.lessonInfo) ?? "In person"
+        if(lessonFormat.contains("Online") && lessonFormat.contains("In")){
+            format = 2
+        }
+        else if(lessonFormat.contains("In")){
+            format = 1
+        }
+        else{
+            format = 0
+        }
+
     }
 }
 
