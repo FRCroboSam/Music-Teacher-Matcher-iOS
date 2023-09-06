@@ -57,6 +57,10 @@ struct CreateStudentProfilePage: View{
     @State private var value:CGFloat = 0
     @State var offset: CGFloat = 25
     
+    @State private var teachInperson: Bool = false
+    @State private var teachOnline: Bool = false
+
+    
     //    @State var tag:Int? = nil
     
     //    @State private var sldkfj: String = ""
@@ -235,12 +239,16 @@ struct CreateStudentProfilePage: View{
                         TextField("ie. A teacher that will instill good habits. ", text: $teacherDesc, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
                             .padding(10)
-                        HStack(spacing: 10){
-                            Picker("Describe your ideal lesson format", selection: $lessonFormat, content:{
-                                Text("Online").tag(0)
-                                Text("Virtual").tag(1)
-                                Text("Hybrid").tag(2)
-                            })
+                        HStack{
+                            Text("Select the lesson formats you would like to have.")
+
+                            Button("In person"){
+                                
+                            }.buttonStyle(FillButtonStyle(isClicked: $teachInperson, color: .teal))
+                            Button("Online"){
+                                
+                            }.buttonStyle(FillButtonStyle(isClicked: $teachOnline, color: .green))
+
                             
                         }
                     }
@@ -436,7 +444,13 @@ struct CreateStudentProfilePage: View{
         //creates Student and sets it to modelData.studentUser
         func createStudentObject(){
             //reset newEmail, changeEmail, newPassword, etc
-            
+            var format: String = ""
+            if(teachOnline){
+                format += "Online"
+            }
+            if(teachInperson){
+                format += " In person"
+            }
             if(changeEmail){
                 email = newEmail
             }
@@ -459,7 +473,8 @@ struct CreateStudentProfilePage: View{
                 "age": String(Double(age)),
                 "Location": location,
                 "Schedule": schedule,
-                "Teacher Description": teacherDesc
+                "Teacher Description": teacherDesc,
+                "Format": format
             ]
             newEmail = ""
             newPassword = ""
@@ -589,6 +604,13 @@ struct CreateStudentProfilePage: View{
         age = convertToDouble(s:value(key: "age", pairs: student.personalInfo))
         //loginInfo
         location = value(key: "Location", pairs: student.personalInfo)
+        let format = value(key: "Format", pairs: student.personalInfo)
+        if(format.localizedCaseInsensitiveContains("In person")){
+            teachInperson = true
+        }
+        if(format.localizedCaseInsensitiveContains("In person")){
+            teachOnline = true
+        }
         schedule = value(key: "Schedule", pairs: student.personalInfo)
         email = modelData.email ?? "template@gmail.com"
         //musical background

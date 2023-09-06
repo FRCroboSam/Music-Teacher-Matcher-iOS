@@ -35,12 +35,14 @@ struct StudentProfilePageUI: View {
     @State var email: String = ""
     @State var skillLevel: Level = .beginner
     @State var priorPiecesPlayed: String = ""
-    @State var format: Int = 2
     @State var schedule: String = ""
     @State var instrument: String = "Cello"
     @State var lessonLength: String = ""
     @State var teacherDesc: String = ""
     @State var ageDescription: String = ""
+    @State var format: Int = 0
+    @State var lessonFormat: String = ""
+
 
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
@@ -298,7 +300,7 @@ struct StudentProfilePageUI: View {
                                     .resizable()
                                     .foregroundColor(.orange)
                                     .frame(width: 30, height: 30)
-                                if(format == 0  || format == 1){
+                                if(format == 0  || format == 2){
                                     Text(" In Person ")
                                         .foregroundColor(.green)
                                         .background{
@@ -389,6 +391,16 @@ struct StudentProfilePageUI: View {
         priorPiecesPlayed = student.getStringProperty(key: "Prior Pieces Played", pairs: student.musicalBackground) ?? "Twinkle Twinkle Little Star"
         schedule = student.getStringProperty(key: "Schedule", pairs: student.personalInfo) ?? "Twinkle Twinkle Little Star"
         teacherDesc = student.getStringProperty(key: "Teacher Description", pairs: student.personalInfo) ?? "Looking for a teacher who can instill good practice habits."
+        lessonFormat = student.getStringProperty(key: "Format", pairs: student.personalInfo) ?? "In person"
+        if(lessonFormat.contains("Online") && lessonFormat.contains("In")){
+            format = 2
+        }
+        else if(lessonFormat.contains("In")){
+            format = 1
+        }
+        else{
+            format = 0
+        }
     }
     func determineAgeRange(_ age: Int) -> String{
         if(age <= 5){

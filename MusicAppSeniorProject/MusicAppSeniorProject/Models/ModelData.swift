@@ -494,6 +494,7 @@ final class ModelData: ObservableObject{
                     "lastName": (data!["lastName"] ?? "Generic User") as! String,
                     "firstName": (data!["firstName"] ?? "Generic User") as! String,
                     "age": (data!["age"] ?? "Generic User") as! String,
+                    "Format": (data!["Format"] ?? "Generic User") as! String,
                     "Location": (data!["Location"] ?? "Generic User") as! String,
                     "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String,
                     "Teacher Description": (data!["Teacher Description"] ?? "Weekly lessons per month.") as! String
