@@ -52,9 +52,9 @@ struct TeacherAppPage: View {
                     tabBarAppearance.backgroundColor = .systemPurple
                     if(modelData.uid != ""){
                         print("FETCHING IN APP PAGE FOR: " + modelData.uid)
-                        self.modelData.fetchStudentData {
-                            
-                        }
+//                        self.modelData.fetchStudentData {
+//                            
+//                        }
                         //TODO: USE THE NEW LOGIC
 //                        modelData.fetchImage{_ in
 //

@@ -25,7 +25,7 @@ struct CreateStudentProfilePage: View{
     @State private var noUserFound = true
     @State private var firstName: String = ""
     @State private var lessonLength: String = ""
-
+    @State private var teacherDesc: String = ""
     @State private var lastName: String = ""
     @State private var age : CGFloat = 0
     @State private var yearsPlaying: CGFloat = 0
@@ -222,8 +222,16 @@ struct CreateStudentProfilePage: View{
                         }).pickerStyle(.segmented)
                         Text("Prior Pieces played")
                             .font(.system(size: 20))
+                            .listRowSeparator(.hidden)
                             .padding(10)
                         TextField("Names of pieces if applicable", text: $description, axis:.vertical)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(10)
+                        Text("Describe what kind of teacher you are looking for. ")
+                            .listRowSeparator(.hidden)
+                            .font(.system(size: 20))
+                            .padding(10)
+                        TextField("ie. A teacher that will instill good habits. ", text: $teacherDesc, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
                             .padding(10)
                     }
@@ -441,7 +449,8 @@ struct CreateStudentProfilePage: View{
                 "lastName": lastName,
                 "age": String(Double(age)),
                 "Location": location,
-                "Schedule": schedule
+                "Schedule": schedule,
+                "Teacher Description": teacherDesc
             ]
             newEmail = ""
             newPassword = ""
@@ -579,6 +588,7 @@ struct CreateStudentProfilePage: View{
         studentLevel = Int(convertToDouble(s:value(key: "Skill Level", pairs: student.musicalBackground)))
         description = value(key: "Prior Pieces Played", pairs: student.musicalBackground)
         price = convertToDouble(s:value(key: "Budget", pairs: student.musicalBackground))
+        teacherDesc = value(key: "Teacher Description", pairs: student.personalInfo)
         print("SEtting profile image 2")
         let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "heart.fill")!)
         if(!modelData.hasPopulated){

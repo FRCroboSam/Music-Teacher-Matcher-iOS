@@ -161,6 +161,7 @@ final class ModelData: ObservableObject{
             data[key] = value
         }
         data["uid"] = self.uid
+        data["ImageURL"] = self.imageURL
         docRef.setData(data)
 
 //        docRef.setData([
@@ -494,7 +495,8 @@ final class ModelData: ObservableObject{
                     "firstName": (data!["firstName"] ?? "Generic User") as! String,
                     "age": (data!["age"] ?? "Generic User") as! String,
                     "Location": (data!["Location"] ?? "Generic User") as! String,
-                    "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String
+                    "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String,
+                    "Teacher Description": (data!["Teacher Description"] ?? "Weekly lessons per month.") as! String
 
                 ]
                 let imageUrl = (data!["ImageURL"] ?? "NONE") as! String

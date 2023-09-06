@@ -25,6 +25,8 @@ enum Level: Hashable{
     }
 }
 struct StudentProfilePageUI: View {
+    @EnvironmentObject var modelData: TeacherModelData
+    @Environment(\.dismiss) var dismiss
     let student: Student?
     @State var name: String = ""
     @State var yearsExperience: Int = 0
@@ -37,7 +39,8 @@ struct StudentProfilePageUI: View {
     @State var schedule: String = ""
     @State var instrument: String = "Cello"
     @State var lessonLength: String = ""
-    
+    @State var teacherDesc: String = ""
+    @State var ageDescription: String = ""
 
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
@@ -56,6 +59,8 @@ struct StudentProfilePageUI: View {
                             .scaledToFill()
                             .frame(height: 2/5 * deviceHeight)
                             .mask(Rectangle().edgesIgnoringSafeArea(.top))
+                            .offset(y: -50)
+
                         
                         
                     }.frame(maxHeight: 1/4 * deviceHeight)
@@ -65,38 +70,57 @@ struct StudentProfilePageUI: View {
                     VStack(alignment: .center){
                         HStack{
                             Spacer()
-                            ProfileImageFromURL(url: student?.imageURL ?? "", size: 50)
+                            ProfileImageFromURL(url: student?.imageURL ?? "", size: 90)
                                 .scaleEffect(x: 1.75, y: 1.75)
                                 .offset(y: -50)
                                 .zIndex(4)
 
                             Spacer()
                         }
+                        
                         HStack{
-                            Image(systemName:"x.circle")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .foregroundColor(Color.red)
-                                .zIndex(6)
-                                .background(Color.white)
-                                .clipShape(Circle())
+                            Button {
+                                modelData.declineStudent(studentUID: student?.uid ?? "NONE")
+                                dismiss()
+
+                            } label: {
+                                VStack{
+                                    Image(systemName:"x.circle")
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
+                                        .foregroundColor(Color.red)
+                                        .zIndex(6)
+                                        .background(Color.white)
+                                        .clipShape(Circle())
+                                        
+                                }
+                            }
                             Spacer()
                                 .frame(width: 30)
-                            
-                            Image(systemName:"checkmark.circle")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                                .background(Color.white)
-                                .clipShape(Circle())
-                                .foregroundColor(Color.green)
-                                .zIndex(6)
+                            Button {
+                                modelData.matchStudent(studentUID: student?.uid ?? "NONE")
+                                dismiss()
+                            } label: {
+                                VStack{
+                                    Image(systemName:"checkmark.circle")
+                                        .resizable()
+                                        .frame(width: 50, height: 50)
+                                        .foregroundColor(Color.green)
+                                        .zIndex(6)
+                                        .background(Color.white)
+                                        .clipShape(Circle())
+
+                                        
+                                }
+                            }
                         }.background{
                             RoundedRectangle(cornerRadius: 30)
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(-10)
+                                
 
-                        }
+                        }.padding(.top, -40)
                         Spacer()
                             .frame(height: 20)
                         Text(name)
@@ -118,7 +142,7 @@ struct StudentProfilePageUI: View {
                                         .brightness(0.2)
                                     
                                 }
-                            Text(" Cello ")
+                            Text(instrument)
                                 .font(.system(size: 20))
                                 .foregroundColor(Color.brown)
                                 .background{
@@ -130,7 +154,7 @@ struct StudentProfilePageUI: View {
                                         .brightness(0.2)
                                     
                                 }
-                            Text(" 5+ ")
+                            Text(ageDescription)
                                 .font(.system(size: 20))
                                 .foregroundColor(Color.teal)
                                 .background{
@@ -197,6 +221,8 @@ struct StudentProfilePageUI: View {
                             .shadow(radius: 5)
                         
                     )
+                    .offset(y: -50)
+                    .padding(.bottom, -50)
                     Spacer()
                         .frame(height: 30)
                     VStack{
@@ -207,9 +233,6 @@ struct StudentProfilePageUI: View {
                             .bold()
                         Spacer()
                             .frame(height: 5)
-                        HStack{
-
-                        }
                         Divider()
                         Text("They have played: " + priorPiecesPlayed)
                             .multilineTextAlignment(.leading)
@@ -227,7 +250,7 @@ struct StudentProfilePageUI: View {
                             
                         )
                     Spacer()
-                        .frame(height: 20)
+                        .frame(height: 35)
                     VStack(){
                         Spacer()
                             .frame(height: 15)
@@ -256,7 +279,7 @@ struct StudentProfilePageUI: View {
                                 .shadow(radius: 5)
                                 .padding(.bottom, -10))
                     Spacer()
-                        .frame(height: 30)
+                        .frame(height: 35)
                     VStack{
                         Spacer()
                             .frame(height: 10)
@@ -324,6 +347,9 @@ struct StudentProfilePageUI: View {
                     .background(ScrollViewConfigurator {
                         $0?.bounces = false               // << here !!
                     })
+                    .toolbarBackground(.hidden, for: .navigationBar)
+                    .navigationBarBackButtonHidden(true) // Hide default button
+                    .navigationBarItems(leading: CustomBackButton(dismiss: dismiss))
             }
 //            Image("music_background")
 //                .resizable()
@@ -349,14 +375,34 @@ struct StudentProfilePageUI: View {
         print("POPULATING INFO FOR: " + student.name)
         name = student.getStringProperty(key:"name", pairs: student.personalInfo)
         location = student.getStringProperty(key:"Location", pairs: student.personalInfo)
-
+        let age = Int(student.getDoubleProperty(key: "age", pairs: student.personalInfo))
+        ageDescription = determineAgeRange(age)
         yearsExperience = Int(student.getDoubleProperty(key: "Years Playing", pairs: student.musicalBackground))
-        print("YEARS EXPERIENCE IS: " + String(yearsExperience))
         pricing = student.getStringProperty(key: "Pricing", pairs: student.musicalBackground)
         instrument = student.getStringProperty(key: "Instrument", pairs: student.musicalBackground)
         lessonLength = student.getStringProperty(key: "Lesson Length", pairs: student.musicalBackground) ?? "60"
         skillLevel = determineSkillLevel(level: Int(student.getStringProperty(key: "Skill Level", pairs: student.musicalBackground)) ?? 0)
         priorPiecesPlayed = student.getStringProperty(key: "Prior Pieces Played", pairs: student.musicalBackground) ?? "Twinkle Twinkle Little Star"
+        schedule = student.getStringProperty(key: "Schedule", pairs: student.personalInfo) ?? "Twinkle Twinkle Little Star"
+        teacherDesc = student.getStringProperty(key: "Teacher Description", pairs: student.personalInfo) ?? "Looking for a teacher who can instill good practice habits."
+    }
+    func determineAgeRange(_ age: Int) -> String{
+        if(age <= 5){
+            return "5+"
+        }
+        else if(age > 5 && age <= 10){
+            return "Under 10"
+        }
+        else if(age > 10 && age <= 15){
+            return "Under 15"
+        }
+        else if(age > 15 && age <= 20 ){
+            return "Under 20"
+        }
+        else{
+            return "21+"
+        }
+        
     }
 }
 

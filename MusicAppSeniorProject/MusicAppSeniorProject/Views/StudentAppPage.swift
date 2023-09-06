@@ -48,9 +48,7 @@ struct StudentAppPage: View {
                 }
                 .onAppear() {
                     let teacher = Teacher(name: "DF")
-                    modelData.teacherDistance(teacher: teacher, student: modelData.studentUser, completion: { _ in
-                        
-                    })
+
                     UITabBarItem.appearance().badgeColor = .systemOrange
 
                     if(modelData.uiImage == nil && !(modelData.uid == "")){

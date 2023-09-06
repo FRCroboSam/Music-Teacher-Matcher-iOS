@@ -78,6 +78,7 @@ struct LoginPage: View {
                     
                 }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
                     .padding(.bottom, 20    )
+                
                 HStack {
                     Image(systemName: "lock")
                     SecureField("Password", text: $password)
@@ -87,6 +88,9 @@ struct LoginPage: View {
                         .autocorrectionDisabled()
 
                 }.modifier(customViewModifier(roundedCornes: 20, startColor: .orange, endColor: .pink, textColor: .white))
+                    .onTapGesture{
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to:nil, from:nil, for:nil)
+                    }
                 Spacer(minLength: 50)
                 Button("Sign In") {
                     print("USER TYPE IS: " + userType)
