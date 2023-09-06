@@ -535,14 +535,15 @@ struct CreateTeacherProfilePage: View {
                 "Pricing": cost,
                 "Levels": levels,
                 "Schedule": schedule,
-                "Format": format
+                
             ]
             let name = firstName + " " +  lastName
             let teacherInfo:KeyValuePairs = [
                 "name": name,
                 "firstName": firstName,
                 "lastName": lastName,
-                "Location": location
+                "Location": location,
+                "Format": format
             ]
             modelData.teacherUser = Teacher(name: firstName + " " + lastName)
             modelData.teacherUser.email = email
@@ -649,6 +650,9 @@ struct CreateTeacherProfilePage: View {
         }
 
         func populateProfileEditor(teacher: Teacher){
+            
+            print(teacher.lessonInfo)
+            print(teacher.teacherInfo)
             //personal info
             name = teacher.name
             firstName = value(key: "firstName", pairs: teacher.teacherInfo)
@@ -665,7 +669,7 @@ struct CreateTeacherProfilePage: View {
                 hasMusicDegree = true
             }
             let instruments = value(key: "Instrument", pairs: teacher.musicalBackground)
-            let format = value(key: "Format", pairs: teacher.lessonInfo)
+            let format = value(key: "Format", pairs: teacher.teacherInfo)
             if(instruments.localizedCaseInsensitiveContains("Cello")){
                 playsCello = true
             }
@@ -675,7 +679,7 @@ struct CreateTeacherProfilePage: View {
             if(instruments.localizedCaseInsensitiveContains("Piano")){
                 playsPiano = true
             }
-            
+            print("FORMAT IS: " + format)
             if(format.localizedCaseInsensitiveContains("person")){
                 teachInperson = true
             }
