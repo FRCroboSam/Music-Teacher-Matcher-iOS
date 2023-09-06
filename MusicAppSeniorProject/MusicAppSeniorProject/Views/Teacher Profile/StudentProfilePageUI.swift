@@ -42,6 +42,7 @@ struct StudentProfilePageUI: View {
     @State var ageDescription: String = ""
     @State var format: Int = 0
     @State var lessonFormat: String = ""
+    @State var canRequest: Bool = false
 
 
     var deviceHeight: CGFloat {
@@ -72,57 +73,59 @@ struct StudentProfilePageUI: View {
                     VStack(alignment: .center){
                         HStack{
                             Spacer()
-                            ProfileImageFromURL(url: student?.imageURL ?? "", size: 90)
+                            ProfileImageFromURL(url: student?.imageURL ?? "None", size: 90)
                                 .scaleEffect(x: 1.75, y: 1.75)
                                 .offset(y: -50)
                                 .zIndex(4)
 
                             Spacer()
                         }
-                        
-                        HStack{
-                            Button {
-                                modelData.declineStudent(studentUID: student?.uid ?? "NONE")
-                                dismiss()
+                        if(canRequest){
+                            HStack{
+                                Button {
+                                    modelData.declineStudent(studentUID: student?.uid ?? "NONE")
+                                    dismiss()
 
-                            } label: {
-                                VStack{
-                                    Image(systemName:"x.circle")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundColor(Color.red)
-                                        .zIndex(6)
-                                        .background(Color.white)
-                                        .clipShape(Circle())
-                                        
+                                } label: {
+                                    VStack{
+                                        Image(systemName:"x.circle")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundColor(Color.red)
+                                            .zIndex(6)
+                                            .background(Color.white)
+                                            .clipShape(Circle())
+                                            
+                                    }
                                 }
-                            }
-                            Spacer()
-                                .frame(width: 30)
-                            Button {
-                                modelData.matchStudent(studentUID: student?.uid ?? "NONE")
-                                dismiss()
-                            } label: {
-                                VStack{
-                                    Image(systemName:"checkmark.circle")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundColor(Color.green)
-                                        .zIndex(6)
-                                        .background(Color.white)
-                                        .clipShape(Circle())
+                                Spacer()
+                                    .frame(width: 30)
+                                Button {
+                                    modelData.matchStudent(studentUID: student?.uid ?? "NONE")
+                                    dismiss()
+                                } label: {
+                                    VStack{
+                                        Image(systemName:"checkmark.circle")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundColor(Color.green)
+                                            .zIndex(6)
+                                            .background(Color.white)
+                                            .clipShape(Circle())
 
-                                        
+                                            
+                                    }
                                 }
-                            }
-                        }.background{
-                            RoundedRectangle(cornerRadius: 30)
-                                .fill(Color.white)
-                                .shadow(radius: 5)
-                                .padding(-10)
-                                
+                            }.background{
+                                RoundedRectangle(cornerRadius: 30)
+                                    .fill(Color.white)
+                                    .shadow(radius: 5)
+                                    .padding(-10)
+                                    
 
-                        }.padding(.top, -40)
+                            }.padding(.top, -40)
+                        }
+
                         Spacer()
                             .frame(height: 20)
                         Text(name)
@@ -379,6 +382,10 @@ struct StudentProfilePageUI: View {
     }
     func populateInfo(student: Student){
         print("POPULATING INFO FOR: " + student.name)
+
+        if(modelData.requestedStudents.contains { $0.uid == student.uid}){
+            canRequest = true
+        }
         name = student.getStringProperty(key:"name", pairs: student.personalInfo)
         location = student.getStringProperty(key:"Location", pairs: student.personalInfo)
         let age = Int(student.getDoubleProperty(key: "age", pairs: student.personalInfo))

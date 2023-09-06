@@ -390,7 +390,6 @@ final class TeacherModelData: ObservableObject{
                             
                             // Check if the student is not already in the list before adding
                             let canAdd = !self.matchedStudents.contains { $0.uid == studentId }
-                            
                             if canAdd {
                                 self.matchedStudents.append(matchedStudent)
                                 // Handle the updated data as needed
@@ -435,6 +434,11 @@ final class TeacherModelData: ObservableObject{
                                 if(requestedStudent.name > "A"){
                                     self.requestedStudents.append(requestedStudent)
                                 }
+                                else{
+                                    print(requestedStudent.name + " Is NOT GREATER THAN A")
+                                    print(requestedStudent.name < "A")
+                                }
+                                
                             }
                         }
                     }

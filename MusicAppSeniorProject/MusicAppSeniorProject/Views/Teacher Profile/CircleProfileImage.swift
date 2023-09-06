@@ -75,7 +75,7 @@ struct ProfileImageFromURL: View{
     let url: String
     let size: CGFloat
     var body: some View {
-        if(url.count > 2){
+        if(url.count > 5 && !url.localizedCaseInsensitiveContains("None")){
             WebImage(url: URL(string: url))
                 .placeholder(Image(systemName: "person.fill"))
                 .resizable()

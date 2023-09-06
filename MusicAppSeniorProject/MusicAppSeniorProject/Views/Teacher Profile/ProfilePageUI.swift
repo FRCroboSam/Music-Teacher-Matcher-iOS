@@ -25,6 +25,7 @@ struct ProfilePageUI: View {
     @State var schedule: String = ""
     @State var isFavorite: Bool = false
     @State var format: Int = 0
+    @State var canRequest: Bool = false
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -60,6 +61,7 @@ struct ProfilePageUI: View {
 
                             Spacer()
                         }
+                        
                         HStack{
                             Button {
                                 modelData.declineTeacher(teacherId: teacher?.uid ?? "")

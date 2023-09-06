@@ -27,7 +27,10 @@ struct StudentListView: View {
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }
-
+    func log(_ log: String) -> EmptyView {
+        print("** \(log)")
+        return EmptyView()
+    }
     var body: some View {
         NavigationStack{
             VStack(spacing: 0){
@@ -122,13 +125,15 @@ struct StudentListView: View {
                             List{
                                 Section{
                                     ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, student in
+                                        
                                         if(student.name.contains(searchStudent) || searchStudent == ""){
                                             NavigationLink{
                                                 StudentProfilePageUI(student: student)
 //                                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
                                             } label:{
                                                 HStack{
-                                                    if(student.imageURL.count > 2){
+                                                    log(student.name + "'s IMAGE URL: " + student.imageURL)
+                                                    if(student.imageURL.count > 5 && student.imageURL != "NONE"){
                                                         ProfileImageFromURL(url: student.imageURL, size: 50)
                                                     }
                                                     else{
