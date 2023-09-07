@@ -11,6 +11,7 @@ struct ProfilePageUI: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var modelData: ModelData
     let teacher: Teacher?
+    let status: String
     @State var name: String = ""
     @State var instrument: String = ""
     @State var yearsExperience: Int = 0
@@ -371,6 +372,7 @@ struct ProfilePageUI: View {
         }
     }
     func populateInfo(teacher: Teacher){
+        
         name = teacher.name
         location = teacher.getStringProperty(key:"Location", pairs: teacher.teacherInfo)
 
@@ -397,11 +399,11 @@ struct ProfilePageUI: View {
     }
 }
 
-struct ProfilePageUI_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfilePageUI(teacher: Teacher(name: "BOB"))
-    }
-}
+//struct ProfilePageUI_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfilePageUI(teacher: Teacher(name: "BOB"))
+//    }
+//}
 struct ScrollViewConfigurator: UIViewRepresentable {
     let configure: (UIScrollView?) -> ()
     func makeUIView(context: Context) -> UIView {

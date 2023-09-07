@@ -190,13 +190,58 @@ struct CreateStudentProfilePage: View{
 //                        })
                     }
                     .padding(10)
-                    HStack(spacing: 10){
-                        Picker("Pick an instrument", selection: $selectedInstrument, content:{
-                            Text("Cello").tag("Cello")
-                            Text("Piano").tag("Piano")
-                            Text("Violin").tag("Violin")
-                        })
-                        
+                    VStack{
+                        Text("Select the instrument you want to take lessons for.")
+//                            .listRowSeparator(.hidden)
+                        HStack(spacing: 10){
+                            HStack {
+                                Spacer()
+                                Text("Cello")
+                                    .bold()
+                                
+                                    .padding()
+                                    .background(selectedInstrument == "Cello" ? Color.orange : Color(UIColor.systemGray6))
+                                    .cornerRadius(8)
+                                    .onTapGesture {
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            selectedInstrument = "Cello"
+                                        }
+                                    }
+                                Spacer()
+                                Text("Piano")
+                                    .padding()
+                                    .bold()
+                                
+                                    .background(selectedInstrument == "Piano" ? Color.orange : Color(UIColor.systemGray6))
+                                    .cornerRadius(8)
+                                    .onTapGesture {
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            selectedInstrument = "Piano"
+                                        }
+                                    }
+                                Spacer()
+                                Text("Violin")
+                                    .bold()
+                                    .padding()
+                                    .background(selectedInstrument == "Violin" ? Color.orange :  Color(UIColor.systemGray6))
+                                    .cornerRadius(8)
+                                    .onTapGesture {
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            selectedInstrument = "Violin"
+                                        }
+                                    }
+                                Spacer()
+                            }
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        }
                     }
                 }
                     .padding(10)
@@ -207,7 +252,8 @@ struct CreateStudentProfilePage: View{
                                 .bold()
                             Divider()
                         }.listRowSeparator(.hidden)
-                        Spacer(minLength: 5)
+                        Spacer()
+                            .frame(height: 10)
                         VStack(spacing: 10){
                             CustomSlider(
                                 value: $yearsPlaying,
@@ -239,17 +285,20 @@ struct CreateStudentProfilePage: View{
                         TextField("ie. A teacher that will instill good habits. ", text: $teacherDesc, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
                             .padding(10)
-                        HStack{
-                            Text("Select the lesson formats you would like to have.")
-
-                            Button("In person"){
+                        VStack{
+                            Text("Select the lesson formats you want.")
+                                .listRowSeparator(.hidden)
+                            HStack{
                                 
-                            }.buttonStyle(FillButtonStyle(isClicked: $teachInperson, color: .teal))
-                            Button("Online"){
+                                Button("In person"){
+                                    
+                                }.buttonStyle(FillButtonStyle(isClicked: $teachInperson, color: .teal))
+                                Button("Online"){
+                                    
+                                }.buttonStyle(FillButtonStyle(isClicked: $teachOnline, color: .green))
                                 
-                            }.buttonStyle(FillButtonStyle(isClicked: $teachOnline, color: .green))
-
-                            
+                                
+                            }
                         }
                     }
                     .padding(10)
@@ -316,29 +365,24 @@ struct CreateStudentProfilePage: View{
 
                     }
                     if(editMode){
-
-
-                        Toggle(isOn: $changeEmail) {
+                        HStack{
                             Text("Update Email?")
-                                .foregroundColor(.black)
-                        }
-                        .toggleStyle(iOSCheckboxToggleStyle())
+                            iosCheckboxToggleStyle(checked: $changeEmail)
+                        }.listRowSeparator(changeEmail ? .hidden : .visible)
+                            .padding(.bottom, 10)
                         if(changeEmail){
                             TextField("Enter new email", text: $newEmail)
                                 .textFieldStyle(.roundedBorder)
                         }
-                        Toggle(isOn: $changePassword) {
+                        HStack{
                             Text("Change Password?")
-                                .foregroundColor(.black)
-    //                            .listRowSeparator(.hidden)
-                        }.toggleStyle(iOSCheckboxToggleStyle())
-                    }
-
-
-                    if(changePassword){
-                        TextField("Enter new password", text: $newPassword)
-                            .textFieldStyle(.roundedBorder)
-                            .listRowSeparator(.hidden)
+                            iosCheckboxToggleStyle(checked: $changePassword)
+                        }.listRowSeparator(changePassword ? .hidden : .visible)
+                            .padding(.bottom, 10)
+                        if(changePassword){
+                            TextField("Enter new password", text: $newPassword)
+                                .textFieldStyle(.roundedBorder)
+                        }
                     }
                 if(editMode){
                     if(changePassword || changeEmail){

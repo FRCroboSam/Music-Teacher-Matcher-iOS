@@ -14,8 +14,8 @@ struct TeacherListView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var modelData: ModelData
     @Binding var displayArray: [Teacher]
-    @Binding var uiImage: UIImage?
     let status: String
+    @Binding var uiImage: UIImage?
     let displayText: String
     @State private var loggedOut = false
     @State private var showInfo  = false
@@ -126,7 +126,7 @@ struct TeacherListView: View {
                                     ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
                                         if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
                                             NavigationLink{
-                                                ProfilePageUI(teacher: teacher)
+                                                ProfilePageUI(teacher: teacher, status: status)
                                             } label:{
                                                 HStack{
                                                     if(teacher.imageURL.count > 2){

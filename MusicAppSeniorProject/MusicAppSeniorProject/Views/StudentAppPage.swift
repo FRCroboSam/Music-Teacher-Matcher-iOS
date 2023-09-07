@@ -33,11 +33,11 @@ struct StudentAppPage: View {
             ZStack{
                 //slider to toggle distance between teacher and student
                 CustomTabBarContainerView(selection: $tabSelection) {
-                    TeacherListView(displayArray: $modelData.availableTeachers, uiImage: $modelData.uiImage, status: "Available Teachers", displayText: availableTeacherDesc)
+                    TeacherListView(displayArray: $modelData.availableTeachers, status: "Available Teachers", uiImage: $modelData.uiImage, displayText: availableTeacherDesc)
                                .tabBarItem(tab: .available, selection: $tabSelection)
-                    TeacherListView(displayArray: $modelData.requestedTeachers, uiImage: $modelData.uiImage, status: "Requested Teachers", displayText: requestedTeacherDesc)
+                    TeacherListView(displayArray: $modelData.requestedTeachers,  status: "Requested Teachers", uiImage: $modelData.uiImage, displayText: requestedTeacherDesc)
                                .tabBarItem(tab: .requested, selection: $tabSelection)
-                    TeacherListView(displayArray: $modelData.matchedTeachers, uiImage: $modelData.uiImage, status: "Matched Teachers", displayText: matchedTeacherDesc)
+                    TeacherListView(displayArray: $modelData.matchedTeachers, status: "Matched Teachers", uiImage: $modelData.uiImage, displayText: matchedTeacherDesc)
 
                         .tabBarItem(tab: .matched, selection: $tabSelection)
                     CreateStudentProfilePage(editMode: true, student:modelData.studentUser)

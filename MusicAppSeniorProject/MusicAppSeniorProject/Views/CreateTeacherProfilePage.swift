@@ -380,20 +380,24 @@ struct CreateTeacherProfilePage: View {
                 else{
                     Text("Email: " + (modelData.email ?? "No email found"))
                         .font(.system(size: 20))
-                    Toggle(isOn: $changeEmail) {
+                    HStack{
                         Text("Update Email?")
-                            .foregroundColor(.black)
-                    }
-                    .toggleStyle(iOSCheckboxToggleStyle())
+                        iosCheckboxToggleStyle(checked: $changeEmail)
+                    }.listRowSeparator(changeEmail ? .hidden : .visible)
+                        .padding(.bottom, 10)
                     if(changeEmail){
                         TextField("Enter new email", text: $newEmail)
                             .textFieldStyle(.roundedBorder)
                     }
-                    Toggle(isOn: $changePassword) {
+                    HStack{
                         Text("Change Password?")
-                            .foregroundColor(.black)
-//                            .listRowSeparator(.hidden)
-                    }.toggleStyle(iOSCheckboxToggleStyle())
+                        iosCheckboxToggleStyle(checked: $changePassword)
+                    }.listRowSeparator(changePassword ? .hidden : .visible)
+                        .padding(.bottom, 10)
+                    if(changePassword){
+                        TextField("Enter new password", text: $newPassword)
+                            .textFieldStyle(.roundedBorder)
+                    }
                 }
                 if(editMode){
                     if(changePassword || changeEmail){
