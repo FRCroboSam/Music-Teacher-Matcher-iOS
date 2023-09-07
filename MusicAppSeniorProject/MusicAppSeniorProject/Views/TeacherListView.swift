@@ -37,6 +37,47 @@ struct TeacherListView: View {
                         .frame(height: 1/10 * deviceHeight)
                     GeometryReader{ geometry in
                         ZStack{
+                            if(showInfo && status == "Available Teachers"){
+                                VStack(alignment: .leading){
+                                    Text("How to match with available teachers")
+                                        .foregroundColor(Color.gray)
+                                    Divider()
+                                    HStack{
+                                        Image(systemName:"checkmark.circle")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(Color.green)
+                                            .zIndex(6)
+                                            .background(Color.white)
+                                            .clipShape(Circle())
+                                        Text("Sends a request, teacher may match or decline")
+                                             .foregroundColor(Color(UIColor.systemGray2))
+                                    }
+                                    HStack{
+                                        Image(systemName:"x.circle")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(Color.red)
+                                            .zIndex(6)
+                                            .background(Color.white)
+                                            .clipShape(Circle())
+                                        Text("Not interested, explore other teachers")
+                                             .foregroundColor(Color(UIColor.systemGray2))
+                                    }
+                                    Text("(Tap to Dismiss)")
+                                        .italic()
+                                        .foregroundColor(Color(UIColor.systemGray3))
+
+
+                                }
+                                .background{
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.white)
+                                        .shadow(radius: 5)
+                                        .padding(-10)
+                                }.zIndex(30)
+                                    .frame(maxWidth: 3/4 * deviceWidth)
+                            }
                             VStack(alignment: .center, spacing: 10){
                                 Section{
                                     //TODO: REIMPLEMENT IMAGE STRUCTURE TO USE WEBIMAGE
@@ -57,18 +98,23 @@ struct TeacherListView: View {
                                             .background(Color.teal)
                                             .clipShape(RoundedRectangle(cornerRadius:10))
                                             .overlay(alignment: .topTrailing){
-                                                Button{
-                                                    showInfo.toggle()
-                                                }label:{
-                                                    Image(systemName: "info.circle")
-                                                        .resizable()
-                                                        .frame(width: 20, height: 20)
-                                                        .background {
-                                                            Circle().fill(
-                                                                Color.white
-                                                            )
+                                                if(status == "Available Teachers"){
+                                                    Button{
+                                                        withAnimation(.easeInOut(duration: 0.2)){
+                                                            showInfo.toggle()
                                                         }
-                                                }.offset(x: 2, y: -15)
+                                                    }label:{
+                                                        Image(systemName: "info.circle")
+                                                            .resizable()
+                                                            .frame(width: 20, height: 20)
+                                                            .background {
+                                                                Circle().fill(
+                                                                    Color.white
+                                                                )
+                                                            }
+                                                    }.offset(x: 2, y: -15)
+                                                }
+
                                             }
 
 
@@ -78,7 +124,10 @@ struct TeacherListView: View {
                         }
                     }.frame(maxHeight: 1/5 * deviceHeight)
                     .onTapGesture {
-                        showInfo = false
+                        withAnimation(.easeInOut(duration: 0.2)){
+                            showInfo = false
+
+                        }
                     }
                     .background{
                         Image("music_background")

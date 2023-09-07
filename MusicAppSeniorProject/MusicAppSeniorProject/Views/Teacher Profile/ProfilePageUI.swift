@@ -20,6 +20,7 @@ struct ProfilePageUI: View {
     @State var levels: String = ""
     @State var studentDesc: String = ""
     @State var about: String = ""
+    @State var email: String = ""
     @State var lessonFormat: String = ""
     @State var lessonLength: Int = 60
     @State var pricing: String = ""
@@ -27,6 +28,7 @@ struct ProfilePageUI: View {
     @State var isFavorite: Bool = false
     @State var format: Int = 0
     @State var canRequest: Bool = false
+    @State var matchText: String = "Contact at: "
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -62,63 +64,85 @@ struct ProfilePageUI: View {
 
                             Spacer()
                         }
-                        
-                        HStack{
-                            Button {
-                                modelData.declineTeacher(teacherId: teacher?.uid ?? "")
-                                dismiss()
+                        if(status == "Available Teachers"){
+                            HStack{
+                                Button {
+                                    modelData.declineTeacher(teacherId: teacher?.uid ?? "")
+                                    dismiss()
 
-                            } label: {
-                                VStack{
-                                    Image(systemName:"x.circle")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundColor(Color.red)
-                                        .zIndex(6)
-                                        .background(Color.white)
-                                        .clipShape(Circle())
-                                        
+                                } label: {
+                                    VStack{
+                                        Image(systemName:"x.circle")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundColor(Color.red)
+                                            .zIndex(6)
+                                            .background(Color.white)
+                                            .clipShape(Circle())
+                                            
+                                    }
                                 }
-                            }
-                            Spacer()
-                                .frame(width: 30)
-                            Button {
-                            } label: {
-                                VStack{
-                                    Image(systemName:"star")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundColor(Color.yellow)
-                                        .zIndex(6)
-                                        .background(Color.white)
-                                        
-                                }
-                            }
-                            Spacer()
-                                .frame(width: 30)
-                            Button {
-                                modelData.requestTeacher(teacherId: teacher?.uid ?? "", score: teacher?.score ?? -1000.0)
-                                dismiss()
-                            } label: {
-                                VStack{
-                                    Image(systemName:"checkmark.circle")
-                                        .resizable()
-                                        .frame(width: 50, height: 50)
-                                        .foregroundColor(Color.green)
-                                        .zIndex(6)
-                                        .background(Color.white)
-                                        .clipShape(Circle())
+                                Spacer()
+                                    .frame(width: 30)
+//                                Button {
+//                                } label: {
+//                                    VStack{
+//                                        Image(systemName:"star")
+//                                            .resizable()
+//                                            .frame(width: 50, height: 50)
+//                                            .foregroundColor(Color.yellow)
+//                                            .zIndex(6)
+//                                            .background(Color.white)
+//
+//                                    }
+//                                }
+//                                Spacer()
+//                                    .frame(width: 30)
+                                Button {
+                                    modelData.requestTeacher(teacherId: teacher?.uid ?? "", score: teacher?.score ?? -1000.0)
+                                    dismiss()
+                                } label: {
+                                    VStack{
+                                        Image(systemName:"checkmark.circle")
+                                            .resizable()
+                                            .frame(width: 50, height: 50)
+                                            .foregroundColor(Color.green)
+                                            .zIndex(6)
+                                            .background(Color.white)
+                                            .clipShape(Circle())
 
-                                        
+                                            
+                                    }
                                 }
-                            }
-                        }.background{
-                            RoundedRectangle(cornerRadius: 30)
-                                .fill(Color.white)
-                                .shadow(radius: 5)
-                                .padding(-10)
-                        }.offset(y: -60)
-                        .padding(.bottom, -40)
+                            }.background{
+                                RoundedRectangle(cornerRadius: 30)
+                                    .fill(Color.white)
+                                    .shadow(radius: 5)
+                                    .padding(-10)
+                            }.offset(y: -60)
+                            .padding(.bottom, -40)
+                        }
+                        if(status == "Requested Teachers"){
+                           Button("Cancel your request"){
+                               modelData.cancelTeacherRequest(teacherId: teacher?.uid ?? "No UID", score: teacher?.score ?? -2300)
+                               dismiss()
+                           }.buttonStyle(BigButtonStyle(color: .orange))
+                            .scaleEffect(x: 0.5, y: 0.5)
+                            .offset(y: -60)
+                            .padding(.bottom, -80)
+                       }
+                         if(status == "Matched Teachers"){
+                            Text(matchText)
+                                 .foregroundColor(Color(UIColor.systemGray2))
+                            .background{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white)
+                                    .shadow(radius: 5)
+                                    .padding(-10)
+                            }.offset(y: -60)
+                            .padding(.bottom, -40)
+                        }
+
 
                         Text(name)
                             .font(.system(size: 35))
@@ -206,19 +230,19 @@ struct ProfilePageUI: View {
                                             
                                     }
                             }
-                            if(levels.contains("Intermediate")){
-                                Text(" Intermediate ")
-                                    .foregroundColor(.teal)
-                                    .background{
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .strokeBorder(Color.green, lineWidth: 1)
-                                            .background(Color.green)
-                                            .opacity(0.5)
-                                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                                            .brightness(0.2)
-                                            
-                                    }
-                            }
+//                            if(levels.contains("Intermediate")){
+//                                Text(" Intermediate ")
+//                                    .foregroundColor(.teal)
+//                                    .background{
+//                                        RoundedRectangle(cornerRadius: 10)
+//                                            .strokeBorder(Color.green, lineWidth: 1)
+//                                            .background(Color.green)
+//                                            .opacity(0.5)
+//                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+//                                            .brightness(0.2)
+//
+//                                    }
+//                            }
                             if(levels.contains("Advanced")){
                                 Text(" Advanced ")
                                     .foregroundColor(.red)
@@ -310,10 +334,6 @@ struct ProfilePageUI: View {
                                                     
                                             }
                                     }
-                                    if(format == 2){
-                                        Text(" OR ")
-                                            .foregroundColor(.red)
-                                    }
                                     if(format == 1 || format == 2){
                                         Text(" Online ")
                                             .foregroundColor(.blue)
@@ -347,6 +367,7 @@ struct ProfilePageUI: View {
                             }
                         }
 
+
                     }.frame(width: 7/8 * deviceWidth)
                         .background(
                             RoundedRectangle(cornerRadius: 40)
@@ -372,7 +393,7 @@ struct ProfilePageUI: View {
         }
     }
     func populateInfo(teacher: Teacher){
-        
+        print("STATUS: " + status)
         name = teacher.name
         location = teacher.getStringProperty(key:"Location", pairs: teacher.teacherInfo)
 
@@ -386,6 +407,7 @@ struct ProfilePageUI: View {
         studentDesc = teacher.getStringProperty(key: "Student Description", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
         musicDegree = teacher.getStringProperty(key: "Musical Degree", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
         lessonFormat = teacher.getStringProperty(key: "Format", pairs: teacher.lessonInfo) ?? "In person"
+        email = teacher.getStringProperty(key: "email", pairs: teacher.loginInfo) ?? "In person"
         if(lessonFormat.contains("Online") && lessonFormat.contains("In")){
             format = 2
         }
@@ -395,6 +417,7 @@ struct ProfilePageUI: View {
         else{
             format = 0
         }
+        matchText = "Contact " + teacher.name + " at " + email + " to schedule an appointment!"
 
     }
 }
@@ -428,3 +451,4 @@ extension UIView {
         return nil
     }
 }
+

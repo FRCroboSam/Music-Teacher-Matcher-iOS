@@ -652,7 +652,7 @@ struct CreateStudentProfilePage: View{
         if(format.localizedCaseInsensitiveContains("In person")){
             teachInperson = true
         }
-        if(format.localizedCaseInsensitiveContains("In person")){
+        if(format.localizedCaseInsensitiveContains("Online")){
             teachOnline = true
         }
         schedule = value(key: "Schedule", pairs: student.personalInfo)
