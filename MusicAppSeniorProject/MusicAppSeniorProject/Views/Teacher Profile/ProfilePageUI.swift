@@ -29,6 +29,7 @@ struct ProfilePageUI: View {
     @State var format: Int = 0
     @State var canRequest: Bool = false
     @State var matchText: String = "Contact at: "
+    @State var pricingText: String = ""
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -141,6 +142,7 @@ struct ProfilePageUI: View {
                                     .padding(-10)
                             }.offset(y: -60)
                             .padding(.bottom, -40)
+                            .frame(maxWidth: 2/3 * deviceWidth)
                         }
 
 
@@ -230,19 +232,19 @@ struct ProfilePageUI: View {
                                             
                                     }
                             }
-//                            if(levels.contains("Intermediate")){
-//                                Text(" Intermediate ")
-//                                    .foregroundColor(.teal)
-//                                    .background{
-//                                        RoundedRectangle(cornerRadius: 10)
-//                                            .strokeBorder(Color.green, lineWidth: 1)
-//                                            .background(Color.green)
-//                                            .opacity(0.5)
-//                                            .clipShape(RoundedRectangle(cornerRadius: 10))
-//                                            .brightness(0.2)
-//
-//                                    }
-//                            }
+                            if(levels.contains("Intermediate")){
+                                Text(" Intermediate ")
+                                    .foregroundColor(.teal)
+                                    .background{
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .strokeBorder(Color.teal, lineWidth: 1)
+                                            .background(Color.teal)
+                                            .opacity(0.5)
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .brightness(0.2)
+
+                                    }
+                            }
                             if(levels.contains("Advanced")){
                                 Text(" Advanced ")
                                     .foregroundColor(.red)
@@ -356,7 +358,7 @@ struct ProfilePageUI: View {
                                     .resizable()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color.green)
-                                Text(String(pricing) + " per " + String(lessonLength) + " lesson")
+                                Text(pricingText)
                             }
                             HStack{
                                 Image(systemName: "calendar.circle")
@@ -364,6 +366,13 @@ struct ProfilePageUI: View {
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color.teal)
                                 Text(schedule)
+                            }
+                            HStack{
+                                Image(systemName: "clock.circle")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(Color.purple)
+                                Text(String(lessonLength) + " minute lessons")
                             }
                         }
 
@@ -399,7 +408,12 @@ struct ProfilePageUI: View {
 
         yearsExperience = Int(teacher.getDoubleProperty(key: "Years Teaching", pairs: teacher.musicalBackground))
         pricing = teacher.getStringProperty(key: "Pricing", pairs: teacher.lessonInfo)
-        
+        if(pricing.isNumeric){
+            pricingText = "$" + pricing + " per lesson"
+        }
+        else{
+            pricingText = pricing
+        }
         instrument = teacher.getStringProperty(key: "Instrument", pairs: teacher.musicalBackground)
         lessonLength = Int(teacher.getDoubleProperty(key: "Lesson Length", pairs: teacher.lessonInfo)) ?? 60
         levels = (teacher.getStringProperty(key: "Levels", pairs: teacher.lessonInfo))
@@ -417,6 +431,7 @@ struct ProfilePageUI: View {
         else{
             format = 0
         }
+        schedule = teacher.getStringProperty(key: "Schedule", pairs: teacher.lessonInfo)
         matchText = "Contact " + teacher.name + " at " + email + " to schedule an appointment!"
 
     }

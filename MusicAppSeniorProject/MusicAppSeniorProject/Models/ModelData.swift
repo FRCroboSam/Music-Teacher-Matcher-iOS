@@ -3,14 +3,7 @@
 //  MusicAppSeniorProject
 //
 //  Created by Samuel Wang on 2/23/23.
-//TODO: Available Teacher algorithm -> populates all of the teachers that could be compatible with the student, irrespective of distance and level, only considering the instrument
-//TODO: method to determine compatibility of teacher - > level, years of experience, location
-//TODO: method to determine proximity between teacher and student
-//TODO: method to take top 5 best teachers for the student
-//TODO: button at bottom of screen for adding 5 more teachers
-//TODO: Save teachers into "available teachers
-//todo: dfdf
-//TODO: 8/6 work out available teachers logic
+
 import Foundation
 import Firebase
 import FirebaseAppCheck
@@ -497,6 +490,7 @@ final class ModelData: ObservableObject{
                     "Format": (data!["Format"] ?? "Generic User") as! String,
                     "Location": (data!["Location"] ?? "Generic User") as! String,
                     "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String,
+                    "Lesson Length": (data!["Lesson Length"] ?? "Weekly lessons per month.") as! String,
                     "Teacher Description": (data!["Teacher Description"] ?? "Weekly lessons per month.") as! String
 
                 ]
@@ -595,9 +589,8 @@ final class ModelData: ObservableObject{
         print("UID IS: " + uid)
         //populate all available teachers with teachers with the same instrument
         let teacherRef = db.collection("Teachers")//.document("Teacher Instruments").collection("Cello") //TODO: FIX LOGIC
-        let query = teacherRef
-            .whereField("Instrument", isEqualTo: "Cello")
-            .whereField("name", isGreaterThan: "A")
+        let query = teacherRef.whereField("name", isGreaterThan: "A")
+
         teacherListener = query.addSnapshotListener { querySnapshot, error in
             var numAdded = 0
             var numRemoved = 0
@@ -606,6 +599,7 @@ final class ModelData: ObservableObject{
                     numAdded += 1
                 }
                 if (diff.type == .modified) {
+                    print("TEACHER WAS MODIFIED")
                     let modifiedTeacherID = diff.document.documentID
                     if let index = self.matchedTeachers.firstIndex(where: { $0.uid == modifiedTeacherID }) {
                         // You've found the index of the matched teacher with the specified ID
@@ -827,7 +821,7 @@ final class ModelData: ObservableObject{
                 let query = allAvailableTeachersRef
                     .order(by: "Score", descending: true)
                     .limit(to: 20)
-            self.availableListener = allAvailableTeachersRef.addSnapshotListener { querySnapshot, error in
+            self.availableListener = query.addSnapshotListener { querySnapshot, error in
                 //todo implement this later
                 print("Available Teachers is changing ")
                 querySnapshot?.documentChanges.forEach{ diff in
@@ -939,6 +933,7 @@ final class ModelData: ObservableObject{
             "Years Teaching": (data!["Years Teaching"] ?? "Generic User") as! String,
             "Musical Degree": (data!["Musical Degree"] ?? "Generic User") as! String,
             "Teaching Style": (data!["Teaching Style"] ?? "Generic User") as! String,
+            "Student Description": (data!["Student Description"] ?? "Generic User") as! String,
         ]
 //        print("Teaching Style for : " + uid)
 //        print((data!["Teaching Style"] ?? "Generic User") as! String)
@@ -946,11 +941,15 @@ final class ModelData: ObservableObject{
             "Lesson Length": (data!["Lesson Length"] ?? "Generic User") as! String,
             "Pricing": (data!["Pricing"] ?? "Generic User") as! String,
             "Levels": (data!["Levels"] ?? "Generic User") as! String,
+            "Schedule": (data!["Schedule"] ?? "Generic User") as! String,
         ]
         let teacherInfo:KeyValuePairs = [
             "name": (data!["name"] ?? "Generic User") as! String,
             "firstName": (data!["firstName"] ?? "Generic User") as! String,
-            "lastName": (data!["lastName"] ?? "Generic User") as! String
+            "lastName": (data!["lastName"] ?? "Generic User") as! String,
+            "Location": (data!["Location"] ?? "Generic User") as! String,
+            "Format": (data!["Format"] ?? "Generic User") as! String,
+            
         ]
         let teacherImgURL = (data!["ImageURL"] ?? "None") as! String
         let name = (data!["name"] ?? "Generic User") as! String

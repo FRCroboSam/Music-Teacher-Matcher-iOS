@@ -220,6 +220,7 @@ final class TeacherModelData: ObservableObject{
             "Prior Pieces Played": (data!["Prior Pieces Played"] ?? "Generic User") as! String,
             "Budget": (data!["Budget"] ?? "Generic User") as! String
         ]
+        //TODO: FInish up the profile page UI to populate everything properly 
         let studentInfo:KeyValuePairs = [
             "name": (data!["name"] ?? "Generic User") as! String,
             "age": String(format: "%@", (data!["age"] ?? "0") as! CVarArg),
@@ -227,7 +228,8 @@ final class TeacherModelData: ObservableObject{
             "email": (data!["email"] ?? "No email found") as! String,
             "Schedule": (data!["Schedule"] ?? "Weekly lessons per month.") as! String,
             "Teacher Description": (data!["Teacher Description"] ?? "Weekly lessons per month.") as! String,
-            "Format": (data!["Format"] ?? "Weekly lessons per month.") as! String
+            "Format": (data!["Format"] ?? "Weekly lessons per month.") as! String,
+            "Lesson Length": (data!["Lesson Length"] ?? "Weekly lessons per month.") as! String,
 
         ]
         let studentImageURL = (data!["ImageURL"] ?? "None") as! String

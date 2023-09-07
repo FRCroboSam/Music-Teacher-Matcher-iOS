@@ -32,52 +32,12 @@ struct TeacherListView: View {
 
     var body: some View {
         NavigationStack{
-            VStack(spacing: 0){
+            ZStack{
+                VStack(spacing: 0){
                     Spacer()
                         .frame(height: 1/10 * deviceHeight)
                     GeometryReader{ geometry in
                         ZStack{
-                            if(showInfo && status == "Available Teachers"){
-                                VStack(alignment: .leading){
-                                    Text("How to match with available teachers")
-                                        .foregroundColor(Color.gray)
-                                    Divider()
-                                    HStack{
-                                        Image(systemName:"checkmark.circle")
-                                            .resizable()
-                                            .frame(width: 30, height: 30)
-                                            .foregroundColor(Color.green)
-                                            .zIndex(6)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
-                                        Text("Sends a request, teacher may match or decline")
-                                             .foregroundColor(Color(UIColor.systemGray2))
-                                    }
-                                    HStack{
-                                        Image(systemName:"x.circle")
-                                            .resizable()
-                                            .frame(width: 30, height: 30)
-                                            .foregroundColor(Color.red)
-                                            .zIndex(6)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
-                                        Text("Not interested, explore other teachers")
-                                             .foregroundColor(Color(UIColor.systemGray2))
-                                    }
-                                    Text("(Tap to Dismiss)")
-                                        .italic()
-                                        .foregroundColor(Color(UIColor.systemGray3))
-
-
-                                }
-                                .background{
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color.white)
-                                        .shadow(radius: 5)
-                                        .padding(-10)
-                                }.zIndex(30)
-                                    .frame(maxWidth: 3/4 * deviceWidth)
-                            }
                             VStack(alignment: .center, spacing: 10){
                                 Section{
                                     //TODO: REIMPLEMENT IMAGE STRUCTURE TO USE WEBIMAGE
@@ -85,7 +45,7 @@ struct TeacherListView: View {
                                         .overlay(Circle()
                                             .strokeBorder(Color.white,lineWidth: 5)
                                         ).modifier(CenterModifier())
-
+                                    
                                     Spacer()
                                         .frame(height: 10)
                                     HStack{
@@ -94,7 +54,7 @@ struct TeacherListView: View {
                                             .font(.custom("MarkerFelt-Wide", size: 40))
                                             .foregroundColor(.white)
                                             .minimumScaleFactor(0.01)
-
+                                        
                                             .background(Color.teal)
                                             .clipShape(RoundedRectangle(cornerRadius:10))
                                             .overlay(alignment: .topTrailing){
@@ -114,35 +74,30 @@ struct TeacherListView: View {
                                                             }
                                                     }.offset(x: 2, y: -15)
                                                 }
-
+                                                
                                             }
-
-
+                                        
+                                        
                                     }//.modifier(CenterModifier())
                                 }
                             }
                         }
                     }.frame(maxHeight: 1/5 * deviceHeight)
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.2)){
-                            showInfo = false
 
+                        .background{
+                            Image("music_background")
+                                .resizable()
+                                .scaledToFill()
+                                .edgesIgnoringSafeArea(.all)
+                                .aspectRatio(contentMode: .fill)
                         }
-                    }
-                    .background{
-                        Image("music_background")
-                            .resizable()
-                            .scaledToFill()
-                            .edgesIgnoringSafeArea(.all)
-                            .aspectRatio(contentMode: .fill)
-                    }
-
-                
-                Spacer()
-                    .frame(height: 1/30 * deviceHeight)
-                ZStack{
-                    VStack(spacing: 0){
-//                        Section{
+                    
+                    
+                    Spacer()
+                        .frame(height: 1/30 * deviceHeight)
+                    ZStack{
+                        VStack(spacing: 0){
+                            //                        Section{
                             HStack {
                                 Image(systemName: "magnifyingglass")
                                     .foregroundColor(.black)
@@ -161,96 +116,154 @@ struct TeacherListView: View {
                             //TODO: TRY EMBEDDING THE LIST IN A ZSTACK THAT WAY YOU CAN USE THE FRAME THING AND ITLL ONLY AFFECT THE LIST
                             //make the offset however big divider offset is and frame big enough to cover between divider and search
                             Rectangle()
-                            .offset(y:20)
+                                .offset(y:20)
                                 .frame(maxHeight: 30)
                                 .foregroundColor(Color.white)
                                 .zIndex(4)
                             Divider()
-                            .offset(y:20)
+                                .offset(y:20)
                                 .zIndex(6)
-//                        }
-                        ScrollViewReader{ proxy in
-                            List{
-                                Section{
-                                    ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
-                                        if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
-                                            NavigationLink{
-                                                ProfilePageUI(teacher: teacher, status: status)
-                                            } label:{
-                                                HStack{
-                                                    if(teacher.imageURL.count > 2){
-                                                        ProfileImageFromURL(url: teacher.imageURL, size: 50)
+                            //                        }
+                            ScrollViewReader{ proxy in
+                                List{
+                                    Section{
+                                        ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
+                                            if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
+                                                NavigationLink{
+                                                    ProfilePageUI(teacher: teacher, status: status)
+                                                } label:{
+                                                    HStack{
+                                                        if(teacher.imageURL.count > 2){
+                                                            ProfileImageFromURL(url: teacher.imageURL, size: 50)
+                                                        }
+                                                        else{
+                                                            ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                        }
+                                                        VStack(alignment: .leading) {
+                                                            Spacer()
+                                                            Text(teacher.name).font(.system(size: 25))
+                                                            Text(teacher.instrument).font(.subheadline)
+                                                        }.foregroundColor(.black)
                                                     }
-                                                    else{
-                                                        ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                    .buttonStyle(BigButtonStyle())
+                                                    .swipeActions {
+                                                        Button("Decline") {
+                                                            print("Awesome!")
+                                                        }
+                                                        .tint(.red)
                                                     }
-                                                    VStack(alignment: .leading) {
-                                                        Spacer()
-                                                        Text(teacher.name).font(.system(size: 25))
-                                                        Text(teacher.instrument).font(.subheadline)
-                                                    }.foregroundColor(.black)
-                                                }
-                                                .buttonStyle(BigButtonStyle())
-                                                .swipeActions {
-                                                    Button("Decline") {
-                                                        print("Awesome!")
-                                                    }
-                                                    .tint(.red)
-                                                }
-                                            }.id(index)
+                                                }.id(index)
+                                            }
+                                        } .onMove { from, to in
+                                            
+                                            displayArray.move(fromOffsets: from, toOffset: to)
                                         }
-                                    } .onMove { from, to in
                                         
-                                        displayArray.move(fromOffsets: from, toOffset: to)
+                                    } //header: {
+                                    //                                Text(displayText)
+                                    //                                    .font(.system(size: 20))
+                                    //                                    .textCase(.none)
+                                    //                            }
+                                    .listSectionSeparator(.hidden, edges: .top)
+                                    HStack{
+                                        Button("Log Out"){
+                                            modelData.logOut()
+                                            loggedOut = true
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                modelData.reset()
+                                            }
+                                        }
+                                        .modifier(CenterModifier())
+                                        .buttonStyle(BigButtonStyle(color: .purple))
                                     }
-                                    
-                                } //header: {
-                                //                                Text(displayText)
-                                //                                    .font(.system(size: 20))
-                                //                                    .textCase(.none)
-                                //                            }
-                                .listSectionSeparator(.hidden, edges: .top)
-                                HStack{
-                                    Button("Log Out"){
-                                        modelData.logOut()
-                                        loggedOut = true
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                            modelData.reset()
-                                       }
-                                    }
-                                    .modifier(CenterModifier())
-                                    .buttonStyle(BigButtonStyle(color: .purple))
+                                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    .listRowSeparator(.hidden)
                                 }
-                                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                .listRowSeparator(.hidden)
+                                .edgesIgnoringSafeArea(.all)
+                                .listStyle(GroupedListStyle())
+                                .scrollContentBackground(.hidden)
+                                Spacer()
+                                    .ignoresSafeArea(.all)
+                                    .frame(height: 1/8 * deviceHeight)
+                                    .listRowSeparator(.hidden)
+                                
+                                    .navigationDestination(isPresented: $loggedOut, destination: {
+                                        HomePage()
+                                    })
+
                             }
-                            .edgesIgnoringSafeArea(.all)
-                            .listStyle(GroupedListStyle())
-                            .scrollContentBackground(.hidden)
-                            Spacer()
-                                .ignoresSafeArea(.all)
-                                .frame(height: 1/8 * deviceHeight)
-                                .listRowSeparator(.hidden)
-                            
-                                .navigationDestination(isPresented: $loggedOut, destination: {
-                                    HomePage()
-                                })
-                                .onAppear{
-                                    proxy.scrollTo(4)
-                                }
+                            .zIndex(2)
                         }
-                        .zIndex(2)
+                        
+                        .background{
+                            Color.white
+                        }.cornerRadius(20)
+                            .frame(width: deviceWidth, height: 2/3 * deviceHeight)
+                            .contentShape(Rectangle())
+                            .zIndex(3)
+                        
                     }
                     
-                    .background{
-                        Color.white
-                    }.cornerRadius(20)
-                        .frame(width: deviceWidth, height: 2/3 * deviceHeight)
-                        .contentShape(Rectangle())
-                        .zIndex(3)
-                    
                 }
+                if(showInfo && status == "Available Teachers"){
+                    VStack(alignment: .leading){
 
+                        Text("The app shows you 5 new teachers at a time.")
+                            .lineLimit(2, reservesSpace: true)
+                            .modifier(CenterModifier())
+                            .foregroundColor(Color(UIColor.systemGray3))
+                        Divider()
+                        HStack{
+                            Image(systemName:"checkmark.circle")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(Color.green)
+                                .zIndex(6)
+                                .background(Color.white)
+                                .clipShape(Circle())
+                            Text("Sends a request, teacher may match or decline")
+                                .lineLimit(2, reservesSpace: true)
+                                .foregroundColor(Color(UIColor.systemGray2))
+                        }
+                        HStack{
+                            Image(systemName:"x.circle")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .foregroundColor(Color.red)
+                                .zIndex(6)
+                                .background(Color.white)
+                                .clipShape(Circle())
+                            Text("Not interested, explore other teachers")
+                                .lineLimit(2, reservesSpace: true)
+                                .foregroundColor(Color(UIColor.systemGray2))
+                        }
+                        Text("(Tap to Dismiss)")
+                            .lineLimit(2)
+                            .modifier(CenterModifier())
+                            .italic()
+                            .foregroundColor(Color(UIColor.systemGray3))
+                        
+                        
+                    }
+                    .background{
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white)
+                            .shadow(radius: 10)
+                            .padding(-10)
+                            .overlay{
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color(UIColor.lightGray), lineWidth: 1)
+                                    .padding(-10)
+                            }
+
+                    }.zIndex(30)
+                    .frame(maxWidth: 3/4 * deviceWidth, maxHeight: 500)
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.2)){
+                            showInfo = false
+                        }
+                    }
+                }
             }
         }
     }

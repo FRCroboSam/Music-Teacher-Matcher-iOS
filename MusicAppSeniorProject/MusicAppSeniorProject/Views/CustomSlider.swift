@@ -10,6 +10,7 @@ import SwiftUI
 struct CustomSlider: View {
     @Binding var value:CGFloat
     @State var offset: CGFloat
+    @State var fontSize: CGFloat = 20
     private var name: String
     private var maxValue:CGFloat
     private var minValue: CGFloat
@@ -28,9 +29,10 @@ struct CustomSlider: View {
             ZStack{
                 HStack{
                     Text(name)
+                        .font(.system(size: fontSize))
                     Spacer(minLength: 10)
                     Text(String(Double(value)))
-                        .font(.system(size: 20))
+                        .font(.system(size: fontSize))
                         .background(
                             shape
                                 .strokeBorder(Color.black,lineWidth: 2)

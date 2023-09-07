@@ -245,25 +245,24 @@ struct CreateStudentProfilePage: View{
                     }
                 }
                     .padding(10)
-                    VStack(alignment: .leading, spacing: 5){
+                    Section{
                         VStack(alignment: .center){
                             Text("Musical background")
                                 .font(.system(size: 30))
                                 .bold()
                             Divider()
                         }.listRowSeparator(.hidden)
-                        Spacer()
-                            .frame(height: 10)
                         VStack(spacing: 10){
                             CustomSlider(
                                 value: $yearsPlaying,
                                 name: "Years Playing: ", maxValue: 20, minValue: 0
                             ).padding(5)
-                        }
+                        }.padding(.top, -10)
+//                        Divider()
                         Text("Skill Level")
                             .font(.system(size: 20))
-
-                            .padding(10)
+                            .listRowSeparator(.hidden, edges: .bottom)
+                            .padding(.bottom, -10)
                         Picker("Level", selection: $studentLevel, content:{
                             Text("Beginner").tag(0)
                             Text("Intermediate").tag(1)
@@ -271,23 +270,44 @@ struct CreateStudentProfilePage: View{
                                 .padding(10)
 
                         }).pickerStyle(.segmented)
+                            .onTapGesture(coordinateSpace: .local) { gesture in
+                                let pickerWidth = 3/4 * UIScreen.main.bounds.width
+                                let segmentWidth = pickerWidth / CGFloat(3) // Assuming 3 segments
+                                var newSelection = 0
+                                let tapLocationX = gesture.x
+                                if tapLocationX < segmentWidth {
+                                    newSelection = 0
+                                } else if tapLocationX < 2 * segmentWidth {
+                                    newSelection = 1
+                                } else {
+                                    newSelection = 2
+                                }
+                                
+                                withAnimation {
+                                    studentLevel = newSelection
+                                }
+                            }
+//                        Divider()
                         Text("Prior Pieces played")
                             .font(.system(size: 20))
-                            .listRowSeparator(.hidden)
-                            .padding(10)
-                        TextField("Names of pieces if applicable", text: $description, axis:.vertical)
+                            .listRowSeparator(.hidden, edges: .bottom)
+                            .padding(.bottom, -10)
+                        TextField("Names of pieces ", text: $description, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
-                            .padding(10)
+                            .padding(.horizontal, 10)
+//                        Divider()
                         Text("Describe what kind of teacher you are looking for. ")
-                            .listRowSeparator(.hidden)
+                            .listRowSeparator(.hidden, edges: .bottom)
                             .font(.system(size: 20))
-                            .padding(10)
+                            .padding(.bottom, -10)
                         TextField("ie. A teacher that will instill good habits. ", text: $teacherDesc, axis:.vertical)
                             .textFieldStyle(.roundedBorder)
-                            .padding(10)
+                            .padding(.horizontal, 10)
+//                        Divider()
                         VStack{
                             Text("Select the lesson formats you want.")
-                                .listRowSeparator(.hidden)
+                                .font(.system(size: 20))
+                                .listRowSeparator(.hidden, edges: .bottom)
                             HStack{
                                 
                                 Button("In person"){
@@ -302,96 +322,129 @@ struct CreateStudentProfilePage: View{
                         }
                     }
                     .padding(10)
-                    Group{
-                        VStack(alignment: .leading, spacing: 10){
-                            Text("Preferred Cost (Max) of teacher")
-                                .font(.system(size: 20))
-                            Text("$\(Int(price))")
-                            Slider(
-                                value: $price,
-                                in: 0...200,
-                                step: 1
-                            )
-                            if(editMode){
-
-                            }
-
-                        }
-                        .padding(10)
-                        Text("Lesson Length: ")
-                            .listRowSeparator(.hidden)
-                        VStack(alignment: .leading){
-                            HStack{
-                                TextField("60", text: Binding(
-                                    get: {lessonLength},
-                                    set: {lessonLength = $0.filter{"0123456789".contains($0)}}))
-                                .textFieldStyle(.roundedBorder)
-                                .frame(maxWidth: 80)
-                                
-                                Text(" minutes per lesson")
-                            }.padding(.bottom, 10)
+                Section{
+                    VStack(alignment: .leading, spacing: 10){
+                        VStack(alignment: .center){
+                            Text("Lesson Logistics")
+                                .font(.system(size: 30))
+                                .bold()
                             Divider()
                         }.listRowSeparator(.hidden)
-                        Text("Enter your location")
-                            .listRowSeparator(.hidden)
-                        TextField("ie. Seattle, WA", text: $location)
-                            .textFieldStyle(.roundedBorder)
-                            .listRowSeparator(.visible, edges: .bottom)
-                        Text("Describe your ideal lesson schedule, provided below is default schedule.")
-                            .listRowSeparator(.hidden)
-                        TextField("ie. Weekly Lessons each month", text: $schedule)
-                            .textFieldStyle(.roundedBorder)
-                            .padding(.bottom, 10)
-                        VStack(alignment: .leading, spacing: 5){
-                            Text("Login Info")
-                                .font(.system(size: 20))
-
-
-                            if(editMode){
-                                Text("Email: " + email)
-                                    .font(.system(size: 20))
-                            }
-                            else{
-                                TextField("Enter email (your's or parent's)", text: $email)
-                                    .textFieldStyle(.roundedBorder)
-                                TextField("Enter a password", text: $password)
-                                    .textFieldStyle(.roundedBorder)
-                                    .listRowSeparator(.hidden)
-
-                            }
-
+                        Text("Preferred Cost (Max) of teacher")
+                            .font(.system(size: 20))
+                        Text("$\(Int(price))")
+                        Slider(
+                            value: $price,
+                            in: 0...200,
+                            step: 1
+                        )
+                        if(editMode){
+                            
                         }
-                        .padding(10)
-
+                        
+                    } //.padding(10)
+                    
+                    Text("Lesson Length: ")
+                        .font(.system(size: 20))
+                        .listRowSeparator(.hidden)
+                        .padding(.horizontal, 10)
+                    VStack(alignment: .leading){
+                        HStack{
+                            TextField("60", text: Binding(
+                                get: {lessonLength},
+                                set: {lessonLength = $0.filter{"0123456789".contains($0)}}))
+                            .textFieldStyle(.roundedBorder)
+                            .frame(maxWidth: 80)
+                            
+                            Text(" minutes per lesson")
+                        }.padding(.bottom, 10)
+                        Divider()
+                    }.listRowSeparator(.hidden)
+                    Text("Enter your location")
+                        .font(.system(size: 20))
+                        .padding(.horizontal, 10)
+                    
+                        .listRowSeparator(.hidden)
+                    TextField("ie. Seattle, WA", text: $location)
+                        .textFieldStyle(.roundedBorder)
+                        .listRowSeparator(.visible, edges: .bottom)
+                        .padding(.bottom, 10)
+                    Text("Describe your ideal lesson schedule, provided below is default schedule.")
+                        .padding(.horizontal, 10)
+                    
+                        .font(.system(size: 20))
+                        .listRowSeparator(.hidden)
+                    TextField("ie. Weekly Lessons each month", text: $schedule)
+                        .textFieldStyle(.roundedBorder)
+                        .padding(.bottom, 10)
+                }
+                Section{
+                    VStack(alignment: .center){
+                        Text("Login Info")
+                            .font(.system(size: 30))
+                            .bold()
+                        Divider()
+                    }.listRowSeparator(.hidden)
+                    if(editMode){
+                        Text("Email: " + email)
+                            .font(.system(size: 20))
+                            .padding(.horizontal, 10)
                     }
+                    else{
+                        TextField("Enter email (your's or parent's)", text: $email)
+                            .textFieldStyle(.roundedBorder)
+                        TextField("Enter a password", text: $password)
+                            .textFieldStyle(.roundedBorder)
+                            .listRowSeparator(.hidden)
+                        
+                    }
+                    
+                    
+                    
+                    
                     if(editMode){
                         HStack{
                             Text("Update Email?")
+                                .font(.system(size: 20))
+                                .padding(.horizontal, 10)
                             iosCheckboxToggleStyle(checked: $changeEmail)
                         }.listRowSeparator(changeEmail ? .hidden : .visible)
                             .padding(.bottom, 10)
                         if(changeEmail){
                             TextField("Enter new email", text: $newEmail)
                                 .textFieldStyle(.roundedBorder)
+                                .padding(.horizontal, 10)
+                                .padding(.bottom, 10)
+                            
                         }
                         HStack{
                             Text("Change Password?")
+                                .font(.system(size: 20))
+                                .padding(.horizontal, 10)
+                            
+                            
                             iosCheckboxToggleStyle(checked: $changePassword)
-                        }.listRowSeparator(changePassword ? .hidden : .visible)
+                        }
+                        .listRowSeparator(changePassword || !changePassword && !changeEmail ? .hidden : .visible)
                             .padding(.bottom, 10)
                         if(changePassword){
                             TextField("Enter new password", text: $newPassword)
                                 .textFieldStyle(.roundedBorder)
+                                .padding(.horizontal, 10)
+                            
                         }
                     }
-                if(editMode){
-                    if(changePassword || changeEmail){
-                        Text("Enter current password to save changes to profile")
-                            .listRowSeparator(.hidden)
-
-                        TextField("Enter current password", text: $password)
-                            .textFieldStyle(.roundedBorder)
-                    }
+                    if(editMode){
+                        if(changePassword || changeEmail){
+                            Text("Enter current password to save changes to profile")
+                                .font(.system(size: 20))
+                                .listRowSeparator(.hidden)
+                                .padding(.horizontal, 10)
+                            
+                            TextField("Enter current password", text: $password)
+                                .textFieldStyle(.roundedBorder)
+                                .padding(10)
+                        }
                         Button("Update Profile") {
                             updateProfile(){ canUpdate in
                                 if canUpdate{
@@ -418,18 +471,18 @@ struct CreateStudentProfilePage: View{
                                     
                                 }
                             }
-//                            createStudentObject()
-//                            modelData.registerStudentUser(){ isFound in
-//                                if isFound {
-//                                    noUserFound = false
-//                                    loginSuccessful = true
-//                                } else {
-//                                    noUserFound = true
-//                                    loginSuccessful = false
-//                                }
-//                            }
+                            //                            createStudentObject()
+                            //                            modelData.registerStudentUser(){ isFound in
+                            //                                if isFound {
+                            //                                    noUserFound = false
+                            //                                    loginSuccessful = true
+                            //                                } else {
+                            //                                    noUserFound = true
+                            //                                    loginSuccessful = false
+                            //                                }
+                            //                            }
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(BigButtonStyle(color: .orange))
                         .padding(10)
                         .listRowSeparator(.hidden)
                     }
@@ -447,12 +500,13 @@ struct CreateStudentProfilePage: View{
                                     loginSuccessful = false
                                 }
                             }
-                        }.listRowSeparator(.hidden)
-                            .buttonStyle(BigButtonStyle(color: .orange))
-                        .padding(10)
+                        }
+                        .buttonStyle(BigButtonStyle(color: .orange))
+                        .listRowSeparator(.hidden)
+                            .padding(10)
                     }
-
-
+                    
+                }
                 Spacer(minLength: 100)
                     .listRowBackground(Color.clear)
 //                    .listRowSeparator(.hidden)
@@ -518,7 +572,8 @@ struct CreateStudentProfilePage: View{
                 "Location": location,
                 "Schedule": schedule,
                 "Teacher Description": teacherDesc,
-                "Format": format
+                "Format": format,
+                "Lesson Length": lessonLength
             ]
             newEmail = ""
             newPassword = ""
@@ -648,6 +703,7 @@ struct CreateStudentProfilePage: View{
         age = convertToDouble(s:value(key: "age", pairs: student.personalInfo))
         //loginInfo
         location = value(key: "Location", pairs: student.personalInfo)
+        lessonLength = value(key: "Lesson Length", pairs: student.personalInfo)
         let format = value(key: "Format", pairs: student.personalInfo)
         if(format.localizedCaseInsensitiveContains("In person")){
             teachInperson = true
