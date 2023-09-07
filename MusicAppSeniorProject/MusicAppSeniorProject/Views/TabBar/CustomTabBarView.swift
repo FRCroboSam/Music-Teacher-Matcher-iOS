@@ -53,7 +53,8 @@ struct CustomTabBarView: View {
     var body: some View {
         tabBarVersion2
             .onChange(of: selection, perform: { value in
-                withAnimation(.easeInOut) {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    print("TAB THING IS CHANGING")
                     localSelection = value
                 }
             })

@@ -27,6 +27,7 @@ extension UIImageView{
 final class ModelData: ObservableObject{
     @Published var students =  [Student]()
     @Published var teachers = [Teacher]()
+    @Published var numChanges: Int = 0
     
     //for student users
     private var allAvailableTeachers = [Teacher]() //dont use for now

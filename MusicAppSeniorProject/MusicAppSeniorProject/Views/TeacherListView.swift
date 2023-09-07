@@ -22,7 +22,7 @@ struct TeacherListView: View {
     @State private var searchTeacher = ""
     @State private var listHeight = 500.0
     @State private var offset: Double = 0.0
-
+    @State private var isAppearing: Bool = false
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
     }
@@ -125,63 +125,67 @@ struct TeacherListView: View {
                                 .zIndex(6)
                             //                        }
                             ScrollViewReader{ proxy in
-                                List{
-                                    Section{
-                                        ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
-                                            if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
-                                                NavigationLink{
-                                                    ProfilePageUI(teacher: teacher, status: status)
-                                                } label:{
-                                                    HStack{
-                                                        if(teacher.imageURL.count > 2){
-                                                            ProfileImageFromURL(url: teacher.imageURL, size: 50)
+                                    List{
+                                        Section{
+                                            ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
+                                                if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
+                                                    NavigationLink{
+                                                        ProfilePageUI(teacher: teacher, status: status)
+                                                    } label:{
+                                                        HStack{
+                                                            if(teacher.imageURL.count > 2){
+                                                                ProfileImageFromURL(url: teacher.imageURL, size: 50)
+                                                            }
+                                                            else{
+                                                                ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                            }
+                                                            VStack(alignment: .leading) {
+                                                                Spacer()
+                                                                Text(teacher.name).font(.system(size: 25))
+                                                                Text(teacher.instrument).font(.subheadline)
+                                                            }.foregroundColor(.black)
                                                         }
-                                                        else{
-                                                            ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                        .buttonStyle(BigButtonStyle())
+                                                        .swipeActions {
+                                                            Button("Decline") {
+                                                                print("Awesome!")
+                                                            }
+                                                            .tint(.red)
                                                         }
-                                                        VStack(alignment: .leading) {
-                                                            Spacer()
-                                                            Text(teacher.name).font(.system(size: 25))
-                                                            Text(teacher.instrument).font(.subheadline)
-                                                        }.foregroundColor(.black)
-                                                    }
-                                                    .buttonStyle(BigButtonStyle())
-                                                    .swipeActions {
-                                                        Button("Decline") {
-                                                            print("Awesome!")
-                                                        }
-                                                        .tint(.red)
-                                                    }
-                                                }.id(index)
+                                                    }.id(index)
+                                                    
+                                                }
+                                            } .onMove { from, to in
+                                                
+                                                displayArray.move(fromOffsets: from, toOffset: to)
                                             }
-                                        } .onMove { from, to in
                                             
-                                            displayArray.move(fromOffsets: from, toOffset: to)
-                                        }
-                                        
-                                    } //header: {
-                                    //                                Text(displayText)
-                                    //                                    .font(.system(size: 20))
-                                    //                                    .textCase(.none)
-                                    //                            }
-                                    .listSectionSeparator(.hidden, edges: .top)
-                                    HStack{
-                                        Button("Log Out"){
-                                            modelData.logOut()
-                                            loggedOut = true
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                                modelData.reset()
+                                        } //header: {
+                                        //                                Text(displayText)
+                                        //                                    .font(.system(size: 20))
+                                        //                                    .textCase(.none)
+                                        //                            }
+                                        .listSectionSeparator(.hidden, edges: .top)
+                                        HStack{
+                                            Button("Log Out"){
+                                                modelData.logOut()
+                                                loggedOut = true
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                    modelData.reset()
+                                                }
                                             }
+                                            .modifier(CenterModifier())
+                                            .buttonStyle(BigButtonStyle(color: .purple))
                                         }
-                                        .modifier(CenterModifier())
-                                        .buttonStyle(BigButtonStyle(color: .purple))
+                                        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                        .listRowSeparator(.hidden)
                                     }
-                                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowSeparator(.hidden)
-                                }
-                                .edgesIgnoringSafeArea(.all)
-                                .listStyle(GroupedListStyle())
-                                .scrollContentBackground(.hidden)
+                                    .edgesIgnoringSafeArea(.all)
+                                    .listStyle(GroupedListStyle())
+                                    .scrollContentBackground(.hidden)
+                                    .animation(.easeInOut(duration: 1.0), value: UUID())
+
+                                
                                 Spacer()
                                     .ignoresSafeArea(.all)
                                     .frame(height: 1/8 * deviceHeight)

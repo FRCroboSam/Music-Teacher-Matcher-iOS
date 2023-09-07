@@ -26,7 +26,7 @@ struct StudentAppPage: View {
     private let matchedTeacherDesc = "Send these teachers a message!"
     private let declinedTeacherDesc = "These are teachers that you have declined since they did not fit your needs."
     @State var numNotifications = 4
-    @State private var tabSelection: TabBarItem = .requested
+    @State private var tabSelection: TabBarItem = .matched
 
     var body: some View {
         NavigationStack{

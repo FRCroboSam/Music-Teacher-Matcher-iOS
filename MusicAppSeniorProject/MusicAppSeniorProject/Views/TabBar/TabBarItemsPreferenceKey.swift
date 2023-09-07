@@ -24,9 +24,10 @@ struct TabBarItemViewModifer: ViewModifier {
     @Binding var selection: TabBarItem
     
     func body(content: Content) -> some View {
-        content
-            .opacity(selection == tab ? 1.0 : 0.0)
-            .preference(key: TabBarItemsPreferenceKey.self, value: [tab])
+            content
+                .opacity(selection == tab ? 1.0 : 0.0)
+                .preference(key: TabBarItemsPreferenceKey.self, value: [tab])
+        
     }
     
 }
@@ -37,19 +38,24 @@ struct TabBarItemViewModiferWithOnAppear: ViewModifier {
     @Binding var selection: TabBarItem
     
     @ViewBuilder func body(content: Content) -> some View {
-        if selection == tab {
-            content
-                .opacity(1)
-                .preference(key: TabBarItemsPreferenceKey.self, value: [tab])
-        } else {
-            Text("")
-                .opacity(0)
-                .preference(key: TabBarItemsPreferenceKey.self, value: [tab])
+            if selection == tab {
+                    content
+                        .opacity(1)
+                        .preference(key: TabBarItemsPreferenceKey.self, value: [tab])
+                
+            } else {
+                Text("")
+                    .opacity(0)
+                    .preference(key: TabBarItemsPreferenceKey.self, value: [tab])
+            }
         }
-    }
+    
     
 }
-
+func log(_ log: String) -> EmptyView {
+    print("** \(log)")
+    return EmptyView()
+}
 extension View {
     
     func tabBarItem(tab: TabBarItem, selection: Binding<TabBarItem>) -> some View {

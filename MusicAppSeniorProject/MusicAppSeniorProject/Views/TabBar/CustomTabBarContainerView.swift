@@ -23,11 +23,13 @@ struct CustomTabBarContainerView<Content:View>: View {
             content
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .ignoresSafeArea()
+                
             
             CustomTabBarView(tabs: tabs, selection: $selection, localSelection: selection)
             
         }
         .onPreferenceChange(TabBarItemsPreferenceKey.self, perform: { value in
+            print("TABS ARE CHANIGNG")
                 self.tabs = value
             
         })
