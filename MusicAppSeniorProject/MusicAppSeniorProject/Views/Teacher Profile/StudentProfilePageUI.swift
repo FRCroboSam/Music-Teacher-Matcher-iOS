@@ -43,7 +43,7 @@ struct StudentProfilePageUI: View {
     @State var format: Int = 0
     @State var lessonFormat: String = ""
     @State var canRequest: Bool = false
-
+    @State var pricingText: String = ""
 
     var deviceHeight: CGFloat {
         UIScreen.main.bounds.height
@@ -129,8 +129,11 @@ struct StudentProfilePageUI: View {
                         Spacer()
                             .frame(height: 20)
                         Text(name)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.01)
                             .font(.system(size: 35))
                             .bold()
+                            .frame(maxWidth: 3/4 * deviceWidth)
                         Spacer()
                             .frame(height: 10)
                         HStack{
@@ -303,7 +306,7 @@ struct StudentProfilePageUI: View {
                                     .resizable()
                                     .foregroundColor(.orange)
                                     .frame(width: 30, height: 30)
-                                if(format == 0  || format == 2){
+                                if(format == 1  || format == 2){
                                     Text(" In Person ")
                                         .foregroundColor(.green)
                                         .background{
@@ -320,7 +323,7 @@ struct StudentProfilePageUI: View {
                                     Text(" OR ")
                                         .foregroundColor(.red)
                                 }
-                                if(format == 1 || format == 2){
+                                if(format == 0 || format == 2){
                                     Text(" Online ")
                                         .foregroundColor(.blue)
                                         .background{
@@ -341,6 +344,13 @@ struct StudentProfilePageUI: View {
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color.teal)
                                 Text(schedule)
+                            }
+                            HStack{
+                                Image(systemName: "dollarsign.circle")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(Color.green)
+                                Text("Budget: " + pricingText)
                             }
                         }
 
@@ -386,6 +396,7 @@ struct StudentProfilePageUI: View {
         if(modelData.requestedStudents.contains { $0.uid == student.uid}){
             canRequest = true
         }
+
         name = student.getStringProperty(key:"name", pairs: student.personalInfo)
         location = student.getStringProperty(key:"Location", pairs: student.personalInfo)
         let age = Int(student.getDoubleProperty(key: "age", pairs: student.personalInfo))
@@ -399,15 +410,23 @@ struct StudentProfilePageUI: View {
         schedule = student.getStringProperty(key: "Schedule", pairs: student.personalInfo) ?? "Twinkle Twinkle Little Star"
         teacherDesc = student.getStringProperty(key: "Teacher Description", pairs: student.personalInfo) ?? "Looking for a teacher who can instill good practice habits."
         lessonFormat = student.getStringProperty(key: "Format", pairs: student.personalInfo) ?? "In person"
-        if(lessonFormat.contains("Online") && lessonFormat.contains("In")){
+        if(lessonFormat.contains("Online") && lessonFormat.contains("In person")){
             format = 2
         }
-        else if(lessonFormat.contains("In")){
+        else if(lessonFormat.contains("In person")){
             format = 1
         }
         else{
             format = 0
         }
+        if(pricing.isNumeric){
+            pricingText = "$" + pricing + " per lesson"
+        }
+        else{
+            pricingText = pricing
+        }
+        print("LESSON FORMAT: " + lessonFormat)
+        print("FORMAT: " + String(format))
     }
     func determineAgeRange(_ age: Int) -> String{
         if(age <= 5){

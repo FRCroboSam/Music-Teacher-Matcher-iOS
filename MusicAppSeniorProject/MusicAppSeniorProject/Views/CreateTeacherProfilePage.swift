@@ -654,7 +654,7 @@ struct CreateTeacherProfilePage: View {
         }
 
         func populateProfileEditor(teacher: Teacher){
-            
+
             print(teacher.lessonInfo)
             print(teacher.teacherInfo)
             //personal info
@@ -665,7 +665,15 @@ struct CreateTeacherProfilePage: View {
             
             yearsTeaching = convertToDouble(s:value(key: "Years Teaching", pairs: teacher.musicalBackground))
             email = modelData.email ?? "template@gmail.com"
-            cost = value(key: "Pricing", pairs: teacher.lessonInfo)
+            
+            let actualCost = value(key: "Pricing", pairs: teacher.lessonInfo)
+            if(!actualCost.isNumeric){
+                customPricing = true
+                pricingInfo = actualCost
+            }
+            else{
+                cost = actualCost
+            }
             schedule = value(key: "Schedule", pairs: teacher.lessonInfo)
             studentDesc = value(key: "Student Description", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
             musicDegree = value(key: "Musical Degree", pairs: teacher.musicalBackground)
@@ -720,7 +728,7 @@ struct CreateTeacherProfilePage: View {
             teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
             musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)
             let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
-            viewModel.setImageState(imageState: .success(image2))//                            let image =
+            //viewModel.setImageState(imageState: .success(image2))//                            let image =
             
         }
         func populateImage() async {

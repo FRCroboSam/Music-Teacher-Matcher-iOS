@@ -133,11 +133,14 @@ struct TeacherListView: View {
                                                         ProfilePageUI(teacher: teacher, status: status)
                                                     } label:{
                                                         HStack{
-                                                            if(teacher.imageURL.count > 2){
+                                                            if(teacher.imageURL.count > 8){
                                                                 ProfileImageFromURL(url: teacher.imageURL, size: 50)
                                                             }
                                                             else{
-                                                                ProfileImage(image: Image(uiImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!), size: 50)
+                                                                ProfileImage(image: (Image(systemName: "person.fill")
+                                                                    .font(.system(size: 40))
+                                                                    .foregroundColor(.white)) as! Image, size: 50)
+                                                                
                                                             }
                                                             VStack(alignment: .leading) {
                                                                 Spacer()

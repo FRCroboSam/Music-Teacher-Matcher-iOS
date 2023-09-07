@@ -32,12 +32,12 @@ struct CircleProfileImage: View {
 
 struct CircularProfileImage: View {
     let imageState: ProfileModel.ImageState
-    
+    let size: CGFloat?
     var body: some View {
         CircleProfileImage(imageState: imageState)
             .scaledToFill()
             .clipShape(Circle())
-            .frame(width: 100, height: 100)
+            .frame(width: size ?? 100, height: size ?? 100)
             .background {
                 Circle().fill(
                     LinearGradient(
@@ -89,7 +89,7 @@ struct ProfileImageFromURL: View{
                 .minimumScaleFactor(0.01)
         }
         else{
-            ProfileImage(image: Image(systemName: "person.fill"), size: size)
+            CircularProfileImage(imageState: .empty, size: size)
         }
 
     }
@@ -99,7 +99,7 @@ struct EditableCircularProfileImage: View {
     var finalImage = Image("blankperson")
     
     var body: some View {
-        CircularProfileImage(imageState: viewModel.imageState)
+        CircularProfileImage(imageState: viewModel.imageState, size: 100)
             .overlay(alignment: .bottomTrailing) {
                 PhotosPicker(selection: $viewModel.imageSelection,
                              matching: .images,
