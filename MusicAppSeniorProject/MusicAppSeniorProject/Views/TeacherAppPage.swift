@@ -24,6 +24,7 @@ struct TeacherAppPage: View {
     private let matchedTeacherDesc = "These are teachers that you have requested and have matched your request. Feel Free to reach out to them by their email which you can find by clicking on their profile!"
     @State var numNotifications = 4
     @State private var tabSelection: TabBarItem = .requested
+    
 
     var body: some View {
         NavigationStack{

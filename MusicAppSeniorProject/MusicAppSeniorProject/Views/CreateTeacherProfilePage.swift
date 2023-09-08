@@ -160,6 +160,7 @@ struct CreateTeacherProfilePage: View {
                         hasPopulated = true
                     }
                     if(modelData.uiImage == nil){
+                        print("UIIMAGE NIL BUT URL IS: " + (modelData.imageURL ?? "DF"))
                         Task {
                             await populateImage()
                         }
@@ -728,7 +729,7 @@ struct CreateTeacherProfilePage: View {
             teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
             musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)
             let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
-            //viewModel.setImageState(imageState: .success(image2))//                            let image =
+            viewModel.setImageState(imageState: .success(image2))//                            let image =
             
         }
         func populateImage() async {
@@ -742,6 +743,8 @@ struct CreateTeacherProfilePage: View {
                             // uiImage is not nil, execute the desired method
                             if !isCancelled {
                                 DispatchQueue.main.async {
+//                                    print("NOT NIL ANYMORE")
+
                                     let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "camera.macro")!)
                                     viewModel.setImageState(imageState: .success(image2))
                                     
