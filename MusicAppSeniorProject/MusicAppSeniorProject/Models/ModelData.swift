@@ -876,10 +876,15 @@ final class ModelData: ObservableObject{
                                                             availableTeacher.score = score as! Double ?? 0.0
                                                             self.availableTeachers.append(availableTeacher)
                                                         } else {
+                                                            
                                                             var availableTeacher = self.createTeacherFromData(documentSnapshot: document)
-                                                            availableTeacher.score = score as! Double ?? 0.0
-
-                                                            self.availableTeachers.append(availableTeacher)
+                                                            let teacherInstrument = availableTeacher.instrument
+                                                            let instrumentCanAdd = teacherInstrument.localizedCaseInsensitiveContains(self.studentUser.selectedInstrument)
+                                                            if(instrumentCanAdd){
+                                                                availableTeacher.score = score as! Double ?? 0.0
+                                                                
+                                                                self.availableTeachers.append(availableTeacher)
+                                                            }
                                                         }
 
 
@@ -963,7 +968,7 @@ final class ModelData: ObservableObject{
         var teacher = Teacher(name: name)
         teacher.email = (data!["email"] ?? "Generic User") as! String
         teacher.uid = uid
-        
+        teacher.instrument = (data!["Instrument"] ?? data!["instrument"] ?? "Generic User") as! String
         teacher.populateInfo(teacherInfo: teacherInfo, loginInfo: loginInfo, musicalBackground: musicalBackground, lessonInfo: lessonInfo)
         if(teacherImgURL == "None"){
 //            fetchTeacherImage(teacher: teacher){ fetchedImage in

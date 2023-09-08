@@ -137,9 +137,7 @@ struct TeacherListView: View {
                                                                 ProfileImageFromURL(url: teacher.imageURL, size: 50)
                                                             }
                                                             else{
-                                                                ProfileImage(image: (Image(systemName: "person.fill")
-                                                                    .font(.system(size: 40))
-                                                                    .foregroundColor(.white)) as! Image, size: 50)
+                                                                CircularProfileImage(imageState: .empty, size: 50)
                                                                 
                                                             }
                                                             VStack(alignment: .leading) {
