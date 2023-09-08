@@ -510,6 +510,7 @@ final class ModelData: ObservableObject{
                 }
                 var name = (data!["name"] ?? "Generic User") as! String
                 self.studentUser = Student(name: name)
+                self.studentUser.selectedInstrument = (data!["instrument"] ?? data!["Instrument"] ?? "Generic User") as! String
                 self.studentUser.uid = uid
                 self.uid = uid
                 self.studentUser.populateInfo(personalInfo: studentInfo, loginInfo: loginInfo, musicalBackground: musicalBackground)
@@ -666,11 +667,16 @@ final class ModelData: ObservableObject{
                             if let data = data{
                                 //create the teacher object
                                 var teacher = self.createTeacherFromData(documentSnapshot: snapshot)
-                                self.determineCompatibility(teacher: teacher, student: self.studentUser){ score in
-                                    teacher.score = score ?? 0
-                                    self.addTeacherToAllAvailableTeachers(teacher: teacher, teacherUID: teacherId, unavailableTeachers: unavailableTeachers)
-                                    //put the score in student's all available teachers
-                                    
+                                //todo: test this
+                                let teacherInstrument = teacher.getStringProperty(key: "Instrument", pairs: teacher.musicalBackground)
+                                let canAdd = teacherInstrument.localizedCaseInsensitiveContains(self.studentUser.selectedInstrument)
+                                if(canAdd){
+                                    self.determineCompatibility(teacher: teacher, student: self.studentUser){ score in
+                                        teacher.score = score ?? 0
+                                        self.addTeacherToAllAvailableTeachers(teacher: teacher, teacherUID: teacherId, unavailableTeachers: unavailableTeachers)
+                                        //put the score in student's all available teachers
+                                        
+                                    }
                                 }
                             }
                         }
