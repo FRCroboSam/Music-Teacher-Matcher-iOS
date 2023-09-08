@@ -79,16 +79,41 @@ final class ModelData: ObservableObject{
     //does not consider distance range the student sets in StudentAppPage -> that filters out the available teachers shown
     //negative score means completely incompatible
     //
+    func convertToLevel(_ level: Int) -> String{
+        if(level == 0){
+            return "Beginner"
+        }
+        else if(level == 1){
+            return "Intermediate"
+        }
+        else{
+            return "Advanced"
+        }
+    }
     func determineCompatibility(teacher: Teacher, student: Student, completion:@escaping (Double?) -> Void){
+        print("DETERMINING COMPATIBILITY FOR: " + teacher.name)
         var score = 100.0
         //TODO: FIX THIS
         let teacherLevels = teacher.getStringProperty(key: "Levels", pairs: teacher.lessonInfo)
-        let studentLevel = student.getStringProperty(key: "Skill Level", pairs: student.musicalBackground)
+        let studentLevel = convertToLevel(Int(student.getDoubleProperty(key: "Skill Level", pairs: student.musicalBackground)))
+        print("TEACHER LEVELS: " + teacherLevels)
+        print("Student LEVELS: " + studentLevel)
+
         if(teacherLevels.contains(studentLevel)){
             score += 200
         }
+        else{
+        }
         let teacherFormat = teacher.getStringProperty(key: "Format", pairs: teacher.teacherInfo)
         let studentFormat = student.getStringProperty(key: "Format", pairs: student.personalInfo)
+        print("Teacher format: " + teacherFormat)
+        print("Student format: " + studentFormat)
+        if(teacherFormat.localizedCaseInsensitiveContains("Online") && studentFormat.localizedCaseInsensitiveContains("Online")){
+            score += 50
+        }
+        if(teacherFormat.localizedCaseInsensitiveContains("In person") && studentFormat.localizedCaseInsensitiveContains("In person")){
+            score += 50
+        }
 
         teacherDistance(teacher:teacher, student: student){dist  in
             let distance = dist ?? 200
@@ -822,11 +847,8 @@ final class ModelData: ObservableObject{
             }
         }
         //CODE IS USELESS JUST A PLACEHOLDER
-        let unavailableTeachers = self.requestedTeachers + self.declinedTeachers + self.matchedTeachers
-        print("dECLINED TEACHERS SIZE: " + String(declinedTeachers.count))
             // Perform the population process here
             // This can involve fetching data, processing, and writing to Firestore
-            print("@@@POPULATING ALL AVAILABLE TEACHERS@@@")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
             self.populateAllAvailableTeachers(student: self.studentUser)
         }
@@ -859,58 +881,52 @@ final class ModelData: ObservableObject{
                     }
                 }
                 if(self.availableTeachers.count < 5){
-                    //see if u can get away with removing this outer getDocuments
-                    query.getDocuments{ querySnapshot, err in
-                            print("Available Teachers Changing")
+                    print("TRYING TO FIND ANOTHER AVAILABLE TEACHER")
+                    for document in querySnapshot!.documents {
+                        let teacherId = document.documentID
+                        let data = document.data()
+                        let score = data["Score"] ?? 0
+                        unavailableTeacherIDs.append(teacherId)
+                        let teacherRef = teacherRef.document(teacherId)
+                        teacherRef.getDocument { (document, err) in
                             if let err = err {
-                                print("Error getting documents: \(err)")
-                            } else {
-                                for document in querySnapshot!.documents {
-                                    let teacherId = document.documentID
+                                print("Error getting document: \(err)")
+                            } else if let document = document, document.exists {
+                                let canAdd = !(self.requestedTeachers + self.availableTeachers + self.declinedTeachers + self.matchedTeachers).contains { $0.uid == teacherId }
+                                if canAdd {
                                     let data = document.data()
-                                    let score = data["Score"] ?? 0
-                                    unavailableTeacherIDs.append(teacherId)
-                                    let teacherRef = teacherRef.document(teacherId)
-                                    teacherRef.getDocument { (document, err) in
-                                        if let err = err {
-                                            print("Error getting document: \(err)")
-                                        } else if let document = document, document.exists {
-                                            let canAdd = !(self.requestedTeachers + self.availableTeachers + self.declinedTeachers + self.matchedTeachers).contains { $0.uid == teacherId }
-                                            if canAdd {
-                                                let data = document.data()
-                                                if let data = data {
-                                                    print("ADDING AVAILABLE TEACHER: " + teacherId)
-                                                    if(self.availableTeachers.count < 5){
-                                                        if let foundIndex = self.allAvailableTeachers.firstIndex(where: { $0.uid == document.documentID }) {
-                                                            var availableTeacher = self.allAvailableTeachers[foundIndex]
-                                                            availableTeacher.score = score as! Double ?? 0.0
-                                                            self.availableTeachers.append(availableTeacher)
-                                                        } else {
-                                                            
-                                                            var availableTeacher = self.createTeacherFromData(documentSnapshot: document)
-                                                            let teacherInstrument = availableTeacher.instrument
-                                                            let instrumentCanAdd = teacherInstrument.localizedCaseInsensitiveContains(self.studentUser.selectedInstrument)
-                                                            if(instrumentCanAdd){
-                                                                availableTeacher.score = score as! Double ?? 0.0
-                                                                
-                                                                self.availableTeachers.append(availableTeacher)
-                                                            }
-                                                        }
-
-
-  
-                                                    }
+                                    if let data = data {
+                                        print("ADDING AVAILABLE TEACHER: " + teacherId)
+                                        if(self.availableTeachers.count < 5){
+                                            if let foundIndex = self.allAvailableTeachers.firstIndex(where: { $0.uid == document.documentID }) {
+                                                var availableTeacher = self.allAvailableTeachers[foundIndex]
+                                                availableTeacher.score = score as! Double ?? 0.0
+                                                self.availableTeachers.append(availableTeacher)
+                                            } else {
+                                                
+                                                var availableTeacher = self.createTeacherFromData(documentSnapshot: document)
+                                                let teacherInstrument = availableTeacher.instrument
+                                                let instrumentCanAdd = teacherInstrument.localizedCaseInsensitiveContains(self.studentUser.selectedInstrument)
+                                                if(instrumentCanAdd){
+                                                    availableTeacher.score = score as! Double ?? 0.0
                                                     
+                                                    self.availableTeachers.append(availableTeacher)
                                                 }
                                             }
-                                            else{
-                                                print("CANT ADD UID IS: " + teacherId)
-                                            }
+
+
+
                                         }
+                                        
                                     }
+                                }
+                                else{
+                                    print("CANT ADD UID IS: " + teacherId)
                                 }
                             }
                         }
+                    }
+
                 }
             }
         }
