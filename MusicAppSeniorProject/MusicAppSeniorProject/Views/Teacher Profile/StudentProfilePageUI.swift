@@ -26,6 +26,7 @@ enum Level: Hashable{
 }
 struct StudentProfilePageUI: View {
     @EnvironmentObject var modelData: TeacherModelData
+    @State var matchText: String = ""
     @Environment(\.dismiss) var dismiss
     let student: Student?
     @State var name: String = ""
@@ -124,6 +125,10 @@ struct StudentProfilePageUI: View {
                                     
 
                             }.padding(.top, -40)
+                        }
+                        else{
+                            MatchedView()
+                                .padding(.top, -30)          
                         }
 
                         Spacer()
@@ -350,7 +355,7 @@ struct StudentProfilePageUI: View {
                                     .resizable()
                                     .frame(width: 30, height: 30)
                                     .foregroundColor(Color.green)
-                                Text("Budget: " + pricingText)
+                                Text("Budget: $" + pricingText + " per lesson.")
                             }
                         }
 
@@ -402,7 +407,7 @@ struct StudentProfilePageUI: View {
         let age = Int(student.getDoubleProperty(key: "age", pairs: student.personalInfo))
         ageDescription = determineAgeRange(age)
         yearsExperience = Int(student.getDoubleProperty(key: "Years Playing", pairs: student.musicalBackground))
-        pricing = student.getStringProperty(key: "Pricing", pairs: student.musicalBackground)
+        pricing = student.getStringProperty(key: "Budget", pairs: student.musicalBackground)
         instrument = student.getStringProperty(key: "Instrument", pairs: student.musicalBackground)
         lessonLength = student.getStringProperty(key: "Lesson Length", pairs: student.musicalBackground) ?? "60"
         skillLevel = determineSkillLevel(level: Int(student.getStringProperty(key: "Skill Level", pairs: student.musicalBackground)) ?? 0)
@@ -425,6 +430,8 @@ struct StudentProfilePageUI: View {
         else{
             pricingText = pricing
         }
+        email = student.getStringProperty(key: "email", pairs: student.loginInfo)
+        matchText = "Expect a message from " + student.name + " to schedule a preliminary appointment!"
         print("LESSON FORMAT: " + lessonFormat)
         print("FORMAT: " + String(format))
     }
@@ -451,5 +458,56 @@ struct StudentProfilePageUI: View {
 //struct StudentProfilePageUI_Previews: PreviewProvider {
 //    static var previews: some View {
 //        StudentProfilePageUI()
+//    }
+//}
+
+struct MatchedView: View {
+    var body: some View {
+        HStack {
+            SparklesImage()
+            Text("Matched")
+                .font(.system(size: 30))
+                .italic()
+                .bold()
+                .foregroundColor(Color.yellow)
+            SparklesImage()
+        }
+        .background {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(Color.white)
+                .padding(-10)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 30)
+                        .stroke(Color.yellow)
+                        .padding(-10)
+                }
+        }
+    }
+}
+
+struct SparklesImage: View {
+    var body: some View {
+        Image(systemName: "sparkles")
+            .resizable()
+            .frame(width: 30, height: 30)
+            .foregroundColor(Color.yellow)
+            .zIndex(6)
+            .background(Color.white)
+    }
+}
+
+//struct MatchedTextView: View{
+//    var body: some View{
+//           Text(matchText)
+//                .foregroundColor(Color(UIColor.gray))
+//                .multilineTextAlignment(.center)
+//           .background{
+//               RoundedRectangle(cornerRadius: 10)
+//                   .fill(Color.white)
+//                   .shadow(radius: 5)
+//                   .padding(-10)
+//           }.offset(y: -40)
+//           .padding(.bottom, -40)
+//           .frame(maxWidth: 2/3 * deviceWidth)
 //    }
 //}
