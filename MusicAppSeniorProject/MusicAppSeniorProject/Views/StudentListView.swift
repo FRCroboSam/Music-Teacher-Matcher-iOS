@@ -211,7 +211,7 @@ struct StudentListView: View {
                 if(showInfo && status == "Requested Students"){
                     VStack(alignment: .leading){
                         
-                        Text("The app shows you 5 new teachers at a time.")
+                        Text("The app shows you all students who have requested you.")
                             .lineLimit(2, reservesSpace: true)
                             .modifier(CenterModifier())
                             .foregroundColor(Color(UIColor.systemGray3))
@@ -224,7 +224,7 @@ struct StudentListView: View {
                                 .zIndex(6)
                                 .background(Color.white)
                                 .clipShape(Circle())
-                            Text("Sends a request, teacher may match or decline")
+                            Text("Matches with the student so they can contact you for an appointment ")
                                 .lineLimit(2, reservesSpace: true)
                                 .foregroundColor(Color(UIColor.systemGray2))
                         }
@@ -236,7 +236,7 @@ struct StudentListView: View {
                                 .zIndex(6)
                                 .background(Color.white)
                                 .clipShape(Circle())
-                            Text("Not interested, explore other teachers")
+                            Text("Not interested, explore other students")
                                 .lineLimit(2, reservesSpace: true)
                                 .foregroundColor(Color(UIColor.systemGray2))
                         }
