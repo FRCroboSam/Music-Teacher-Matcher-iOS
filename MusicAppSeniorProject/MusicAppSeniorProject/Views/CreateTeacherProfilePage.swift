@@ -379,7 +379,7 @@ struct CreateTeacherProfilePage: View {
                     }
                 }
                 else{
-                    Text("Email: " + (modelData.email ?? "No email found"))
+                    Text("Email: " + (email ?? "No email found"))
                         .font(.system(size: 20))
                     HStack{
                         Text("Update Email?")
@@ -603,7 +603,8 @@ struct CreateTeacherProfilePage: View {
                                                     }
                                                     else{
                                                         email = newEmail
-                                                        print("UPDATED EMAIL")
+                                                        modelData.email = newEmail
+                                                        print(email)
                                                         completion(true)
                                                     }
                                                 }
@@ -619,6 +620,8 @@ struct CreateTeacherProfilePage: View {
                                             }
                                             else{
                                                 email = newEmail
+                                                modelData.teacherUser.email = email
+                                                modelData.email = email
                                                 print("UPDATED EMAIL")
                                                 completion(true)
                                             }
