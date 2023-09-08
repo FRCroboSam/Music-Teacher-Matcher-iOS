@@ -229,7 +229,7 @@ struct StudentProfilePageUI: View {
                     .zIndex(0)
                     .frame(width: 7/8 * deviceWidth)
                     .background(
-                        RoundedRectangle(cornerRadius: 40)
+                        RoundedRectangle(cornerRadius: 20)
                             .fill(Color.white)
                             .shadow(radius: 5)
                         
@@ -257,7 +257,7 @@ struct StudentProfilePageUI: View {
                         
                     }.frame(width: 7/8 * deviceWidth)
                         .background(
-                            RoundedRectangle(cornerRadius: 40)
+                            RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                             
@@ -287,7 +287,7 @@ struct StudentProfilePageUI: View {
                         
                     }.frame(width: 7/8 * deviceWidth)
                         .background(
-                            RoundedRectangle(cornerRadius: 40)
+                            RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(.bottom, -10))
@@ -361,7 +361,7 @@ struct StudentProfilePageUI: View {
 
                     }.frame(width: 7/8 * deviceWidth)
                         .background(
-                            RoundedRectangle(cornerRadius: 40)
+                            RoundedRectangle(cornerRadius: 20)
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(.bottom, -10))
@@ -475,12 +475,13 @@ struct MatchedView: View {
         .background {
             RoundedRectangle(cornerRadius: 30)
                 .fill(Color.white)
+                .shadow(radius: 5)
                 .padding(-10)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 30)
-                        .stroke(Color.yellow)
-                        .padding(-10)
-                }
+//                .overlay {
+//                    RoundedRectangle(cornerRadius: 30)
+//                        .stroke(Color.yellow)
+//                        .padding(-10)
+//                }
         }
     }
 }
