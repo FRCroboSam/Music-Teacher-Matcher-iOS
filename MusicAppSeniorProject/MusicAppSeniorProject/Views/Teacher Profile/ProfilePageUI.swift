@@ -6,7 +6,24 @@
 //
 
 import SwiftUI
-
+//enum Status: Hashable{
+//    case advanced, intermediate, advanced
+//    var title: String {
+//        switch self {
+//        case .beginner: return "Beginner"
+//        case .intermediate: return "Intermediate"
+//        case .advanced: return "Advanced"
+//        }
+//    }
+//    
+//    var color: Color {
+//        switch self {
+//            case .beginner: return Color.red
+//            case .intermediate: return Color.teal
+//            case .advanced: return Color.red
+//        }
+//    }
+//}
 struct ProfilePageUI: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var modelData: ModelData
@@ -65,91 +82,23 @@ struct ProfilePageUI: View {
 
                             Spacer()
                         }
-                        if(status == "Available Teachers"){
-                            HStack{
-                                Button {
-                                    modelData.declineTeacher(teacherId: teacher?.uid ?? "")
-                                    dismiss()
 
-                                } label: {
-                                    VStack{
-                                        Image(systemName:"x.circle")
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                            .foregroundColor(Color.red)
-                                            .zIndex(6)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
-                                            
-                                    }
-                                }
-                                Spacer()
-                                    .frame(width: 30)
-//                                Button {
-//                                } label: {
-//                                    VStack{
-//                                        Image(systemName:"star")
-//                                            .resizable()
-//                                            .frame(width: 50, height: 50)
-//                                            .foregroundColor(Color.yellow)
-//                                            .zIndex(6)
-//                                            .background(Color.white)
-//
-//                                    }
-//                                }
-//                                Spacer()
-//                                    .frame(width: 30)
-                                Button {
-                                    modelData.requestTeacher(teacherId: teacher?.uid ?? "", score: teacher?.score ?? -1000.0)
-                                    dismiss()
-                                } label: {
-                                    VStack{
-                                        Image(systemName:"checkmark.circle")
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                            .foregroundColor(Color.green)
-                                            .zIndex(6)
-                                            .background(Color.white)
-                                            .clipShape(Circle())
+                    
+                         StatusLabelView(text: status)
+                             .padding(.top, -60)
 
-                                            
-                                    }
-                                }
-                            }.background{
-                                RoundedRectangle(cornerRadius: 30)
-                                    .fill(Color.white)
-                                    .shadow(radius: 5)
-                                    .padding(-10)
-                            }.offset(y: -60)
-                            .padding(.bottom, -40)
-                        }
-                        if(status == "Requested Teachers"){
-                           Button("Cancel your request"){
-                               modelData.cancelTeacherRequest(teacherId: teacher?.uid ?? "No UID", score: teacher?.score ?? -2300)
-                               dismiss()
-                           }.buttonStyle(BigButtonStyle(color: .orange))
-                            .scaleEffect(x: 0.5, y: 0.5)
-                            .offset(y: -60)
-                            .padding(.bottom, -80)
-                       }
-                         if(status == "Matched Teachers"){
-                            Text(matchText)
-                                 .foregroundColor(Color(UIColor.systemGray2))
-                            .background{
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.white)
-                                    .shadow(radius: 5)
-                                    .padding(-10)
-                            }.offset(y: -60)
-                            .padding(.bottom, -40)
-                            .frame(maxWidth: 2/3 * deviceWidth)
-                        }
+                        
 
 
                         Text(name)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.01)
                             .font(.system(size: 35))
                             .bold()
-                            .offset(y: -10)
+                            .padding(.bottom, 5)
+                            .padding(.top, -10)
+                            .frame(maxWidth: 3/4 * deviceWidth)
+
                         HStack{
                             Text(instrument + " teacher")
                                 .font(.system(size: 20))
@@ -157,6 +106,11 @@ struct ProfilePageUI: View {
                                 .foregroundColor(.gray)
                                 .offset(y: -7)
                         }
+                        
+//
+//                            .offset(y: -60)
+//                            .padding(.bottom, -80)
+                       
                         Divider()
                             .padding(.top, -10)
                         VStack(alignment: .leading){
@@ -377,12 +331,31 @@ struct ProfilePageUI: View {
                         }
 
 
+
                     }.frame(width: 7/8 * deviceWidth)
                         .background(
                             RoundedRectangle(cornerRadius: 40)
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(.bottom, -10))
+                    Spacer(minLength: 50)
+                        
+                    if(status == "Matched Teachers"){
+                        Text(matchText)
+                            .foregroundColor(Color(UIColor.systemGray2))
+                            .background{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white)
+                                    .shadow(radius: 5)
+                                    .padding(-10)
+                                    .overlay{
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .strokeBorder(Color.yellow, lineWidth: 1)
+                                            .padding(-10)
+                                    }
+                            }
+                            .frame(maxWidth: 2/3 * deviceWidth)
+                    }
                 }
                     .background(ScrollViewConfigurator {
                         $0?.bounces = false               // << here !!
@@ -467,3 +440,41 @@ extension UIView {
     }
 }
 
+struct StatusLabelView: View {
+    let text: String
+    func getColor() -> Color{
+        if(text == "Available Teachers"){
+           return .orange
+        }
+        if(text == "Requested Teachers"){
+           return .green
+        }
+        if(text == "Matched Teachers"){
+           return .blue
+        }
+        return .green
+    }
+    var body: some View {
+        
+        HStack {
+            SparklesImage()
+            Text(text)
+                .font(.system(size: 30))
+                .italic()
+                .bold()
+                .foregroundColor(getColor())
+            SparklesImage()
+        }
+        .background {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(Color.white)
+                .shadow(radius: 5)
+                .padding(-10)
+//                .overlay {
+//                    RoundedRectangle(cornerRadius: 30)
+//                        .stroke(Color.yellow)
+//                        .padding(-10)
+//                }
+        }
+    }
+}
