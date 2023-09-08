@@ -82,21 +82,27 @@ final class ModelData: ObservableObject{
     func determineCompatibility(teacher: Teacher, student: Student, completion:@escaping (Double?) -> Void){
         var score = 100.0
         //TODO: FIX THIS
-        let teacherPreferredLevel = teacher.getDoubleProperty(key: "Minimum Student Level", pairs: teacher.musicalBackground)
-        let studentLevel = student.getDoubleProperty(key: "Student Level", pairs: student.musicalBackground)
-        //add more to score if student and teacher Level are the same with studentLevel >= teacherLevel
-        //TODO: Come up with a better one in the future
-        score += 50 + (-0.5 * (teacherPreferredLevel - studentLevel))
-        
-        if(teacher.instrument != student.selectedInstrument){
-            completion(-1000)
+        let teacherLevels = teacher.getStringProperty(key: "Levels", pairs: teacher.lessonInfo)
+        let studentLevel = student.getStringProperty(key: "Skill Level", pairs: student.musicalBackground)
+        if(teacherLevels.contains(studentLevel)){
+            score += 200
         }
+        let teacherFormat = teacher.getStringProperty(key: "Format", pairs: teacher.teacherInfo)
+        let studentFormat = student.getStringProperty(key: "Format", pairs: student.personalInfo)
+
         teacherDistance(teacher:teacher, student: student){dist  in
+            let distance = dist ?? 200
             if(dist != nil){
-                score -= dist ?? 0
+                if(distance < 100.0){
+                    score += 100 + (100 - distance)
+                }
+                else{
+                    score -= 100
+                }
                 completion(score)
             }
             else{
+                score -= 100
                 completion(score)
             }
         }
@@ -104,9 +110,12 @@ final class ModelData: ObservableObject{
 
     func teacherDistance (teacher: Teacher, student: Student, completion: @escaping (Double?) -> Void) {
         let geocoder = CLGeocoder()
-        let city1  = "Lynnwood, WA"
-        let city2 = "Bellevue, Delaware"
-        geocoder.geocodeAddressString(city1) { (placemarks1, error) in
+        let studentCity = student.getStringProperty(key: "Location", pairs: student.personalInfo )
+        let teacherCity = teacher.getStringProperty(key: "Location", pairs: teacher.teacherInfo )
+
+        print("STUDENT CITY IS: " + studentCity)
+        print("Teacher City is: " + teacherCity )
+        geocoder.geocodeAddressString(studentCity) { (placemarks1, error) in
             if(error != nil){
                 print("CITY DOES NOT EXIST")
             }
@@ -115,7 +124,7 @@ final class ModelData: ObservableObject{
                 return
             }
             
-            geocoder.geocodeAddressString(city2) { (placemarks2, error) in
+            geocoder.geocodeAddressString(teacherCity) { (placemarks2, error) in
                 guard let location2 = placemarks2?.first?.location else {
                     completion(nil)
                     return
@@ -850,6 +859,7 @@ final class ModelData: ObservableObject{
                     }
                 }
                 if(self.availableTeachers.count < 5){
+                    //see if u can get away with removing this outer getDocuments
                     query.getDocuments{ querySnapshot, err in
                             print("Available Teachers Changing")
                             if let err = err {
