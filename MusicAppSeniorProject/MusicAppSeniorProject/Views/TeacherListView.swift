@@ -55,7 +55,9 @@ struct TeacherListView: View {
                                         .overlay(Circle()
                                             .strokeBorder(Color.white,lineWidth: 5)
                                         ).modifier(CenterModifier())
-                                        .padding(.top, 60)
+                                        .padding(.top, max(30, 1/15 * deviceHeight))
+                                        .padding(.bottom, max(10, 0.0117 * deviceHeight))
+                            
                                     HStack{
                                         Text(" " + status + " Teachers ")
                                             .scaledToFill()
@@ -68,7 +70,7 @@ struct TeacherListView: View {
                                             .background(getColor())
                                             .clipShape(RoundedRectangle(cornerRadius:10))
                                             .overlay(alignment: .topTrailing){
-                                                if(status == "Available Teachers"){
+                                                if(status == "Available"){
                                                     Button{
                                                         withAnimation(.easeInOut(duration: 0.2)){
                                                             showInfo.toggle()
@@ -89,7 +91,7 @@ struct TeacherListView: View {
                                         
                                         
                                     }.frame(maxWidth: 10/11 * deviceWidth)
-                                        .padding(.bottom, 50)
+//                                        .padding(.bottom, 40)
                                 }
                             }
                         }
@@ -103,8 +105,8 @@ struct TeacherListView: View {
                                 .aspectRatio(contentMode: .fill)
                         }
                     
-                    
-                    Spacer(minLength: 50)
+                    Spacer()
+                        .frame(height: 1/10 * deviceHeight)
                     ZStack{
                         VStack(spacing: 0){
                             //                        Section{
@@ -112,7 +114,7 @@ struct TeacherListView: View {
                                 Image(systemName: "magnifyingglass")
                                     .foregroundColor(.black)
                                 TextField("Enter a teacher name", text: $searchTeacher)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.black)
                                     .textContentType(.newPassword)
                                     .keyboardType(.asciiCapable)
                                     .autocorrectionDisabled()
@@ -188,6 +190,7 @@ struct TeacherListView: View {
                                             }
                                             .modifier(CenterModifier())
                                             .buttonStyle(BigButtonStyle(color: .purple))
+                                            .padding(.top, -20)
                                         }
                                         .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                                         .listRowSeparator(.hidden)
@@ -218,10 +221,10 @@ struct TeacherListView: View {
                             .contentShape(Rectangle())
                             .zIndex(3)
                         
-                    }
+                    }.padding(.top, 20)
                     
                 }
-                if(showInfo && status == "Available Teachers"){
+                if(showInfo && status == "Available"){
                     VStack(alignment: .leading){
 
                         Text("The app shows you 5 new teachers at a time.")

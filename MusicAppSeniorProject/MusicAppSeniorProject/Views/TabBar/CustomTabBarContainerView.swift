@@ -12,7 +12,9 @@ struct CustomTabBarContainerView<Content:View>: View {
     @Binding var selection: TabBarItem
     let content: Content
     @State private var tabs: [TabBarItem] = []
-    
+    var deviceHeight: CGFloat {
+        UIScreen.main.bounds.height
+    }
     init(selection: Binding<TabBarItem>, @ViewBuilder content: () -> Content) {
         self._selection = selection
         self.content = content()
@@ -26,6 +28,7 @@ struct CustomTabBarContainerView<Content:View>: View {
                 
             
             CustomTabBarView(tabs: tabs, selection: $selection, localSelection: selection)
+                .offset(y: -1/20 * deviceHeight)
             
         }
         .onPreferenceChange(TabBarItemsPreferenceKey.self, perform: { value in
