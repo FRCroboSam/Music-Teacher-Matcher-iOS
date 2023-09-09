@@ -61,7 +61,6 @@ struct TeacherListView: View {
                                     HStack{
                                         Text(" " + status + " Teachers ")
                                             .scaledToFill()
-                                            .zIndex(100)
                                             .lineLimit(1)
                                             .font(.custom("MarkerFelt-Wide", size: 100))
                                             .frame(maxWidth: 7/8 * deviceWidth)
@@ -91,7 +90,11 @@ struct TeacherListView: View {
                                         
                                         
                                     }.frame(maxWidth: 10/11 * deviceWidth)
-//                                        .padding(.bottom, 40)
+                                        .onTapGesture {
+                                            withAnimation(.easeInOut(duration: 0.2)){
+                                                showInfo.toggle()
+                                            }
+                                        }
                                 }
                             }
                         }
@@ -106,7 +109,7 @@ struct TeacherListView: View {
                         }
                     
                     Spacer()
-                        .frame(height: 1/10 * deviceHeight)
+                        .frame(height: min(0.1 * UIScreen.main.bounds.height, 70))
                     ZStack{
                         VStack(spacing: 0){
                             //                        Section{
