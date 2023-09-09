@@ -463,7 +463,15 @@ struct CreateStudentProfilePage: View{
                                     createStudentObject()
                                     if(profileImageCount > 1){
                                         print("GOING TO UPLOAD AN IMAGE")
-                                        modelData.uploadImage(student: modelData.studentUser) { _  in
+                                        modelData.uploadImage(student: modelData.studentUser) { success  in
+                                            if(success){
+                                                successfulPhotoUpdate = true
+                                                failedPhotoUpdate = false
+                                            }
+                                            else{
+                                                successfulPhotoUpdate = false
+                                                failedPhotoUpdate = true
+                                            }
                                         }
                                     }
                                     modelData.updateStudentData { works in
@@ -553,6 +561,12 @@ struct CreateStudentProfilePage: View{
                 Button("Try Again", role: .destructive) { }
             }
             .alert("Info updated successfully", isPresented: $updatedSuccessfully) {
+                Button("Ok", role: .destructive) { }
+            }
+            .alert("Photo uploaded successfully", isPresented: $successfulPhotoUpdate) {
+                Button("Ok", role: .destructive) { }
+            }
+            .alert("Failed to upload Photo", isPresented: $failedPhotoUpdate) {
                 Button("Ok", role: .destructive) { }
             }
             
