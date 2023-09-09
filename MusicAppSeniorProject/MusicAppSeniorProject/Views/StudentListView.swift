@@ -128,38 +128,59 @@ struct StudentListView: View {
                             ScrollViewReader{ proxy in
                                 List{
                                     Section{
-                                        ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, student in
-                                            
-                                            if(student.name.contains(searchStudent) || searchStudent == ""){
-                                                NavigationLink{
-                                                    StudentProfilePageUI(student: student)
-                                                    //                                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
-                                                } label:{
-                                                    HStack{
-                                                        log(student.name + "'s IMAGE URL: " + student.imageURL)
-                                                        if(student.imageURL.count > 5 && student.imageURL != "NONE"){
-                                                            ProfileImageFromURL(url: student.imageURL, size: 50)
-
+                                        if(displayArray.count < 1){
+                                            Text("No teachers at this time.")
+                                                .font(.system(size: 20))
+                                                .italic()
+                                                .modifier(CenterModifier())
+                                                .foregroundColor(Color(UIColor.systemGray3))
+                                                .background{
+                                                    RoundedRectangle(cornerRadius: 20)
+                                                        .fill(Color.white)
+                                                        .shadow(radius: 10)
+                                                        .padding(-10)
+                                                        .overlay{
+                                                            RoundedRectangle(cornerRadius: 20)
+                                                                .stroke(Color(UIColor.lightGray), lineWidth: 1)
+                                                                .padding(-10)
                                                         }
-                                                        else{
-                                                            CircularProfileImage(imageState: .empty, size: 50)
+                                                }
+                                                .listRowSeparator(.hidden)
+                                        }
+                                        else{
+                                            ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, student in
+                                                
+                                                if(student.name.contains(searchStudent) || searchStudent == ""){
+                                                    NavigationLink{
+                                                        StudentProfilePageUI(student: student)
+                                                        //                                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
+                                                    } label:{
+                                                        HStack{
+                                                            log(student.name + "'s IMAGE URL: " + student.imageURL)
+                                                            if(student.imageURL.count > 5 && student.imageURL != "NONE"){
+                                                                ProfileImageFromURL(url: student.imageURL, size: 50)
+                                                                
+                                                            }
+                                                            else{
+                                                                CircularProfileImage(imageState: .empty, size: 50)
+                                                            }
+                                                            VStack(alignment: .leading) {
+                                                                Text(student.name).font(.system(size: 25))
+                                                            }.foregroundColor(.black)
                                                         }
-                                                        VStack(alignment: .leading) {
-                                                            Text(student.name).font(.system(size: 25))
-                                                        }.foregroundColor(.black)
-                                                    }
-                                                    .buttonStyle(BigButtonStyle())
-                                                    .swipeActions {
-                                                        Button("Decline") {
-                                                            print("Awesome!")
+                                                        .buttonStyle(BigButtonStyle())
+                                                        .swipeActions {
+                                                            Button("Decline") {
+                                                                print("Awesome!")
+                                                            }
+                                                            .tint(.red)
                                                         }
-                                                        .tint(.red)
-                                                    }
-                                                }.id(index)
+                                                    }.id(index)
+                                                }
+                                            } .onMove { from, to in
+                                                
+                                                displayArray.move(fromOffsets: from, toOffset: to)
                                             }
-                                        } .onMove { from, to in
-                                            
-                                            displayArray.move(fromOffsets: from, toOffset: to)
                                         }
                                         
                                     } //header: {

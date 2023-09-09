@@ -140,40 +140,62 @@ struct TeacherListView: View {
                                 .zIndex(6)
                             //                        }
                             ScrollViewReader{ proxy in
+                                
                                     List{
                                         Section{
-                                            ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
-                                                if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
-                                                    NavigationLink{
-                                                        ProfilePageUI(teacher: teacher, status: status)
-                                                    } label:{
-                                                        HStack{
-                                                            if(teacher.imageURL.count > 8){
-                                                                ProfileImageFromURL(url: teacher.imageURL, size: 50)
+                                            if(displayArray.count < 1){
+                                                Text("No " + status + " teachers at this time.")
+                                                    .font(.system(size: 20))
+                                                    .italic()
+                                                    .modifier(CenterModifier())
+                                                    .foregroundColor(Color(UIColor.systemGray3))
+//                                                    .background{
+//                                                        RoundedRectangle(cornerRadius: 20)
+//                                                            .fill(Color.white)
+//                                                            .shadow(radius: 10)
+//                                                            .padding(-10)
+//                                                            .overlay{
+//                                                                RoundedRectangle(cornerRadius: 20)
+//                                                                    .stroke(Color(UIColor.lightGray), lineWidth: 1)
+//                                                                    .padding(-10)
+//                                                            }
+//                                                    }
+                                                    .listRowSeparator(.hidden)
+                                            }
+                                            else{
+                                                ForEach(Array(displayArray.enumerated()), id: \.element.id) { index, teacher in
+                                                    if(teacher.name.contains(searchTeacher) || searchTeacher == ""){
+                                                        NavigationLink{
+                                                            ProfilePageUI(teacher: teacher, status: status)
+                                                        } label:{
+                                                            HStack{
+                                                                if(teacher.imageURL.count > 8){
+                                                                    ProfileImageFromURL(url: teacher.imageURL, size: 50)
+                                                                }
+                                                                else{
+                                                                    CircularProfileImage(imageState: .empty, size: 50)
+                                                                    
+                                                                }
+                                                                VStack(alignment: .leading) {
+                                                                    Spacer()
+                                                                    Text(teacher.name).font(.system(size: 25))
+                                                                    Text(teacher.instrument).font(.subheadline)
+                                                                }.foregroundColor(.black)
                                                             }
-                                                            else{
-                                                                CircularProfileImage(imageState: .empty, size: 50)
-                                                                
+                                                            .buttonStyle(BigButtonStyle())
+                                                            .swipeActions {
+                                                                Button("Decline") {
+                                                                    print("Awesome!")
+                                                                }
+                                                                .tint(.red)
                                                             }
-                                                            VStack(alignment: .leading) {
-                                                                Spacer()
-                                                                Text(teacher.name).font(.system(size: 25))
-                                                                Text(teacher.instrument).font(.subheadline)
-                                                            }.foregroundColor(.black)
-                                                        }
-                                                        .buttonStyle(BigButtonStyle())
-                                                        .swipeActions {
-                                                            Button("Decline") {
-                                                                print("Awesome!")
-                                                            }
-                                                            .tint(.red)
-                                                        }
-                                                    }.id(index)
+                                                        }.id(index)
+                                                        
+                                                    }
+                                                } .onMove { from, to in
                                                     
+                                                    displayArray.move(fromOffsets: from, toOffset: to)
                                                 }
-                                            } .onMove { from, to in
-                                                
-                                                displayArray.move(fromOffsets: from, toOffset: to)
                                             }
                                             
                                         } //header: {
