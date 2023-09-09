@@ -13,7 +13,6 @@ import FirebaseStorage
 import SDWebImageSwiftUI
 final class TeacherModelData: ObservableObject{
     @Published var teachers = [Teacher]()
-    
     @Published var declinedStudents = [Student]()
     @Published var requestedStudents = [Student]()
     @Published var matchedStudents = [Student]()
@@ -33,12 +32,14 @@ final class TeacherModelData: ObservableObject{
 
     
     func logOut(){
-        reset()
         try! Auth.auth().signOut()
     }
     func reset(){
+        print("RESETING THE TEACHER ACCOUNT")
         uid = ""
         uiImage = nil
+        imageURL = ""
+        teacherUser = Teacher(name: "Generic")
         email = ""
         declinedStudents.removeAll()
         requestedStudents.removeAll()
@@ -168,13 +169,13 @@ final class TeacherModelData: ObservableObject{
                 self.teacherUser.uid = uid
                 self.teacherUser.email = self.email ?? "No email found"
                 let imageUrl = (data!["ImageURL"] ?? "NONE") as! String
-                if(imageUrl == "NONE"){
+                if(imageUrl == "NONE" || imageUrl.count < 5){
 //                    print("DID NOT FIND IMAGE URL IN FIRESTORE, fETCHING FROM STORAGE")
 //                    self.fetchImage{_ in
 //                    }
                 }
                 else{
-                    print("FOUND THE IMAGE URL")
+                    print("FOUND THE IMAGE URL: " + imageUrl)
                     self.imageURL = imageUrl
                     self.fetchUserImage(url: imageUrl)
                 }

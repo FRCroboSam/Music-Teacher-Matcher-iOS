@@ -461,6 +461,9 @@ struct CreateTeacherProfilePage: View {
                                 noUserFound = false
                                 loginSuccessful = true
                                 editMode = true
+                                modelData.uploadImage(teacher: modelData.teacherUser){ _ in
+                                    
+                                }
                             } else {
                                 noUserFound = true
                                 loginSuccessful = false
@@ -557,6 +560,7 @@ struct CreateTeacherProfilePage: View {
             modelData.teacherUser = Teacher(name: firstName + " " + lastName)
             modelData.teacherUser.email = email
             modelData.teacherUser.password = password
+            //get image from editablecircle profile view thing
             let uiImage = viewModel.profileImage?.uiImage ?? viewModel.uiImage2 ?? UIImage(systemName: "person.badge.shield.checkmark.fill")
             modelData.teacherUser.setUIImage(uiImage: uiImage!)
             //only do this if u selected a diff image

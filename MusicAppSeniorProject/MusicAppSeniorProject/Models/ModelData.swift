@@ -15,6 +15,9 @@ import CoreLocation
 import SDWebImageSwiftUI
 import SDWebImage
 import UIKit
+enum SampleError: Error {
+    case errorRequired
+}
 extension UIImageView{
     //TODO: REMOVE
     func downloadImage(url:String){
@@ -43,7 +46,6 @@ final class ModelData: ObservableObject{
     @Published var userData: [String: Any]?
     @Published var uid: String = ""
     
-    @Published var profileImage: ProfileModel?
     @Published var imageURL: String?
 
     
@@ -56,11 +58,13 @@ final class ModelData: ObservableObject{
     @Published var loggedIn: Bool?
     @Published var isStudent: Bool?
     @Published var hasPopulated: Bool = false
+
     private var teacherListener: ListenerRegistration?
     private var requestedListener: ListenerRegistration?
     private var matchedListener: ListenerRegistration?
     private var availableListener: ListenerRegistration?
     private var declinedListener: ListenerRegistration?
+    
 
 //    var user: User? {
 //        didSet {
@@ -372,7 +376,7 @@ final class ModelData: ObservableObject{
         
     }
     func uploadImage(student: Student, completion:@escaping(Bool) -> Void){
-        print("UPLOADING THE IMAGE")
+        print("UPLOADING THE IMAGE FOR THE STUDENT USER")
         let db = Firestore.firestore()
 
         let docRef = db.collection("StudentUser").document(uid)
@@ -395,7 +399,7 @@ final class ModelData: ObservableObject{
                     return
                 }
 
-                print("Successfully stored image with url: \(url?.absoluteString ?? "")")
+                print("Successfully stored STUDENT image with url: \(url?.absoluteString ?? "")")
                 print(url?.absoluteString)
                 //store the url in firestore
                 if(url?.absoluteString.count ?? 0 > 7){
@@ -449,6 +453,7 @@ final class ModelData: ObservableObject{
     func reset(){
         uid = ""
         uiImage = nil
+        imageURL = ""
         email = ""
         password = ""
         loggedIn = false

@@ -136,7 +136,6 @@ struct CreateStudentProfilePage: View{
 
                         }
                         else{
-                            viewModel.setImageState(imageState: .empty)
                         }
                     }
 

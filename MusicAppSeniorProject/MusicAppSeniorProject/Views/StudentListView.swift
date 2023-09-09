@@ -10,7 +10,9 @@ import SDWebImageSwiftUI
 
 struct StudentListView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var modelData: ModelData
+    @EnvironmentObject var modelData: TeacherModelData
+    @EnvironmentObject var viewModel: ProfileModel
+
     @Binding var displayArray: [Student]
     @Binding var uiImage: UIImage?
     let status: String
@@ -173,6 +175,8 @@ struct StudentListView: View {
                                             loggedOut = true
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                                 modelData.reset()
+                                                viewModel.setImageState(imageState: .failure(SampleError.errorRequired))
+
                                             }
                                         }
                                         .modifier(CenterModifier())

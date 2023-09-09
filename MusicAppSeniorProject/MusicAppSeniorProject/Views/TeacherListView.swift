@@ -12,6 +12,7 @@ enum teacherType{
 }
 struct TeacherListView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var viewModel: ProfileModel
     @EnvironmentObject var modelData: ModelData
     @Binding var displayArray: [Teacher]
     let status: String
@@ -184,6 +185,7 @@ struct TeacherListView: View {
                                                 modelData.logOut()
                                                 loggedOut = true
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                                    viewModel.setImageState(imageState: .failure(SampleError.errorRequired))
                                                     modelData.reset()
                                                 }
                                             }
