@@ -92,9 +92,9 @@ struct StudentProfilePageUI: View {
                                         Image(systemName:"x.circle")
                                             .resizable()
                                             .frame(width: 50, height: 50)
-                                            .foregroundColor(Color.red)
+                                            .foregroundColor(Color.white)
                                             .zIndex(6)
-                                            .background(Color.white)
+                                            .background(Color.red)
                                             .clipShape(Circle())
                                             
                                     }
@@ -109,9 +109,9 @@ struct StudentProfilePageUI: View {
                                         Image(systemName:"checkmark.circle")
                                             .resizable()
                                             .frame(width: 50, height: 50)
-                                            .foregroundColor(Color.green)
+                                            .foregroundColor(Color.white)
                                             .zIndex(6)
-                                            .background(Color.white)
+                                            .background(Color.green)
                                             .clipShape(Circle())
 
                                             

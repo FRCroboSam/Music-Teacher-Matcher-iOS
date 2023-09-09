@@ -454,9 +454,17 @@ struct CreateTeacherProfilePage: View {
                             }
                         }
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(BigButtonStyle(color: .orange))
                     .padding(10)
                     .listRowSeparator(.hidden)
+                    Spacer()
+                        .frame(height: 20)
+                    Button("Delete Account"){
+                        modelData.deleteAccount()
+                    }
+                        .buttonStyle(BigButtonStyle(color: .red))
+                        .padding(10)
+                        .listRowSeparator(.hidden)
                 }
                 else{
                     Button("Submit Profile") {
@@ -477,6 +485,7 @@ struct CreateTeacherProfilePage: View {
                     }.listRowSeparator(.hidden)
                         .buttonStyle(BigButtonStyle(color: .orange))
                         .padding(10)
+
                 }
             }
                 Spacer()

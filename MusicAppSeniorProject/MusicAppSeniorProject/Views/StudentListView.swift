@@ -133,7 +133,7 @@ struct StudentListView: View {
                                 List{
                                     Section{
                                         if(displayArray.count < 1){
-                                            Text("No " + status + " students at this time.")
+                                            Text("No " + status + " at this time.")
                                                 .font(.system(size: 20))
                                                 .italic()
                                                 .modifier(CenterModifier())

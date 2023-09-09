@@ -108,6 +108,7 @@ struct LoginPage: View {
                                 print("LoginFailed")
                                 noUserFound = true
                                 studentLoginSuccessful = false
+                                modelData.logOut()
                             }
                         }
                     }
@@ -121,6 +122,7 @@ struct LoginPage: View {
                                 print("LoginFailed")
                                 noUserFound = true
                                 teacherLoginSuccessful = false
+                                teacherModelData.logOut()
                             }
                         }
                     }

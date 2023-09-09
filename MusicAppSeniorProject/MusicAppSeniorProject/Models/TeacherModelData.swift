@@ -566,7 +566,43 @@ final class TeacherModelData: ObservableObject{
         }//
         
     }
-    
+    func deleteAccount(){
+        //remove the reference in firestore
+        let db = Firestore.firestore()
+        let teacherRef = db.collection("Teachers").document(uid)
+        teacherRef.delete()
+        //remove the reference in storage
+        let storage = Storage.storage()
+        let storageRef = storage.reference(forURL: imageURL ?? "NONE")
+        storageRef.delete { error in
+          if let error = error {
+            // Uh-oh, an error occurred!
+              print(error)
+          } else {
+            print("IMage deleted successfully ")
+          }
+        }
+        //delete the account
+        let user = Auth.auth().currentUser
+
+        user?.delete { error in
+          if let error = error {
+            print(error)
+          } else {
+            print("ACCOUNT SUCCESSFULLY DELETED")
+          }
+        }
+        reset()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+            self.logOut()
+        }
+        
+        
+        
+        
+
+    }
     func submitProfile(teacher: Teacher, completion: @escaping (Bool)->Void){
         print("Emial: " + teacher.email)
         print("Password: " + teacher.password)
