@@ -97,7 +97,7 @@ struct TeacherListView: View {
                                 }
                             }
                         }
-                    }.frame(height: 1/5 * deviceHeight)
+                    }.frame(maxHeight: 1/5 * deviceHeight)
                         .onTapGesture {
                             showInfo = false
                         }
