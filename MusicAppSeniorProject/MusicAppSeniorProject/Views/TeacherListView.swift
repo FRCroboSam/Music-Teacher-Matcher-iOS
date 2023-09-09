@@ -46,8 +46,6 @@ struct TeacherListView: View {
         NavigationStack{
             ZStack{
                 VStack(spacing: 0){
-                    Spacer()
-                        .frame(height: 1/10 * deviceHeight)
                     GeometryReader{ geometry in
                         ZStack{
                             VStack(alignment: .center, spacing: 10){
@@ -57,15 +55,14 @@ struct TeacherListView: View {
                                         .overlay(Circle()
                                             .strokeBorder(Color.white,lineWidth: 5)
                                         ).modifier(CenterModifier())
-                                    
-                                    Spacer()
-                                        .frame(height: 10)
+                                        .padding(.top, 60)
                                     HStack{
                                         Text(" " + status + " Teachers ")
                                             .scaledToFill()
+                                            .zIndex(100)
                                             .lineLimit(1)
                                             .font(.custom("MarkerFelt-Wide", size: 100))
-                                            .frame(minWidth: 7/8 * deviceWidth)
+                                            .frame(maxWidth: 7/8 * deviceWidth)
                                             .minimumScaleFactor(0.01)
                                             .foregroundColor(.white)
                                             .background(getColor())
@@ -92,10 +89,11 @@ struct TeacherListView: View {
                                         
                                         
                                     }.frame(maxWidth: 10/11 * deviceWidth)
+                                        .padding(.bottom, 50)
                                 }
                             }
                         }
-                    }.frame(maxHeight: 1/5 * deviceHeight)
+                    }.frame(height: 1/5 * deviceHeight)
 
                         .background{
                             Image("music_background")
@@ -106,8 +104,7 @@ struct TeacherListView: View {
                         }
                     
                     
-                    Spacer()
-                        .frame(height: 1/30 * deviceHeight)
+                    Spacer(minLength: 50)
                     ZStack{
                         VStack(spacing: 0){
                             //                        Section{
