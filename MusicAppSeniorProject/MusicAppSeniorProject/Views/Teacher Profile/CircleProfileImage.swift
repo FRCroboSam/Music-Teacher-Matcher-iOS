@@ -108,8 +108,11 @@ struct EditableCircularProfileImage: View {
                         .symbolRenderingMode(.multicolor)
                         .font(.system(size: 30))
                         .foregroundColor(.accentColor)
+
+                    
                 }
                 .buttonStyle(.borderless)
+                
 
             }
     }

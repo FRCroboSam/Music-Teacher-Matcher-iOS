@@ -37,6 +37,7 @@ struct TeacherAppPage: View {
                         .tabBarItem(tab: .matched, selection: $tabSelection)
                     CreateTeacherProfilePage(teacher: modelData.teacherUser, editMode: true)
                                .tabBarItem(tab: .editProfile, selection: $tabSelection)
+                    
                        }
                        .ignoresSafeArea(.keyboard, edges: .bottom)
                    }

@@ -28,7 +28,7 @@ struct CustomTabBarContainerView<Content:View>: View {
                 
             
             CustomTabBarView(tabs: tabs, selection: $selection, localSelection: selection)
-                .offset(y: -1/20 * deviceHeight)
+                .offset(y: selection == .editProfile ? 0 : -1/30 * deviceHeight)
             
         }
         .onPreferenceChange(TabBarItemsPreferenceKey.self, perform: { value in

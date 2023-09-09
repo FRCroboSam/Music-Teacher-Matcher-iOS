@@ -743,6 +743,43 @@ final class ModelData: ObservableObject{
             }
                             
     }
+    func deleteAccount(){
+        //remove the reference in firestore
+        let db = Firestore.firestore()
+        let studentRef = db.collection("StudentUser").document(uid)
+        studentRef.delete()
+        //remove the reference in storage
+        let storage = Storage.storage()
+        let storageRef = storage.reference(forURL: imageURL ?? "NONE")
+        storageRef.delete { error in
+          if let error = error {
+            // Uh-oh, an error occurred!
+              print(error)
+          } else {
+            print("IMage deleted successfully ")
+          }
+        }
+        //delete the account
+        let user = Auth.auth().currentUser
+
+        user?.delete { error in
+          if let error = error {
+            print(error)
+          } else {
+            print("ACCOUNT SUCCESSFULLY DELETED")
+          }
+        }
+        reset()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+            self.logOut()
+        }
+        
+        
+        
+        
+
+    }
     func fetchTeacherData(completion: @escaping () -> Void){
         print("*FETCHING TEACHER DATA")
         let dispatchGroup = DispatchGroup()
