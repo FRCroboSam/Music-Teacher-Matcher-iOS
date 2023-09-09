@@ -37,8 +37,7 @@ struct StudentListView: View {
         NavigationStack{
             ZStack{
                 VStack(spacing: 0){
-                    Spacer()
-                        .frame(height: 1/10 * deviceHeight)
+
                     GeometryReader{ geometry in
                         ZStack{
                             VStack(alignment: .center, spacing: 10){
@@ -48,9 +47,9 @@ struct StudentListView: View {
                                         .overlay(Circle()
                                             .strokeBorder(Color.white,lineWidth: 5)
                                         ).modifier(CenterModifier())
-                                    
-                                    Spacer()
-                                        .frame(height: 10)
+                                        .padding(.top, max(30, 1/15 * deviceHeight))
+                                        .padding(.bottom, max(10, 0.0117 * deviceHeight))
+
                                     HStack{
                                         Text(" " + status + " ")
                                             .scaledToFill()
@@ -95,7 +94,7 @@ struct StudentListView: View {
                     
                     
                     Spacer()
-                        .frame(height: 1/30 * deviceHeight)
+                        .frame(height: min(0.1 * UIScreen.main.bounds.height, 70))
                     ZStack{
                         VStack(spacing: 0){
                             //                        Section{
@@ -231,7 +230,7 @@ struct StudentListView: View {
                             .contentShape(Rectangle())
                             .zIndex(3)
                         
-                    }
+                    }.padding(.top, 20)
                     
                 }
                 if(showInfo && status == "Requested Students"){
