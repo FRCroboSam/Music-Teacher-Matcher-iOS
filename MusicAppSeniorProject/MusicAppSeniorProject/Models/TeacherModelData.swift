@@ -29,9 +29,21 @@ final class TeacherModelData: ObservableObject{
     @Published var uiImage: UIImage?
     
     @Published var imageURL: String?
+    @Published var hasPopulated: Bool = false
+
     
     func logOut(){
+        reset()
         try! Auth.auth().signOut()
+    }
+    func reset(){
+        uid = ""
+        uiImage = nil
+        email = ""
+        declinedStudents.removeAll()
+        requestedStudents.removeAll()
+        matchedStudents.removeAll()
+        
     }
     func updateTeacherData(completion: @escaping (Bool)->Void){
         

@@ -153,11 +153,11 @@ struct CreateTeacherProfilePage: View {
             .onAppear{
                 UITableView.appearance().backgroundView = UIImageView(image: UIImage(named: "music_background"))
                 print("APPEARING")
-                if(editMode && !hasPopulated){
+                if(editMode){
                     if(teacher != nil){
                         print("POPULATING PROFILE EDITOR")
                         populateProfileEditor(teacher: teacher ?? Teacher(name: "DKFJDJ"))
-                        hasPopulated = true
+                        modelData.hasPopulated = true
                     }
                     if(modelData.uiImage == nil){
                         print("UIIMAGE NIL BUT URL IS: " + (modelData.imageURL ?? "DF"))
@@ -166,6 +166,10 @@ struct CreateTeacherProfilePage: View {
                         }
                     }
                     
+                }
+                else if(!editMode){
+                    print("UIIMAGE NIL??" + String(modelData.uiImage == nil))
+//                    viewModel.setImageState(imageState: .empty)
                 }
             }
             Section{
@@ -732,8 +736,9 @@ struct CreateTeacherProfilePage: View {
             teachingStyle = value(key: "Teaching Style", pairs: teacher.musicalBackground)
             musicalBackground = value(key: "Musical Degree", pairs: teacher.musicalBackground)
             let image2 = Image(uiImage: modelData.uiImage ?? UIImage(systemName: "person.fill")!)
-            viewModel.setImageState(imageState: .success(image2))//                            let image =
-            
+            if(!modelData.hasPopulated){
+                viewModel.setImageState(imageState: .success(image2))//                            let ima
+            }
         }
         func populateImage() async {
             if modelData.uiImage == nil {

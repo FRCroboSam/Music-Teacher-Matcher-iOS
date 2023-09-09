@@ -51,6 +51,7 @@ struct StudentListView: View {
                                         .frame(height: 10)
                                     HStack{
                                         Text(" " + status + " ")
+                                            .scaledToFill()
                                             .lineLimit(1)
                                             .font(.custom("MarkerFelt-Wide", size: 40))
                                             .foregroundColor(.white)

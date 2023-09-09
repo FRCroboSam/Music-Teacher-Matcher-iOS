@@ -365,8 +365,25 @@ struct StudentProfilePageUI: View {
                                 .fill(Color.white)
                                 .shadow(radius: 5)
                                 .padding(.bottom, -10))
-
-                    Spacer(minLength: 500)
+                    Spacer(minLength: 50)
+                        
+                    if(!canRequest){
+                        Text(matchText)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(Color(UIColor.systemGray2))
+                            .background{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(Color.white)
+                                    .shadow(radius: 5)
+                                    .padding(-10)
+                                    .overlay{
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .strokeBorder(Color.yellow, lineWidth: 1)
+                                            .padding(-10)
+                                    }
+                            }
+                            .frame(maxWidth: 2/3 * deviceWidth)
+                    }
                 }
                     .background(ScrollViewConfigurator {
                         $0?.bounces = false               // << here !!
@@ -465,12 +482,14 @@ struct MatchedView: View {
     var body: some View {
         HStack {
             SparklesImage()
+                .foregroundColor(Color.yellow)
             Text("Matched")
                 .font(.system(size: 30))
                 .italic()
                 .bold()
                 .foregroundColor(Color.yellow)
             SparklesImage()
+                .foregroundColor(Color.yellow)
         }
         .background {
             RoundedRectangle(cornerRadius: 30)
