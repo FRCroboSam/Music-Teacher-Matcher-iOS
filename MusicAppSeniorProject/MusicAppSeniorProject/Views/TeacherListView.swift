@@ -29,7 +29,18 @@ struct TeacherListView: View {
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
     }
-
+    func getColor() -> Color{
+        if(status == "Available"){
+           return .green
+        }
+        if(status == "Requested"){
+           return .teal
+        }
+        if(status == "Matched"){
+           return .yellow
+        }
+        return .green
+    }
     var body: some View {
         NavigationStack{
             ZStack{
@@ -49,13 +60,14 @@ struct TeacherListView: View {
                                     Spacer()
                                         .frame(height: 10)
                                     HStack{
-                                        Text(" " + status + " ")
+                                        Text(" " + status + " Teachers ")
+                                            .scaledToFill()
                                             .lineLimit(1)
-                                            .font(.custom("MarkerFelt-Wide", size: 40))
-                                            .foregroundColor(.white)
+                                            .font(.custom("MarkerFelt-Wide", size: 100))
+                                            .frame(minWidth: 7/8 * deviceWidth)
                                             .minimumScaleFactor(0.01)
-                                        
-                                            .background(Color.teal)
+                                            .foregroundColor(.white)
+                                            .background(getColor())
                                             .clipShape(RoundedRectangle(cornerRadius:10))
                                             .overlay(alignment: .topTrailing){
                                                 if(status == "Available Teachers"){
@@ -78,7 +90,7 @@ struct TeacherListView: View {
                                             }
                                         
                                         
-                                    }//.modifier(CenterModifier())
+                                    }.frame(maxWidth: 10/11 * deviceWidth)
                                 }
                             }
                         }
@@ -289,3 +301,15 @@ struct CenterModifier: ViewModifier {
 
 
 
+struct FitToWidth: ViewModifier {
+    var fraction: CGFloat = 1.0
+    func body(content: Content) -> some View {
+        GeometryReader { g in
+        content
+            .font(.system(size: 1000))
+            .minimumScaleFactor(0.005)
+            .lineLimit(1)
+            .frame(width: g.size.width*self.fraction)
+        }
+    }
+}

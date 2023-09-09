@@ -340,8 +340,9 @@ struct ProfilePageUI: View {
                                 .padding(.bottom, -10))
                     Spacer(minLength: 50)
                         
-                    if(status == "Matched Teachers"){
+                    if(status == "Matched"){
                         Text(matchText)
+                            .multilineTextAlignment(.center)
                             .foregroundColor(Color(UIColor.systemGray2))
                             .background{
                                 RoundedRectangle(cornerRadius: 10)
@@ -355,6 +356,28 @@ struct ProfilePageUI: View {
                                     }
                             }
                             .frame(maxWidth: 2/3 * deviceWidth)
+                    }
+                    else if(status == "Requested"){
+                       Button("Cancel your request"){
+                           modelData.cancelTeacherRequest(teacherId: teacher?.uid ?? "No UID", score: teacher?.score ?? -2300)
+                           dismiss()
+                       }.buttonStyle(BigButtonStyle(color: .red))
+                        .scaleEffect(x: 0.75, y: 0.75)
+                   }
+                    else{
+                        HStack{
+                            Button("Request"){
+                                modelData.requestTeacher(teacherId: teacher?.uid ?? "No UID", score: teacher?.score ?? -10000)
+                                dismiss()
+                            }.buttonStyle(BigButtonStyle(color: .green))
+                                .scaleEffect(x: 0.75, y: 0.75)
+                            Button("Decline"){
+                                modelData.declineTeacher(teacherId: teacher?.uid ?? "No UID")
+                                dismiss()
+                            }.buttonStyle(BigButtonStyle(color: .red))
+                                .scaleEffect(x: 0.75, y: 0.75)
+                        }
+                        
                     }
                 }
                     .background(ScrollViewConfigurator {
@@ -443,14 +466,14 @@ extension UIView {
 struct StatusLabelView: View {
     let text: String
     func getColor() -> Color{
-        if(text == "Available Teachers"){
-           return .orange
-        }
-        if(text == "Requested Teachers"){
+        if(text == "Available"){
            return .green
         }
-        if(text == "Matched Teachers"){
-           return .blue
+        if(text == "Requested"){
+           return .teal
+        }
+        if(text == "Matched"){
+           return .yellow
         }
         return .green
     }
@@ -458,12 +481,14 @@ struct StatusLabelView: View {
         
         HStack {
             SparklesImage()
+                .foregroundColor(getColor())
             Text(text)
                 .font(.system(size: 30))
                 .italic()
                 .bold()
                 .foregroundColor(getColor())
             SparklesImage()
+                .foregroundColor(getColor())
         }
         .background {
             RoundedRectangle(cornerRadius: 30)

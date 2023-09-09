@@ -491,7 +491,6 @@ struct SparklesImage: View {
         Image(systemName: "sparkles")
             .resizable()
             .frame(width: 30, height: 30)
-            .foregroundColor(Color.yellow)
             .zIndex(6)
             .background(Color.white)
     }
