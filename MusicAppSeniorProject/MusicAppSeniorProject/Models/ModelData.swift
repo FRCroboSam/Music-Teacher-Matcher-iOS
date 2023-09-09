@@ -65,7 +65,9 @@ final class ModelData: ObservableObject{
     private var availableListener: ListenerRegistration?
     private var declinedListener: ListenerRegistration?
     
-
+    func sortAvailableTeachers() {
+        self.availableTeachers.sort { $0.score > $1.score }
+    }
 //    var user: User? {
 //        didSet {
 //            objectWillChange.send()
@@ -907,6 +909,7 @@ final class ModelData: ObservableObject{
                                                     var availableTeacher = self.allAvailableTeachers[foundIndex]
                                                     availableTeacher.score = score as! Double ?? 0.0
                                                     self.availableTeachers.append(availableTeacher)
+                                                    self.sortAvailableTeachers()
                                                 } else {
                                                     
                                                     var availableTeacher = self.createTeacherFromData(documentSnapshot: document)
