@@ -69,6 +69,10 @@ struct CreateStudentProfilePage: View{
     @State private var profileImageCount = 0
     @State private var failedUpdate = false
     @State private var updatedSuccessfully = false
+    
+    @State private var failedPhotoUpdate = false
+    @State private var successfulPhotoUpdate = false
+
     var body: some View {
 //        NavigationStack{
             Form{
@@ -104,6 +108,7 @@ struct CreateStudentProfilePage: View{
                             .font(.system(size: 20))
                             .fontWeight(.bold)
                             .padding(10)
+
 //                        NavigationLink(destination:CameraView()){
 //                            Text("Use camera to take a photo")
 //                        }.buttonStyle(BorderlessButtonStyle())
@@ -116,6 +121,10 @@ struct CreateStudentProfilePage: View{
                             .navigationDestination(isPresented: $useCamera) {
                                 CameraView()
                             }
+                            Text("Don't close the app too clickly after uploading the photo.")
+                                .italic()
+                                .font(.system(size: 15))
+                                .foregroundColor(Color(UIColor.systemGray4))
                             Divider()
                         }.listRowSeparator(.hidden)
                     }

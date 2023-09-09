@@ -62,8 +62,7 @@ struct TeacherListView: View {
                                         Text(" " + status + " Teachers ")
                                             .scaledToFill()
                                             .lineLimit(1)
-                                            .font(.custom("MarkerFelt-Wide", size: 100))
-                                            .frame(maxWidth: 7/8 * deviceWidth)
+                                            .font(.custom("MarkerFelt-Wide", size: 40))
                                             .minimumScaleFactor(0.01)
                                             .foregroundColor(.white)
                                             .background(getColor())
@@ -99,6 +98,9 @@ struct TeacherListView: View {
                             }
                         }
                     }.frame(height: 1/5 * deviceHeight)
+                        .onTapGesture {
+                            showInfo = false
+                        }
 
                         .background{
                             Image("music_background")
@@ -228,7 +230,7 @@ struct TeacherListView: View {
                                 
                                 Spacer()
                                     .ignoresSafeArea(.all)
-                                    .frame(height: 1/8 * deviceHeight)
+                                    .frame(height: 30)
                                     .listRowSeparator(.hidden)
                                 
                                     .navigationDestination(isPresented: $loggedOut, destination: {

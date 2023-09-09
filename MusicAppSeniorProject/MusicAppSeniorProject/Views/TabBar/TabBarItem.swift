@@ -1,9 +1,3 @@
-//
-//  TabBarItem.swift
-//  SwiftfulThinkingAdvancedLearning
-//
-//  Created by Nick Sarno on 9/6/21.
-//
 
 import Foundation
 import SwiftUI

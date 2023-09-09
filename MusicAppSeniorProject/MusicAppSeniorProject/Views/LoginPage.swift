@@ -71,6 +71,7 @@ struct LoginPage: View {
                 Spacer(minLength: 30)
                 HStack {
                     Image(systemName: "envelope")
+                        .foregroundColor(Color.white)
                     TextField("Email", text: $email)
                         .foregroundColor(.white)
                         .keyboardType(.asciiCapable)
@@ -81,6 +82,8 @@ struct LoginPage: View {
                 
                 HStack {
                     Image(systemName: "lock")
+                        .foregroundColor(Color.white)
+
                     SecureField("Password", text: $password)
                         .foregroundColor(.white)
                         .textContentType(.newPassword)

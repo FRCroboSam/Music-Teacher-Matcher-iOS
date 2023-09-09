@@ -35,6 +35,9 @@ struct TeacherAppPage: View {
                     StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
 
                         .tabBarItem(tab: .matched, selection: $tabSelection)
+                    StudentListView(displayArray: $modelData.matchedStudents, uiImage: $modelData.uiImage, status: "Matched Students", displayText: matchedTeacherDesc)
+
+                        .tabBarItem(tab: .matched, selection: $tabSelection)
                     CreateTeacherProfilePage(teacher: modelData.teacherUser, editMode: true)
                                .tabBarItem(tab: .editProfile, selection: $tabSelection)
                     

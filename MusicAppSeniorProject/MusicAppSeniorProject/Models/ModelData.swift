@@ -58,6 +58,8 @@ final class ModelData: ObservableObject{
     @Published var loggedIn: Bool?
     @Published var isStudent: Bool?
     @Published var hasPopulated: Bool = false
+    @Published var attemptedPhotoUpload: Bool = false
+
 
     private var teacherListener: ListenerRegistration?
     private var requestedListener: ListenerRegistration?
@@ -397,7 +399,8 @@ final class ModelData: ObservableObject{
             storageRef.downloadURL { url, err in
                 if let err = err {
                     print("Failed to retrieve downloadURL")
-                    completion(true)
+                    
+                    completion(false)
                     return
                 }
 

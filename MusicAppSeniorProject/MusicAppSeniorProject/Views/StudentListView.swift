@@ -76,7 +76,12 @@ struct StudentListView: View {
                                             }
                                         
                                         
-                                    }//.modifier(CenterModifier())
+                                    }.frame(maxWidth: 10/11 * deviceWidth)
+                                        .onTapGesture {
+                                            withAnimation(.easeInOut(duration: 0.2)){
+                                                showInfo.toggle()
+                                            }
+                                        }
                                 }
                             }
                         }
@@ -128,22 +133,11 @@ struct StudentListView: View {
                                 List{
                                     Section{
                                         if(displayArray.count < 1){
-                                            Text("No teachers at this time.")
+                                            Text("No " + status + " students at this time.")
                                                 .font(.system(size: 20))
                                                 .italic()
                                                 .modifier(CenterModifier())
                                                 .foregroundColor(Color(UIColor.systemGray3))
-                                                .background{
-                                                    RoundedRectangle(cornerRadius: 20)
-                                                        .fill(Color.white)
-                                                        .shadow(radius: 10)
-                                                        .padding(-10)
-                                                        .overlay{
-                                                            RoundedRectangle(cornerRadius: 20)
-                                                                .stroke(Color(UIColor.lightGray), lineWidth: 1)
-                                                                .padding(-10)
-                                                        }
-                                                }
                                                 .listRowSeparator(.hidden)
                                         }
                                         else{
@@ -155,7 +149,7 @@ struct StudentListView: View {
                                                         //                                                TeacherProfilePage(teacher: teacher, displayText: displayText, status: status, teacherImage: (teacher.uiImage ?? UIImage(systemName: "person.fill"))!)
                                                     } label:{
                                                         HStack{
-                                                            log(student.name + "'s IMAGE URL: " + student.imageURL)
+                                                            
                                                             if(student.imageURL.count > 5 && student.imageURL != "NONE"){
                                                                 ProfileImageFromURL(url: student.imageURL, size: 50)
                                                                 
@@ -216,9 +210,7 @@ struct StudentListView: View {
                                     .navigationDestination(isPresented: $loggedOut, destination: {
                                         HomePage()
                                     })
-                                    .onAppear{
-                                        proxy.scrollTo(4)
-                                    }
+
                             }
                             .zIndex(2)
                         }

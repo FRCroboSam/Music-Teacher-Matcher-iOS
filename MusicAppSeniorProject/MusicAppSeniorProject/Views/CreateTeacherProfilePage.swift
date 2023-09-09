@@ -84,6 +84,9 @@ struct CreateTeacherProfilePage: View {
     //toodo: Finish implementing this
     @State private var teachOnline = false
     @State private var teachInperson = false
+    @State private var failedPhotoUpdate = false
+    @State private var successfulPhotoUpdate = false
+
     
     var deviceWidth: CGFloat {
         UIScreen.main.bounds.width
@@ -148,6 +151,10 @@ struct CreateTeacherProfilePage: View {
                         CameraView()
                     }
                     .modifier(CenterModifier())
+                Text("Don't close the app until you see a notification that the photo was uploaded")
+                    .italic()
+                    .font(.system(size: 15))
+                    .foregroundColor(Color(UIColor.systemGray4))
             }.listRowSeparator(.hidden)
 
             .onAppear{
@@ -419,7 +426,15 @@ struct CreateTeacherProfilePage: View {
                                 createTeacherObject()
                                 if(profileImageCount > 1){
                                     print("GOING TO UPLOAD AN IMAGE")
-                                    modelData.uploadImage(teacher: modelData.teacherUser) { _  in
+                                    modelData.uploadImage(teacher: modelData.teacherUser) { success  in
+                                        if(success){
+                                            failedPhotoUpdate = false
+                                            successfulPhotoUpdate = true
+                                        }
+                                        else{
+                                            failedPhotoUpdate = true
+                                            successfulPhotoUpdate = false
+                                        }
                                     }
                                 }
                                 modelData.updateTeacherData { works in
@@ -438,16 +453,6 @@ struct CreateTeacherProfilePage: View {
                                 
                             }
                         }
-                        //                            createStudentObject()
-                        //                            modelData.registerStudentUser(){ isFound in
-                        //                                if isFound {
-                        //                                    noUserFound = false
-                        //                                    loginSuccessful = true
-                        //                                } else {
-                        //                                    noUserFound = true
-                        //                                    loginSuccessful = false
-                        //                                }
-                        //                            }
                     }
                     .buttonStyle(.bordered)
                     .padding(10)
@@ -487,6 +492,12 @@ struct CreateTeacherProfilePage: View {
                     Button("Try Again", role: .destructive) { }
                 }
                 .alert("Info updated successfully", isPresented: $updatedSuccessfully) {
+                    Button("Ok", role: .destructive) { }
+                }
+                .alert("Photo uploaded successfully", isPresented: $successfulPhotoUpdate) {
+                    Button("Ok", role: .destructive) { }
+                }
+                .alert("Failed to upload Photo", isPresented: $failedPhotoUpdate) {
                     Button("Ok", role: .destructive) { }
                 }
             }.modifier(FormHiddenBackground())

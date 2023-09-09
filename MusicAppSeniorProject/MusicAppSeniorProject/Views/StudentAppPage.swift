@@ -49,6 +49,7 @@ struct StudentAppPage: View {
                 .navigationDestination(isPresented: $loggedOut) {
                     HomePage()
                 }
+
                 .onAppear() {
                     let teacher = Teacher(name: "DF")
 
