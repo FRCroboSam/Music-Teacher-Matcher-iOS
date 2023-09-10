@@ -574,13 +574,16 @@ final class TeacherModelData: ObservableObject{
         //remove the reference in storage
         let storage = Storage.storage()
         let storageRef = storage.reference(forURL: imageURL ?? "NONE")
-        storageRef.delete { error in
-          if let error = error {
-            // Uh-oh, an error occurred!
-              print(error)
-          } else {
-            print("IMage deleted successfully ")
-          }
+        if(imageURL?.count ?? 0 > 3){
+            let storageRef = storage.reference(forURL: imageURL ?? "NONE")
+            storageRef.delete { error in
+                if let error = error {
+                    // Uh-oh, an error occurred!
+                    print(error)
+                } else {
+                    print("IMage deleted successfully ")
+                }
+            }
         }
         //delete the account
         let user = Auth.auth().currentUser
