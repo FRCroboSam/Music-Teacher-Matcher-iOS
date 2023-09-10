@@ -232,18 +232,10 @@ final class ModelData: ObservableObject{
                 print("FOUND MATCHED, not ADDING")
             }
         }
-        checkIfCollectionExists(collectionName: "Available Teachers") { works in
-            if(!works){
-                docRef.collection("Matched Teachers").document().setData([  // 👈 Create a document in the subcollection
-                    "title": "testing"
-                ])
-            }
-            else{
-                print("FOUND MATCHED, not ADDING")
-            }
-        }
+
         checkIfCollectionExists(collectionName: "Matched Teachers") { works in
             if(!works){
+                print("ADDING TO MATCHED")
                 docRef.collection("Matched Teachers").document().setData([  // 👈 Create a document in the subcollection
                     "title": "testing"
                 ])
