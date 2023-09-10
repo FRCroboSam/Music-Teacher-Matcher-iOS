@@ -230,7 +230,7 @@ struct TeacherListView: View {
                                 
                                 Spacer()
                                     .ignoresSafeArea(.all)
-                                    .frame(height: 30)
+                                    .frame(height: 100)
                                     .listRowSeparator(.hidden)
                                 
                                     .navigationDestination(isPresented: $loggedOut, destination: {

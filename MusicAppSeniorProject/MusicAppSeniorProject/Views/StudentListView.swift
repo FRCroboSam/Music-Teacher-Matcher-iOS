@@ -204,7 +204,7 @@ struct StudentListView: View {
                                 .scrollContentBackground(.hidden)
                                 Spacer()
                                     .ignoresSafeArea(.all)
-                                    .frame(height: 30)
+                                    .frame(height: 100)
                                     .listRowSeparator(.hidden)
                                 
                                     .navigationDestination(isPresented: $loggedOut, destination: {
