@@ -132,7 +132,7 @@ struct ProfilePageUI: View {
                                     .resizable()
                                     .foregroundColor(Color.brown)
                                     .frame(width: 30, height: 30)
-                                Text("Julliard School of Music ")
+                                Text(musicDegree)
                                     .font(.system(size: 20))
                                 
                             }
@@ -141,7 +141,7 @@ struct ProfilePageUI: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 30, height: 30)
-                                Text("Seattle, Washington")
+                                Text(location)
                                     .font(.system(size: 20))
                                 
                                 
@@ -416,6 +416,9 @@ struct ProfilePageUI: View {
         about = teacher.getStringProperty(key: "Teaching Style", pairs: teacher.musicalBackground) ?? "Specializing in classical pedagogy with a focus on relaxed, effortless technique."
         studentDesc = teacher.getStringProperty(key: "Student Description", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
         musicDegree = teacher.getStringProperty(key: "Musical Degree", pairs: teacher.musicalBackground) ?? "Student should know pieces like Twinkle Twinkle Little Star "
+        if(musicDegree == "No" || musicDegree == "Generic User"){
+            musicDegree = "No musical degree."
+        }
         lessonFormat = teacher.getStringProperty(key: "Format", pairs: teacher.lessonInfo) ?? "In person"
         email = teacher.getStringProperty(key: "email", pairs: teacher.loginInfo) ?? "In person"
         if(lessonFormat.contains("Online") && lessonFormat.contains("In")){

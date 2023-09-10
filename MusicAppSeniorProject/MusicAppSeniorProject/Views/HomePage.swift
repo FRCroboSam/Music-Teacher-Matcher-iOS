@@ -27,6 +27,7 @@ struct HomePage: View {
                     //                    .scaledToFill()
                         .ignoresSafeArea()
                     VStack(spacing: 15){
+                        Spacer(minLength: 20)
                         Image("app_icon")
                             .resizable()
                             .aspectRatio(contentMode: .fill)

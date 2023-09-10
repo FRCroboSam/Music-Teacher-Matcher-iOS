@@ -551,7 +551,7 @@ struct CreateTeacherProfilePage: View {
             print("LEVELS IS: " + levels)
             let loginInfo:KeyValuePairs = [
                 "email": email,
-                "password": password
+//                "password": password
             ]
             let degree = hasMusicDegree ? musicDegree : "No"
             let musicalBackground:KeyValuePairs = [

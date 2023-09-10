@@ -99,25 +99,26 @@ final class ModelData: ObservableObject{
         }
     }
     func determineCompatibility(teacher: Teacher, student: Student, completion:@escaping (Double?) -> Void){
-        print("DETERMINING COMPATIBILITY FOR: " + teacher.name)
+        print("&&&& DETERMINING COMPATIBILITY FOR: " + teacher.name)
         var score = 100.0
         //TODO: FIX THIS
         let teacherLevels = teacher.getStringProperty(key: "Levels", pairs: teacher.lessonInfo)
         let studentLevel = convertToLevel(Int(student.getDoubleProperty(key: "Skill Level", pairs: student.musicalBackground)))
-        print("TEACHER LEVELS: " + teacherLevels)
-        print("Student LEVELS: " + studentLevel)
+
 
         if(teacherLevels.contains(studentLevel)){
             score += 200
+            print("&&&& LEVELS ARE THE SAME FOR STUDENT AND TEACHER")
         }
         else{
         }
         let teacherFormat = teacher.getStringProperty(key: "Format", pairs: teacher.teacherInfo)
         let studentFormat = student.getStringProperty(key: "Format", pairs: student.personalInfo)
-        print("Teacher format: " + teacherFormat)
-        print("Student format: " + studentFormat)
+
         if(teacherFormat.localizedCaseInsensitiveContains("Online") && studentFormat.localizedCaseInsensitiveContains("Online")){
             score += 50
+            print("&&&& FOrmats ARE THE SAME FOR STUDENT AND TEACHER")
+
         }
         if(teacherFormat.localizedCaseInsensitiveContains("In person") && studentFormat.localizedCaseInsensitiveContains("In person")){
             score += 50
@@ -125,12 +126,13 @@ final class ModelData: ObservableObject{
 
         teacherDistance(teacher:teacher, student: student){dist  in
             let distance = dist ?? 200
+            print("&&&& Distance: " + String(distance))
             if(dist != nil){
                 if(distance < 100.0){
                     score += 100 + (100 - distance)
                 }
                 else{
-                    score -= 100
+                    score -= 250
                 }
                 completion(score)
             }
@@ -150,7 +152,7 @@ final class ModelData: ObservableObject{
         print("Teacher City is: " + teacherCity )
         geocoder.geocodeAddressString(studentCity) { (placemarks1, error) in
             if(error != nil){
-                print("CITY DOES NOT EXIST")
+                print("STUDENT CITY DOES NOT EXIST")
             }
             guard let location1 = placemarks1?.first?.location else {
                 completion(nil)
@@ -158,13 +160,17 @@ final class ModelData: ObservableObject{
             }
             
             geocoder.geocodeAddressString(teacherCity) { (placemarks2, error) in
+                if(error != nil){
+                    print("Teacher CITY DOES NOT EXIST")
+                }
                 guard let location2 = placemarks2?.first?.location else {
+                    print("TEACHER CITY DOESNOT EXIST")
                     completion(nil)
                     return
                 }
                 
                 let distance = location1.distance(from: location2) / 1000.0 // Convert meters to kilometers
-                print("DISTANCE " + String(distance))
+                print("FINAL DISTANCE between " + studentCity + " " + teacherCity + String(distance))
                 completion(distance)
             }
         }

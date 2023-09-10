@@ -587,7 +587,7 @@ struct CreateStudentProfilePage: View{
             }
             let loginInfo:KeyValuePairs = [
                 "email": email,
-                "password": password
+//                "password": password
             ]
             let musicalBackground:KeyValuePairs = [
                 "Instrument": selectedInstrument,
