@@ -783,6 +783,7 @@ final class ModelData: ObservableObject{
         
 
     }
+
     func fetchTeacherData(completion: @escaping () -> Void){
         print("*FETCHING TEACHER DATA")
         let dispatchGroup = DispatchGroup()
@@ -899,6 +900,7 @@ final class ModelData: ObservableObject{
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
             self.populateAllAvailableTeachers(student: self.studentUser)
         }
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 // Put your code which should be executed with a delay here
                 print("@@@POPULATING AVAILABLE TEACHERS")

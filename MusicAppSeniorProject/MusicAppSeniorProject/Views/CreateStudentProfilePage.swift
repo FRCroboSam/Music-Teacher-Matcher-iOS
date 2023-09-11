@@ -371,15 +371,13 @@ struct CreateStudentProfilePage: View{
                         }.padding(.bottom, 10)
                         Divider()
                     }.listRowSeparator(.hidden)
-                    Text("Enter your location")
+                    Text("Enter your location: city, state (abbreviated)")
                         .font(.system(size: 20))
                         .padding(.horizontal, 10)
                     
                         .listRowSeparator(.hidden)
                     TextField("ie. Seattle, WA", text: $location)
-                        .textFieldStyle(.roundedBorder)
-                        .listRowSeparator(.visible, edges: .bottom)
-                        .padding(.bottom, 10)
+                        .modifier(customViewModifier(roundedCornes: 10, startColor: Color(UIColor.systemGray5), endColor: Color(UIColor.systemGray5), textColor: Color.black))
                     Text("Describe your ideal lesson schedule, provided below is default schedule.")
                         .padding(.horizontal, 10)
                     
@@ -507,6 +505,7 @@ struct CreateStudentProfilePage: View{
                         Spacer()
                             .frame(height: 20)
                         Button("Delete Account"){
+                            loggedOut = true
                             modelData.deleteAccount()
                         }
                             .buttonStyle(BigButtonStyle(color: .red))

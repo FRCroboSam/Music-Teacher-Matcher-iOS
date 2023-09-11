@@ -460,6 +460,7 @@ struct CreateTeacherProfilePage: View {
                     Spacer()
                         .frame(height: 20)
                     Button("Delete Account"){
+                        loggedOut = true
                         modelData.deleteAccount()
                     }
                         .buttonStyle(BigButtonStyle(color: .red))

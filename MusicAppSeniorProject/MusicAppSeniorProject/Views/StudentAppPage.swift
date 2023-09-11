@@ -52,7 +52,6 @@ struct StudentAppPage: View {
 
                 .onAppear() {
                     let teacher = Teacher(name: "DF")
-
                     UITabBarItem.appearance().badgeColor = .systemOrange
 
                     if(modelData.uiImage == nil && !(modelData.uid == "")){

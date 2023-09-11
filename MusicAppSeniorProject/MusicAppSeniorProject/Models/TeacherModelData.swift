@@ -511,6 +511,7 @@ final class TeacherModelData: ObservableObject{
             "title": "Matched Student"
         ])
         //remove student from teacher's requested students
+        print("REMOVING FROM PATH: " + requestedStudentsRef.path)
        requestedStudentsRef.document(studentUID).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")
@@ -518,6 +519,8 @@ final class TeacherModelData: ObservableObject{
                 print("Document successfully removed!")
             }
         }
+       //remove teacher from student's requested students
+        print("REMOVING FROM PATH: " + requestedTeachersRef.path)
         requestedTeachersRef.document(uid).delete() { err in
              if let err = err {
                  print("Error removing document: \(err)")
